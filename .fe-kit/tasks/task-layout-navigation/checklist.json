@@ -1,0 +1,49 @@
+{
+  "taskId": "layout-navigation",
+  "createdAt": "2026-08-05T16:00:00Z",
+  "items": [
+    {
+      "id": "1",
+      "title": "Doc convention da co (Button, cn, theme-provider, section id pattern tu hero)",
+      "status": "done",
+      "notes": "Section dung id='hero' de scroll-to; tiep tuc pattern nay cho cac section khac (about, skills, experience, education-contact)."
+    },
+    {
+      "id": "2",
+      "title": "ThemeToggle component (light/dark/system) dung next-themes",
+      "status": "done",
+      "notes": "ThemeToggle: cycle light->dark->system, dung useSyncExternalStore cho mount-detection (thay useState+useEffect de tranh loi lint set-state-in-effect)."
+    },
+    {
+      "id": "3",
+      "title": "Navbar: sticky, active-section highlight (IntersectionObserver), mobile drawer",
+      "status": "done",
+      "notes": "Navbar sticky, active-section qua IntersectionObserver (rootMargin -40%/-50% de tranh flicker), mobile drawer voi focus trap thu cong (Tab/Shift+Tab wrap, Escape to close, focus link dau khi mo)."
+    },
+    {
+      "id": "4",
+      "title": "Footer voi social links",
+      "status": "done",
+      "notes": "Footer voi mailto/tel/LinkedIn that. Bo link GitHub placeholder vi CV khong co GitHub URL that - tranh hien thi lien ket gia."
+    },
+    {
+      "id": "5",
+      "title": "Wire Navbar+Footer vao layout.tsx",
+      "status": "done",
+      "notes": "Navbar+Footer wire vao RootLayout, bao children."
+    },
+    {
+      "id": "6",
+      "title": "A11y: aria-label, aria-expanded, focus trap drawer",
+      "status": "done",
+      "notes": "aria-label tren nav/button, aria-expanded tren hamburger, aria-current tren nav link active, role=dialog+aria-modal tren drawer."
+    }
+  ],
+  "filesChanged": [
+    "src/components/theme-toggle.tsx",
+    "src/components/layout/navbar.tsx",
+    "src/components/layout/footer.tsx",
+    "src/app/layout.tsx"
+  ],
+  "branch": "feat/layout-navigation-navbar-footer"
+}
