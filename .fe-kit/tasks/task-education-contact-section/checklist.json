@@ -1,0 +1,22 @@
+{
+  "taskId": "education-contact-section",
+  "createdAt": "2026-08-05T16:45:00Z",
+  "items": [
+    { "id": "1", "title": "Cai @vercel/analytics, wire <Analytics/> vao layout.tsx (dong khoang trong tu project-scaffold: da ghi note nhung chua thuc lam)", "status": "done", "notes": "Phat hien khi build task nay: checklist project-scaffold ghi 'setup Vercel Analytics' nhung thuc te chua cai. Sua ngay, khong de sai lech note vs code." },
+    { "id": "2", "title": "Tao TrackedAnchor client wrapper (track() tu @vercel/analytics) de Hero/Footer/Contact van la Server Component", "status": "done" },
+    { "id": "3", "title": "Tao EducationCard + ContactLinks (chi mailto/tel/LinkedIn theo Q2, Download CV that theo Q4)", "status": "done" },
+    { "id": "4", "title": "Wire event tracking: cv_download_click, social_link_click_email/phone/linkedin, hero_cta_click_view_work/contact", "status": "done", "notes": "Cung dong luon gap con thieu o hero-3d-scene (hero_cta_click chua wire khi task do merge)." },
+    { "id": "5", "title": "Wire EducationContactSection vao page.tsx, cap nhat Footer dung TrackedAnchor", "status": "done" },
+    { "id": "6", "title": "Typecheck + lint + build + verify SSR HTML co du 5 section (curl)", "status": "done", "notes": "tsc: pass. lint: pass. next build: pass. curl SSR: id=hero/about/skills/experience/contact deu co, noi dung CV (Hanoi University..., EKOTEK, MARINER25) xuat hien dung trong HTML." }
+  ],
+  "filesChanged": [
+    "src/app/layout.tsx",
+    "src/components/tracked-anchor.tsx",
+    "src/components/sections/hero-section.tsx",
+    "src/components/sections/education-contact-section.tsx",
+    "src/components/layout/footer.tsx",
+    "src/app/page.tsx",
+    "package.json"
+  ],
+  "branch": "feat/education-contact-section"
+}

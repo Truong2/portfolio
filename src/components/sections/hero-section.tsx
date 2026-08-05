@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Hero3DCanvasLoader } from "@/components/three/hero-3d-canvas-loader";
+import { TrackedAnchor } from "@/components/tracked-anchor";
 import { personalInfo, summary } from "@/data/profile";
 
 /**
@@ -23,15 +24,19 @@ export function HeroSection() {
         <h2 className="text-lg text-muted-foreground">{summary}</h2>
         <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
           <Button asChild size="lg">
-            <a href="#experience">View Work</a>
+            <TrackedAnchor event="hero_cta_click_view_work" href="#experience">
+              View Work
+            </TrackedAnchor>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <a href="#contact">Contact</a>
+            <TrackedAnchor event="hero_cta_click_contact" href="#contact">
+              Contact
+            </TrackedAnchor>
           </Button>
           <Button asChild variant="ghost" size="lg">
-            <a href={personalInfo.resumeUrl} download>
+            <TrackedAnchor event="cv_download_click" href={personalInfo.resumeUrl} download>
               Download CV
-            </a>
+            </TrackedAnchor>
           </Button>
         </div>
       </div>

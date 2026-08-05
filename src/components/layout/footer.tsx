@@ -1,5 +1,6 @@
 import { ExternalLink, Mail, Phone } from "lucide-react";
 
+import { TrackedAnchor } from "@/components/tracked-anchor";
 import { personalInfo } from "@/data/profile";
 
 export function Footer() {
@@ -11,21 +12,24 @@ export function Footer() {
           Three.js.
         </p>
         <div className="flex items-center gap-4">
-          <a
+          <TrackedAnchor
+            event="social_link_click_email"
             href={`mailto:${personalInfo.email}`}
             aria-label="Send email"
             className="hover:text-foreground"
           >
             <Mail className="size-4" />
-          </a>
-          <a
+          </TrackedAnchor>
+          <TrackedAnchor
+            event="social_link_click_phone"
             href={`tel:${personalInfo.phone.replace(/\s+/g, "")}`}
             aria-label="Call phone number"
             className="hover:text-foreground"
           >
             <Phone className="size-4" />
-          </a>
-          <a
+          </TrackedAnchor>
+          <TrackedAnchor
+            event="social_link_click_linkedin"
             href={personalInfo.linkedin}
             target="_blank"
             rel="noopener noreferrer"
@@ -33,7 +37,7 @@ export function Footer() {
             className="hover:text-foreground"
           >
             <ExternalLink className="size-4" />
-          </a>
+          </TrackedAnchor>
         </div>
       </div>
     </footer>
