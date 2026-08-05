@@ -1,0 +1,13 @@
+{
+  "taskId": "about-section",
+  "createdAt": "2026-08-05T16:15:00Z",
+  "items": [
+    { "id": "1", "title": "Doc convention (Navbar section id pattern, RevealOnScroll tao moi tai su dung duoc cho cac section sau)", "status": "done" },
+    { "id": "2", "title": "Tao RevealOnScroll wrapper (framer-motion, ton trong reduced-motion)", "status": "done", "notes": "useReducedMotion cua framer-motion -> render div thuong khi user bat reduced motion, khong animation." },
+    { "id": "3", "title": "Tao AboutSection (server component, id=about) dung summary tu profile.ts", "status": "done" },
+    { "id": "4", "title": "Wire vao page.tsx", "status": "done" },
+    { "id": "5", "title": "Typecheck + lint", "status": "done", "notes": "Pass ca 2." }
+  ],
+  "filesChanged": ["src/components/reveal-on-scroll.tsx", "src/components/sections/about-section.tsx", "src/app/page.tsx"],
+  "branch": "feat/about-section-summary"
+}
