@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface RevealOnScrollProps {
   children: React.ReactNode;
@@ -11,17 +11,13 @@ interface RevealOnScrollProps {
 
 /**
  * Fades/slides content in once, the first time it enters the viewport.
- * When the user prefers reduced motion, renders a plain static wrapper
- * instead (framer-motion's useReducedMotion + a conditional variant swap),
- * matching the site-wide a11y requirement.
+ *
+ * This must always render the same element on the server and during the
+ * client's first render. Branching on `prefers-reduced-motion` here made the
+ * server return a motion element while some clients returned a plain div,
+ * leaving the server's `opacity: 0` styles in place after hydration.
  */
 export function RevealOnScroll({ children, className, delay = 0 }: RevealOnScrollProps) {
-  const shouldReduceMotion = useReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
     <motion.div
       className={className}

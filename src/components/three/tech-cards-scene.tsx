@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Float, RoundedBox, Text, OrbitControls, Stats } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Float, RoundedBox, Text, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 import { heroHighlightTech } from "@/data/profile";
@@ -56,12 +56,10 @@ interface TechCardsSceneProps {
 
 function RotatingGroup({ reducedMotion }: TechCardsSceneProps) {
   const groupRef = React.useRef<THREE.Group>(null);
-  const { invalidate } = useThree();
 
   useFrame((_, delta) => {
     if (reducedMotion || !groupRef.current) return;
     groupRef.current.rotation.y += AUTO_ROTATE_SPEED * delta;
-    invalidate();
   });
 
   return (
@@ -81,7 +79,6 @@ function RotatingGroup({ reducedMotion }: TechCardsSceneProps) {
 export function TechCardsScene({ reducedMotion }: TechCardsSceneProps) {
   return (
     <>
-      {process.env.NODE_ENV === "development" && <Stats />}
       <ambientLight intensity={0.6} />
       <directionalLight position={[4, 6, 4]} intensity={1.1} />
       <directionalLight position={[-4, -2, -4]} intensity={0.3} />

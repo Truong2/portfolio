@@ -56,7 +56,7 @@ function CanvasLoadingSkeleton() {
  * - WebGL support detection (falls back to static markup if unavailable)
  * - prefers-reduced-motion (falls back to static markup, per a11y requirement)
  * - Suspense loading state while the scene mounts
- * - Capped devicePixelRatio + limited canvas frameloop for perf
+ * - Capped devicePixelRatio + continuous canvas frameloop for the idle scene
  *
  * This component is itself only ever mounted through a `next/dynamic`
  * (`ssr: false`) boundary — see `hero-3d-canvas-loader.tsx` — since it
@@ -81,8 +81,9 @@ export function Hero3DCanvas() {
       <React.Suspense fallback={<CanvasLoadingSkeleton />}>
         <Canvas
           dpr={[1, 1.5]}
-          frameloop="demand"
+          frameloop="always"
           gl={{ antialias: true, alpha: true }}
+          fallback={<StaticFallback />}
         >
           <PerspectiveCamera makeDefault position={[0, 0.6, 7]} fov={45} />
           <TechCardsScene reducedMotion={false} />
