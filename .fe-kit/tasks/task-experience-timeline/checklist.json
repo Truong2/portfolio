@@ -1,0 +1,13 @@
+{
+  "taskId": "experience-timeline",
+  "createdAt": "2026-08-05T16:35:00Z",
+  "items": [
+    { "id": "1", "title": "Cai @radix-ui/react-accordion, tao shadcn-style Accordion component (co san aria-expanded, keyboard nav)", "status": "done", "notes": "Dung Radix thay vi tu viet button+state, dam bao a11y dung chuan tu dau thay vi phai tu implement expand/collapse thu cong nhu plan mo ta." },
+    { "id": "2", "title": "Them keyframes accordion-down/up vao globals.css (Tailwind v4 khong co san)", "status": "done" },
+    { "id": "3", "title": "Tao ProjectCard + ExperienceTimeline (id=experience), dung chung SkillBadge", "status": "done", "notes": "defaultValue = company gan nhat de mo san khi vao trang. type=multiple cho phep mo nhieu company cung luc." },
+    { "id": "4", "title": "Wire vao page.tsx", "status": "done" },
+    { "id": "5", "title": "Typecheck + lint", "status": "done" }
+  ],
+  "filesChanged": ["src/components/ui/accordion.tsx", "src/app/globals.css", "src/components/sections/experience-timeline.tsx", "src/app/page.tsx", "package.json"],
+  "branch": "feat/experience-timeline"
+}
