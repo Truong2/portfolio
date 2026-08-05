@@ -1,0 +1,15 @@
+{
+  "taskId": "performance-a11y-3d",
+  "createdAt": "2026-08-05T17:00:00Z",
+  "items": [
+    { "id": "1", "title": "Them dev-only <Stats/> (drei) trong TechCardsScene, gate boi process.env.NODE_ENV", "status": "done", "notes": "Verify: grep 'Stats(' trong .next/static/chunks sau production build khong tim thay - xac nhan bi tree-shake khoi production, dung nhu yeu cau plan." },
+    { "id": "2", "title": "Verify code-split: chunk three.js/R3F tach rieng, khong nam trong initial script list cua trang chu", "status": "done", "notes": "Chunk 1000K (194o1p3aavcyy.js) chua toan bo THREE/TechCardsScene/RoundedBox/OrbitControls code. curl production HTML (next start) xac nhan chunk nay KHONG xuat hien trong danh sach script tai ngay - chi load qua next/dynamic(ssr:false) khi Hero3DCanvasLoader mount." },
+    { "id": "3", "title": "Verify dispose geometry/material khi unmount", "status": "done", "notes": "Khong override dispose=null tren <Canvas>, giu mac dinh cua R3F la tu dong dispose khi component/geometry/material bi unmount." },
+    { "id": "4", "title": "Verify prefers-reduced-motion ap dung nhat quan toan site", "status": "done", "notes": "3 lop: (1) CSS global media query trong globals.css tat animation/transition cho MOI element; (2) RevealOnScroll (framer-motion useReducedMotion) cho scroll-reveal cac section; (3) Hero3DCanvas fallback hoan toan sang StaticFallback (khong chi tat auto-rotate) khi reduced motion." },
+    { "id": "5", "title": "Verify khong layout shift do scene 3D o moi breakpoint", "status": "done", "notes": "Hero3DCanvasLoader luon render trong khung aspect-square w-full max-w-md co san (skeleton cung dung kich thuoc), tranh CLS khi chunk 3D load xong." },
+    { "id": "6", "title": "Verify text quan trong khong phu thuoc JS 3D (SEO)", "status": "done", "notes": "curl production HTML: h1/h2/CTA, toan bo 5 section (id=hero/about/skills/experience/contact) va noi dung CV (EKOTEK, MARINER25, Hanoi University...) deu co san trong SSR HTML (102KB), khong can JS 3D chay." },
+    { "id": "7", "title": "Full verify: typecheck + lint + production build", "status": "done", "notes": "Ca 3 deu pass sau khi them Stats overlay." }
+  ],
+  "filesChanged": ["src/components/three/tech-cards-scene.tsx"],
+  "branch": "feat/performance-a11y-3d-hardening"
+}

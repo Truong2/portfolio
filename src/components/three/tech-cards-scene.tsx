@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Float, RoundedBox, Text, OrbitControls } from "@react-three/drei";
+import { Float, RoundedBox, Text, OrbitControls, Stats } from "@react-three/drei";
 import * as THREE from "three";
 
 import { heroHighlightTech } from "@/data/profile";
@@ -81,6 +81,7 @@ function RotatingGroup({ reducedMotion }: TechCardsSceneProps) {
 export function TechCardsScene({ reducedMotion }: TechCardsSceneProps) {
   return (
     <>
+      {process.env.NODE_ENV === "development" && <Stats />}
       <ambientLight intensity={0.6} />
       <directionalLight position={[4, 6, 4]} intensity={1.1} />
       <directionalLight position={[-4, -2, -4]} intensity={0.3} />
