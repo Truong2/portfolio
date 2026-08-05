@@ -1,0 +1,12 @@
+{
+  "taskId": "skills-section",
+  "createdAt": "2026-08-05T16:25:00Z",
+  "items": [
+    { "id": "1", "title": "Tao SkillBadge component dung chung (se tai su dung o experience-timeline)", "status": "done", "notes": "Badge trung tinh, khong phan biet category bang mau (a11y: khong dua vao mau don thuan)." },
+    { "id": "2", "title": "Tao SkillsSection (id=skills) group 9 category tu skillCategories", "status": "done" },
+    { "id": "3", "title": "Wire vao page.tsx", "status": "done" },
+    { "id": "4", "title": "Typecheck + lint", "status": "done" }
+  ],
+  "filesChanged": ["src/components/ui/skill-badge.tsx", "src/components/sections/skills-section.tsx", "src/app/page.tsx"],
+  "branch": "feat/skills-section-badges"
+}
