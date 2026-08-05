@@ -1,0 +1,7 @@
+{
+  "latest": 2,
+  "history": [
+    { "version": 1, "createdAt": "2026-08-05T14:32:43Z", "taskType": "feature", "status": "draft-pending-answers", "basedOnSrsVersion": 1 },
+    { "version": 2, "createdAt": "2026-08-05T15:05:00Z", "taskType": "feature", "status": "approved", "basedOnSrsVersion": 1, "changelog": "Tra loi Q1-Q5, plan approved" }
+  ]
+}

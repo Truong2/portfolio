@@ -1,0 +1,74 @@
+{
+  "taskId": "project-scaffold",
+  "createdAt": "2026-08-05T15:20:00Z",
+  "items": [
+    {
+      "id": "1",
+      "title": "Doc convention: khong co repo cu, dung default stack da chot trong plan (Next.js 14 App Router, TS strict, Tailwind, shadcn, R3F)",
+      "status": "done",
+      "notes": "Repo moi, khong co convention san. Dung default stack tu userPreferences: Next.js App Router + TS strict + Tailwind + shadcn + Zustand/TanStack Query (it dung cho site tinh nay) + R3F cho 3D."
+    },
+    {
+      "id": "2",
+      "title": "Khoi tao Next.js 14 App Router + TypeScript strict + ESLint",
+      "status": "done",
+      "notes": "create-next-app@latest -> Next.js 16.3.0 (App Router), React 19, TypeScript, ESLint, Tailwind v4 (CSS-based config, khong co tailwind.config.js truyen thong)."
+    },
+    {
+      "id": "3",
+      "title": "Setup Tailwind + shadcn/ui base tokens (color, spacing, typography)",
+      "status": "done",
+      "notes": "ui.shadcn.com khong nam trong allowlist mang cua sandbox nen CLI shadcn init khong goi duoc. Da tu tay dung tokens (globals.css, CSS variables OKLCH light/dark theo dung schema shadcn) + cn() util + Button component chuan shadcn convention (cva + Slot)."
+    },
+    {
+      "id": "4",
+      "title": "Cai react-three-fiber, @react-three/drei, three, framer-motion",
+      "status": "done",
+      "notes": "three@latest da co built-in types, khong can @types/three rieng (npm bao up to date)."
+    },
+    {
+      "id": "5",
+      "title": "Tao cau truc thu muc src/app, src/components/{ui,sections,three}, src/lib, src/data",
+      "status": "done",
+      "notes": "Cau truc thu muc tao xong: src/components/{ui,sections,three}, src/lib, src/data."
+    },
+    {
+      "id": "6",
+      "title": "Tao src/data/profile.ts voi content typed tu CV (summary, skills, experience, education)",
+      "status": "done",
+      "notes": "src/data/profile.ts: typed data extracted tu CV — personalInfo, summary, skillCategories (9 nhom dung CV), heroTechStack (flatten cho hero 3D theo Q1), experience (3 cong ty, 9 project con), education, interests. Day la nguon du lieu tinh duy nhat."
+    },
+    {
+      "id": "7",
+      "title": "Cau hinh ThemeProvider (dark/light/system)",
+      "status": "done",
+      "notes": "ThemeProvider (next-themes, class strategy) wired vao RootLayout voi suppressHydrationWarning tren <html>. defaultTheme=system, enableSystem=true."
+    },
+    {
+      "id": "8",
+      "title": "Metadata mac dinh (title, description, OG placeholder) + next/font",
+      "status": "done",
+      "notes": "Metadata dong (title/description tu personalInfo+summary), OpenGraph + Twitter card, metadataBase set. Font: chuyen tu next/font/google (Geist) sang system font stack - xem note item 9 ve ly do."
+    },
+    {
+      "id": "9",
+      "title": "Verify build local (typecheck + lint + next build)",
+      "status": "done",
+      "notes": "typecheck (tsc --noEmit): pass. lint (eslint): pass. next build (Turbopack): pass. Doi next/font/google -> system font stack vi fonts.googleapis.com bi chan boi network allowlist cua sandbox (chi npm/github); day cung la lua chon tot hon cho production build (khong phu thuoc mang ngoai luc build/CI). Da set metadataBase de fix OG warning."
+    }
+  ],
+  "filesChanged": [
+    "eslint.config.mjs",
+    "next.config.ts",
+    "package.json",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/app/page.tsx",
+    "src/components/theme-provider.tsx",
+    "src/components/ui/button.tsx",
+    "src/data/profile.ts",
+    "src/lib/utils.ts",
+    "tsconfig.json"
+  ],
+  "branch": "feat/project-scaffold-nextjs-r3f-setup"
+}

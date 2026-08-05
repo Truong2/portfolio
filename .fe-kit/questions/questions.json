@@ -1,0 +1,59 @@
+{
+  "questions": [
+    {
+      "id": "Q1",
+      "question": "Phong cách 3D cho Hero mong muốn là gì? (A) particle/abstract network gợi 'code & data', (B) low-poly 3D avatar/desk scene, (C) xoay các 'card' công nghệ (React/Next/Vue/Web3 logo) quanh 1 trục 3D. Chọn 1 hướng để FE dựng đúng ngay từ đầu, tránh làm lại toàn bộ scene.",
+      "target": "PM",
+      "relatedTaskId": "hero-3d-scene",
+      "status": "answered",
+      "blocksApproval": true,
+      "createdInPlanVersion": 1,
+      "answer": "(C) Rotating tech-cards 3D - logo React/Next/Vue/TypeScript/Web3... xoay quanh truc. De trien khai voi R3F + drei, it rui ro hieu nang hon particle/avatar, tai dung data cho skills-section.",
+      "answeredAt": "2026-08-05T15:05:00Z"
+    },
+    {
+      "id": "Q2",
+      "question": "Form Contact co can gui email that (can backend/API) hay chi can mailto: + link LinkedIn/Zalo/Phone? Anh huong truc tiep toi viec task contact-section co can API that hay chi la mock/static links.",
+      "target": "BE",
+      "relatedTaskId": "education-contact-section",
+      "status": "answered",
+      "blocksApproval": true,
+      "createdInPlanVersion": 1,
+      "answer": "Chi mailto:/tel:/LinkedIn, khong can backend/API rieng. Bo han task con Route Handler /api/contact.",
+      "answeredAt": "2026-08-05T15:05:00Z"
+    },
+    {
+      "id": "Q3",
+      "question": "Ngon ngu hien thi: chi tieng Viet, chi tieng Anh, hay song ngu (i18n switch VI/EN)? CV goc la tieng Anh nhung thong tin lien he la VN.",
+      "target": "PM",
+      "relatedTaskId": "project-scaffold",
+      "status": "answered",
+      "blocksApproval": false,
+      "createdInPlanVersion": 1,
+      "answer": "EN-only cho ban build dau tien; code to chuc san translation-key-ready de them VI sau (khong setup i18n switch ngay).",
+      "answeredAt": "2026-08-05T15:05:00Z"
+    },
+    {
+      "id": "Q4",
+      "question": "Co can nut tai CV dang PDF (download resume) tren portfolio khong?",
+      "target": "PM",
+      "relatedTaskId": "education-contact-section",
+      "status": "answered",
+      "blocksApproval": false,
+      "createdInPlanVersion": 1,
+      "answer": "Co. Them DownloadCVButton, link toi /public/cv.pdf.",
+      "answeredAt": "2026-08-05T15:05:00Z"
+    },
+    {
+      "id": "Q5",
+      "question": "Deploy target: Vercel (khop default Next.js) hay nen tang khac? Anh huong cau hinh CI/CD o task project-scaffold.",
+      "target": "PM",
+      "relatedTaskId": "project-scaffold",
+      "status": "answered",
+      "blocksApproval": false,
+      "createdInPlanVersion": 1,
+      "answer": "Vercel.",
+      "answeredAt": "2026-08-05T15:05:00Z"
+    }
+  ]
+}

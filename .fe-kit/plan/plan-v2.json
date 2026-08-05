@@ -1,0 +1,496 @@
+{
+  "version": 2,
+  "taskType": "feature",
+  "basedOnSrsVersion": 1,
+  "status": "approved",
+  "createdAt": "2026-08-05T15:05:00Z",
+  "changelog": "Tra loi Q1-Q5: hero dung rotating tech-cards 3D, contact chi mailto/tel/LinkedIn (bo API /api/contact), EN-only ban dau, co Download CV, deploy Vercel. Plan approved, san sang build.",
+  "tasks": [
+    {
+      "taskId": "project-scaffold",
+      "title": "Khởi tạo dự án Next.js 14 (App Router) + Tailwind + R3F base",
+      "dependsOn": [],
+      "relatedQuestionIds": [
+        "Q3",
+        "Q5"
+      ],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "RootLayout",
+            "states": [
+              "default"
+            ]
+          },
+          {
+            "component": "ThemeProvider (dark/light)",
+            "states": [
+              "light",
+              "dark",
+              "system"
+            ]
+          }
+        ],
+        "logic": [
+          "Cấu hình tsconfig strict, eslint, prettier",
+          "Setup Tailwind + shadcn/ui base tokens (color, spacing, typography)",
+          "Cài react-three-fiber, @react-three/drei, three, framer-motion",
+          "Setup cấu trúc thư mục: src/app, src/components/{ui,sections,three}, src/lib, src/data",
+          "Tạo src/data/profile.ts chứa toàn bộ content trích từ CV (summary, skills, experience, education) dạng typed object — nguồn dữ liệu tĩnh duy nhất cho toàn site"
+        ],
+        "api": [],
+        "flow": [
+          "npx create-next-app → cài dependencies → cấu hình Tailwind/shadcn → tạo data layer → verify build chạy local"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile",
+            "tablet",
+            "desktop"
+          ],
+          "a11y": [
+            "Cấu hình font/contrast base đạt AA ngay từ token gốc"
+          ],
+          "i18n": [
+            "EN-only cho ban dau (Q3). To chuc text qua constant/data file (khong hardcode rai rac) de de chuyen sang i18n that (next-intl) sau nay, nhung KHONG setup i18n switch trong scope nay."
+          ],
+          "analytics": [
+            "Setup Vercel Analytics (Q5 xac nhan deploy Vercel)"
+          ],
+          "performance": [
+            "Bật next/font, image optimization mặc định"
+          ],
+          "seo": [
+            "Tạo metadata mặc định (title, description, OG image placeholder)"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "layout-navigation",
+      "title": "Navbar, smooth-scroll section nav, footer",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [
+        "Q3"
+      ],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "Navbar",
+            "states": [
+              "idle",
+              "scrolled (compact)",
+              "mobile-menu-open"
+            ]
+          },
+          {
+            "component": "MobileMenuDrawer",
+            "states": [
+              "closed",
+              "open"
+            ]
+          },
+          {
+            "component": "Footer",
+            "states": [
+              "default"
+            ]
+          }
+        ],
+        "logic": [
+          "Active-section highlight dựa trên IntersectionObserver theo từng <section id>",
+          "Smooth scroll tới section khi click nav item (scroll-behavior + focus management)",
+          "Theme toggle (dark/light) lưu localStorage",
+          "Toggle ngôn ngữ VI/EN nếu Q3 xác nhận song ngữ"
+        ],
+        "api": [],
+        "flow": [
+          "Click nav item → scroll tới section tương ứng → nav item active cập nhật theo scroll position",
+          "Mobile: tap hamburger → mở drawer → chọn mục → đóng drawer + scroll"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: hamburger menu",
+            "tablet/desktop: full nav bar"
+          ],
+          "a11y": [
+            "nav là <nav aria-label='Main'>, hamburger có aria-expanded, focus trap trong drawer khi mở"
+          ],
+          "i18n": [
+            "Nhãn menu qua translation key nếu song ngữ"
+          ],
+          "analytics": [
+            "event nav_click với section name"
+          ],
+          "performance": [],
+          "seo": [
+            "Dùng thẻ <nav>/<header>/<footer> ngữ nghĩa đúng chuẩn semantic HTML"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "hero-3d-scene",
+      "title": "Hero section với scene 3D (React Three Fiber) làm điểm nhấn chính",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [
+        "Q1"
+      ],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "HeroSection",
+            "states": [
+              "3d-loading",
+              "3d-loaded",
+              "3d-fallback-static (reduced-motion / low-end / WebGL unsupported)"
+            ]
+          },
+          {
+            "component": "Hero3DCanvas",
+            "states": [
+              "idle-animation",
+              "on-hover/on-drag interaction"
+            ]
+          },
+          {
+            "component": "CTAButtons (View Work / Contact / Download CV)",
+            "states": [
+              "default",
+              "hover",
+              "focus"
+            ]
+          }
+        ],
+        "logic": [
+          "Q1 xac nhan: hero dung (C) Rotating tech-cards 3D - card logo React/Next/Vue/TypeScript/Zustand/Web3(wagmi)/Node xoay quanh 1 truc, dung @react-three/drei <Float> + instancing don gian, khong dung particle system hay avatar model",
+          "Lazy-load Canvas 3D bằng next/dynamic (ssr:false) để không chặn TTI",
+          "Kiểm tra prefers-reduced-motion và WebGL support → fallback ảnh/illustration tĩnh nếu không hỗ trợ",
+          "Auto-rotate camera nhẹ khi idle; OrbitControls giới hạn góc xoay/zoom để tránh user bị 'lạc' trong scene"
+        ],
+        "api": [],
+        "flow": [
+          "Load trang → hiện skeleton/loading nhẹ → Canvas 3D mount sau khi hydrate → nếu thiết bị yếu/không hỗ trợ WebGL → hiện ảnh tĩnh thay thế",
+          "User kéo/hover scene → object phản hồi tương tác nhẹ (rotate theo con trỏ) → không chặn scroll trang"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: scene đơn giản hoá/giảm poly count hoặc thay bằng ảnh tĩnh để tiết kiệm pin/CPU",
+            "desktop: full interactive scene"
+          ],
+          "a11y": [
+            "Canvas 3D có aria-hidden='true' + text content thật (h1/h2, CTA) tồn tại song song, không phụ thuộc 3D để truyền tải thông tin",
+            "Tôn trọng prefers-reduced-motion"
+          ],
+          "i18n": [
+            "Text hero (tiêu đề, subtitle) qua translation key nếu song ngữ"
+          ],
+          "analytics": [
+            "event hero_cta_click theo từng CTA"
+          ],
+          "performance": [
+            "Giới hạn poly count, dùng instancing nếu nhiều object lặp, giới hạn devicePixelRatio, dispose geometry/material khi unmount"
+          ],
+          "seo": [
+            "Nội dung text hero phải render server-side (không phụ thuộc canvas) để crawler đọc được"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "about-section",
+      "title": "Section About/Summary (giới thiệu bản thân từ CV summary)",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "AboutSection",
+            "states": [
+              "default",
+              "in-view (scroll-reveal animation)"
+            ]
+          }
+        ],
+        "logic": [
+          "Render nội dung summary từ src/data/profile.ts",
+          "Scroll-reveal animation bằng framer-motion whileInView (chạy 1 lần, tôn trọng reduced-motion)"
+        ],
+        "api": [],
+        "flow": [
+          "User scroll tới section → nội dung fade/slide vào view"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: 1 cột",
+            "desktop: 2 cột (text + ảnh/illustration hoặc mini 3D icon)"
+          ],
+          "a11y": [
+            "Heading hierarchy đúng thứ tự (h2 sau h1 của Hero)"
+          ],
+          "i18n": [
+            "Text qua translation key nếu song ngữ"
+          ],
+          "analytics": [],
+          "performance": [],
+          "seo": [
+            "Text đầy đủ trong HTML, không render qua canvas/image"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "skills-section",
+      "title": "Section Technical Skills (nhóm theo category) — có thể dùng 3D tag-cloud tuỳ Q1",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [
+        "Q1"
+      ],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "SkillsSection",
+            "states": [
+              "default"
+            ]
+          },
+          {
+            "component": "SkillCategoryGroup (Languages/Frontend/State/Forms/API/Viz/Web3/Tools/Backend)",
+            "states": [
+              "default",
+              "hover"
+            ]
+          },
+          {
+            "component": "SkillBadge",
+            "states": [
+              "default",
+              "hover"
+            ]
+          }
+        ],
+        "logic": [
+          "Group skills từ profile.ts theo đúng 9 nhóm trong CV (Languages, Frontend, State/Data, Forms, API/Realtime, Visualization/Maps, Web3, Tools, Backend Basics)",
+          "Q1 xac nhan (C): data skill nay duoc tai su dung truc tiep cho hero-3d-scene (cung 1 danh sach tech de render card 3D)"
+        ],
+        "api": [],
+        "flow": [
+          "User scroll tới section → các nhóm skill hiện dạng badge/grid, có thể filter theo category (tuỳ nice-to-have)"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: badge wrap tự do",
+            "desktop: grid theo cột cố định"
+          ],
+          "a11y": [
+            "Badge có đủ contrast, không chỉ dựa vào màu để phân biệt category — kèm label text"
+          ],
+          "i18n": [
+            "Tên category qua translation key nếu song ngữ; tên công nghệ giữ nguyên"
+          ],
+          "analytics": [],
+          "performance": [],
+          "seo": []
+        }
+      }
+    },
+    {
+      "taskId": "experience-timeline",
+      "title": "Timeline kinh nghiệm làm việc (EKOTEK / Freelancer / VNPT Technology + các dự án con)",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "ExperienceTimeline",
+            "states": [
+              "default"
+            ]
+          },
+          {
+            "component": "TimelineItem (company + role + date range)",
+            "states": [
+              "collapsed",
+              "expanded"
+            ]
+          },
+          {
+            "component": "ProjectCard (trong mỗi TimelineItem: AML, HRM, Taxi Admin, SANO, METAME, EC Platform, AVT, MARINER25, DX Modules...)",
+            "states": [
+              "default",
+              "hover"
+            ]
+          }
+        ],
+        "logic": [
+          "Data model: Company → Role → date range → list Project { name, description, techStack[], highlights[] }",
+          "Expand/collapse từng company để không dump toàn bộ text 1 lúc (CV khá dài — 3 công ty, ~9 dự án)",
+          "Tech stack hiển thị dạng badge nhỏ, dùng chung SkillBadge component với skills-section"
+        ],
+        "api": [],
+        "flow": [
+          "User scroll tới section → thấy timeline dạng dọc theo thời gian (mới nhất trước) → click 1 company/project để expand chi tiết"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: timeline 1 cột, line bên trái",
+            "desktop: timeline căn giữa hoặc zig-zag 2 bên"
+          ],
+          "a11y": [
+            "Expand/collapse dùng button thật với aria-expanded, không chỉ div onClick"
+          ],
+          "i18n": [
+            "Label UI (vd 'Xem thêm') qua translation key; nội dung mô tả dự án giữ nguyên văn CV hoặc dịch tuỳ Q3"
+          ],
+          "analytics": [
+            "event timeline_project_expand theo taskId dự án"
+          ],
+          "performance": [
+            "Virtualization không cần thiết vì data nhỏ (~9 project), nhưng tránh render ảnh nặng nếu có"
+          ],
+          "seo": [
+            "Toàn bộ nội dung dự án nằm trong DOM (không ẩn hoàn toàn khi collapsed — dùng CSS collapse, không unmount, để crawler đọc được)"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "education-contact-section",
+      "title": "Section Education + Contact (form/liên hệ + social links + optional CV download)",
+      "dependsOn": [
+        "project-scaffold"
+      ],
+      "relatedQuestionIds": [
+        "Q2",
+        "Q4"
+      ],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "EducationCard (Dai hoc Bach Khoa Ha Noi)",
+            "states": [
+              "default"
+            ]
+          },
+          {
+            "component": "ContactSection",
+            "states": [
+              "default"
+            ]
+          },
+          {
+            "component": "SocialLinks (mailto, tel, LinkedIn)",
+            "states": [
+              "default",
+              "hover"
+            ]
+          },
+          {
+            "component": "DownloadCVButton",
+            "states": [
+              "default",
+              "hover"
+            ]
+          }
+        ],
+        "logic": [
+          "Q2 xac nhan: KHONG dung form/backend. Chi render link mailto:truong8dt@gmail.com, tel:+84978803231, va LinkedIn href. Khong can Zod/API cho task nay.",
+          "Q4 xac nhan: co Download CV - link toi file tinh /public/cv-nguyen-van-truong.pdf, track event download"
+        ],
+        "api": [],
+        "flow": [
+          "User click email/phone/LinkedIn -> mo app tuong ung (mailto:/tel:/tab moi)",
+          "User click Download CV -> tai file PDF tinh, khong goi API"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "mobile: form 1 cột full-width",
+            "desktop: form max-width căn giữa hoặc 2 cột (info + form)"
+          ],
+          "a11y": [
+            "Mọi input có label thật, error message gắn aria-describedby, aria-live cho vùng thông báo success/error"
+          ],
+          "i18n": [
+            "Label form, thông báo lỗi qua translation key nếu song ngữ"
+          ],
+          "analytics": [
+            "event cv_download_click",
+            "event social_link_click theo type (email/phone/linkedin)"
+          ],
+          "performance": [],
+          "seo": [
+            "Thông tin liên hệ (email/phone) xuất hiện dạng text thật trong HTML để phục vụ local SEO, không chỉ trong ảnh"
+          ]
+        }
+      }
+    },
+    {
+      "taskId": "performance-a11y-3d",
+      "title": "Hardening hiệu năng & khả năng tiếp cận riêng cho tầng 3D (toàn site)",
+      "dependsOn": [
+        "hero-3d-scene"
+      ],
+      "relatedQuestionIds": [],
+      "typeSpecific": {
+        "uiSources": [],
+        "ui": [
+          {
+            "component": "PerfMonitor (dev-only, @react-three/drei Stats)",
+            "states": [
+              "dev-only, không render production"
+            ]
+          },
+          {
+            "component": "WebGLFallbackNotice",
+            "states": [
+              "shown-when-unsupported"
+            ]
+          }
+        ],
+        "logic": [
+          "Đo FPS scene 3D trên thiết bị tầm trung, đặt ngưỡng chấp nhận được (>= 30fps mobile mid-range)",
+          "Code-split toàn bộ code liên quan three.js ra khỏi bundle chính (dynamic import, không import three ở page khác)",
+          "Dispose đúng geometry/material/texture khi component unmount để tránh leak khi navigate SPA",
+          "Kiểm tra prefers-reduced-motion áp dụng nhất quán cho mọi animation (không chỉ hero)"
+        ],
+        "api": [],
+        "flow": [
+          "Build production → chạy Lighthouse (mobile + desktop) → nếu LCP/TBT vượt ngưỡng do bundle 3D → tối ưu tiếp (giảm poly, giảm draw call, lazy hơn nữa)"
+        ],
+        "nonFunctional": {
+          "responsive": [
+            "Xác nhận scene 3D không làm layout shift trên mọi breakpoint"
+          ],
+          "a11y": [
+            "Audit toàn site bằng axe/Lighthouse a11y, đảm bảo phần 3D không phá luồng tab/focus order"
+          ],
+          "i18n": [],
+          "analytics": [],
+          "performance": [
+            "Target: Lighthouse Performance >= 85 mobile, LCP < 2.5s, bundle three.js tách riêng chunk và lazy-load"
+          ],
+          "seo": [
+            "Xác nhận toàn bộ text quan trọng (hero, about, experience, contact) không phụ thuộc JS 3D để crawl/index đúng"
+          ]
+        }
+      }
+    }
+  ]
+}
