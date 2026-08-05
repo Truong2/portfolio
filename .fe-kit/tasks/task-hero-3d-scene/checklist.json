@@ -1,0 +1,78 @@
+{
+  "taskId": "hero-3d-scene",
+  "createdAt": "2026-08-05T15:40:00Z",
+  "items": [
+    {
+      "id": "1",
+      "title": "Doc convention: xem lib/utils.ts, data/profile.ts, components/ui/button.tsx da tao o task project-scaffold de bam sat pattern",
+      "status": "done",
+      "notes": "Pattern da xac dinh o project-scaffold: cn() tu @/lib/utils, du lieu tu @/data/profile (heroTechStack), Button tu @/components/ui/button (variant/size/asChild), CSS var tokens (--color-primary, --color-accent...) dung duoc truc tiep trong Tailwind class (bg-primary, text-accent...)."
+    },
+    {
+      "id": "2",
+      "title": "Tao Hero3DCanvas: R3F Canvas wrapper, dynamic import ssr:false, detect WebGL + prefers-reduced-motion",
+      "status": "done",
+      "notes": "Se lam trong item tiep: Hero3DCanvas la loader/canvas wrapper, ban tao truoc TechCardsScene la scene noi dung."
+    },
+    {
+      "id": "3",
+      "title": "Tao TechCardsScene: rotating tech-cards 3D tu heroTechStack (Q1 = huong C)",
+      "status": "done",
+      "notes": "TechCardsScene: 12 the (heroHighlightTech) xep vong tron ban kinh 3.2, Float cho hieu ung bap benh nhe, auto-rotate group qua useFrame (tat khi reducedMotion), OrbitControls gioi han goc/zoom, khong pan."
+    },
+    {
+      "id": "4",
+      "title": "Tao StaticFallback: anh/illustration tinh khi khong ho tro WebGL hoac reduced-motion",
+      "status": "done",
+      "notes": "StaticFallback: server-renderable grid 9 tech badge (subset heroHighlightTech), role=img + aria-label mo ta, khong canvas/motion."
+    },
+    {
+      "id": "5",
+      "title": "Tao HeroSection: layout text (h1/h2) + CTA buttons + Hero3DCanvas, dam bao text server-rendered doc lap voi canvas",
+      "status": "done",
+      "notes": "HeroSection la Server Component (khong use client): h1/h2/CTA la HTML that, render server-side, doc lap voi Hero3DCanvasLoader (client, lazy). Them Download CV CTA - da copy file CV goc that vao public/cv-nguyen-van-truong.pdf nen link hoat dong ngay."
+    },
+    {
+      "id": "6",
+      "title": "Wire HeroSection vao page.tsx thay placeholder scaffold",
+      "status": "done",
+      "notes": "page.tsx thay placeholder scaffold bang HeroSection that."
+    },
+    {
+      "id": "7",
+      "title": "Non-functional: responsive (giam scene/poly tren mobile)",
+      "status": "done",
+      "notes": "Layout flex-col tren mobile (lg:flex-row tren desktop), canvas w-full max-w-md tu co giao. DPR cap giam xuong [1,1.5] de tiet kiem GPU tren thiet bi mobile/tam trung."
+    },
+    {
+      "id": "8",
+      "title": "Non-functional: a11y (aria-hidden canvas, text that song song, reduced-motion)",
+      "status": "done",
+      "notes": "Canvas wrapper co aria-hidden=true; h1/h2/CTA la text that ben ngoai canvas, khong phu thuoc 3D. reducedMotion=true -> render StaticFallback (khong canvas, khong animation) thay vi chi tat auto-rotate, dam bao tuan thu tuyet doi prefers-reduced-motion."
+    },
+    {
+      "id": "9",
+      "title": "Non-functional: performance (limit DPR, dispose on unmount, lazy-load)",
+      "status": "done",
+      "notes": "dpr cap [1,1.5], frameloop=demand (chi render khi invalidate() duoc goi, khong render loop lien tuc), Suspense loading skeleton, next/dynamic ssr:false lazy-load toan bo three.js code khoi bundle chinh, R3F auto-dispose geometry/material khi unmount (mac dinh, khong override dispose=null)."
+    },
+    {
+      "id": "10",
+      "title": "Chay lint + typecheck + build de verify",
+      "status": "done",
+      "notes": "typecheck: pass. lint: pass sau khi fix 2 loi react-hooks/set-state-in-effect (chuyen sang useSyncExternalStore cho reducedMotion, lazy useState init cho webglSupported vi component chi mount client-side qua ssr:false). next build: pass. dev server: GET / tra 200, HTML SSR chua h1=Nguyen Van Truong that, CTA View Work/Download CV render server-side, xac nhan khong phu thuoc canvas mount."
+    }
+  ],
+  "filesChanged": [
+    "src/components/three/tech-cards-scene.tsx",
+    "src/data/profile.ts",
+    "src/components/three/static-fallback.tsx",
+    "src/components/three/hero-3d-canvas.tsx",
+    "src/components/three/hero-3d-canvas-loader.tsx",
+    "src/components/sections/hero-section.tsx",
+    "src/app/page.tsx",
+    "public/cv-nguyen-van-truong.pdf",
+    "src/components/three/hero-3d-canvas.tsx"
+  ],
+  "branch": "feat/hero-3d-scene-rotating-tech-cards"
+}

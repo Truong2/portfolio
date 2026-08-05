@@ -96,10 +96,30 @@ export const skillCategories: SkillCategory[] = [
   },
 ];
 
-/** Flattened, deduplicated tech list — used by the hero 3D rotating cards. */
+/** Flattened, deduplicated tech list — full breakdown, used by skills-section. */
 export const heroTechStack: string[] = Array.from(
   new Set(skillCategories.flatMap((c) => c.skills)),
 );
+
+/**
+ * Curated subset (not the full ~30-item heroTechStack) for the hero's
+ * rotating 3D tech-cards (Q1 = option C). A dozen cards keeps the scene
+ * legible and performant; the full breakdown belongs in skills-section.
+ */
+export const heroHighlightTech: string[] = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "Vue 3",
+  "Nuxt 3",
+  "Zustand",
+  "React Query",
+  "Tailwind CSS",
+  "wagmi",
+  "Socket.IO",
+  "OpenLayers",
+  "Node.js",
+];
 
 export const experience: ExperienceEntry[] = [
   {
