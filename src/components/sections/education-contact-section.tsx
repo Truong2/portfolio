@@ -1,8 +1,8 @@
 import {
   ArrowUpRight,
   Download,
+  ExternalLink,
   GraduationCap,
-  Linkedin,
   Mail,
   MapPin,
   Phone,
@@ -86,7 +86,10 @@ function ContactAction({
         </span>
         <span className="mt-1 block truncate text-sm font-medium text-foreground">{value}</span>
       </span>
-      <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden="true" />
+      <ArrowUpRight
+        className="size-4 shrink-0 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+        aria-hidden="true"
+      />
     </TrackedAnchor>
   );
 }
@@ -94,7 +97,7 @@ function ContactAction({
 function ContactPortalVisual() {
   const nodes = [
     { icon: Mail, className: "left-[8%] top-[22%]", label: "Email" },
-    { icon: Linkedin, className: "right-[7%] top-[27%]", label: "LinkedIn" },
+    { icon: ExternalLink, className: "right-[7%] top-[27%]", label: "LinkedIn" },
     { icon: Download, className: "bottom-[13%] left-[18%]", label: "CV" },
     { icon: Phone, className: "bottom-[11%] right-[18%]", label: "Phone" },
   ] as const;
@@ -192,7 +195,7 @@ export function EducationContactSection() {
                 <ContactAction
                   event="social_link_click_linkedin"
                   href={personalInfo.linkedin}
-                  icon={Linkedin}
+                  icon={ExternalLink}
                   label="Network"
                   value="LinkedIn profile"
                   external
