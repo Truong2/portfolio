@@ -1,13 +1,11 @@
 import {
   Accessibility,
   Activity,
-  ArrowUpRight,
   Blocks,
   Braces,
   Car,
   ExternalLink,
   Mail,
-  Map,
   ShieldCheck,
   Ship,
   type LucideIcon,
