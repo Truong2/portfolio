@@ -11,7 +11,7 @@ const INNER_RADIUS = 2.45;
 const OUTER_RADIUS = 3.65;
 const CARD_WIDTH = 1.45;
 const CARD_HEIGHT = 0.78;
-const CARD_COLORS = ["#7c5cff", "#3be8ff", "#9b8cff", "#55d6ff"];
+const CARD_COLORS = ["#6f5cf5", "#13bfe8", "#8874ff", "#2aa9df"];
 
 interface TechCardProps {
   label: string;
@@ -19,9 +19,10 @@ interface TechCardProps {
   radius: number;
   y: number;
   color: string;
+  lightMode: boolean;
 }
 
-function TechCard({ label, angle, radius, y, color }: TechCardProps) {
+function TechCard({ label, angle, radius, y, color, lightMode }: TechCardProps) {
   const groupRef = React.useRef<THREE.Group>(null);
   const [hovered, setHovered] = React.useState(false);
   const x = Math.sin(angle) * radius;
@@ -47,15 +48,15 @@ function TechCard({ label, angle, radius, y, color }: TechCardProps) {
         <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, 0.1]} radius={0.1} smoothness={5}>
           <meshPhysicalMaterial
             color={color}
-            roughness={0.22}
+            roughness={lightMode ? 0.28 : 0.2}
             metalness={0.12}
-            transmission={0.2}
+            transmission={lightMode ? 0.08 : 0.2}
             transparent
-            opacity={0.92}
-            clearcoat={0.8}
-            clearcoatRoughness={0.2}
+            opacity={0.94}
+            clearcoat={0.85}
+            clearcoatRoughness={0.18}
             emissive={color}
-            emissiveIntensity={hovered ? 0.35 : 0.12}
+            emissiveIntensity={hovered ? 0.38 : lightMode ? 0.08 : 0.14}
           />
         </RoundedBox>
         <Text
@@ -74,7 +75,7 @@ function TechCard({ label, angle, radius, y, color }: TechCardProps) {
   );
 }
 
-function DeveloperCore({ reducedMotion }: { reducedMotion: boolean }) {
+function DeveloperCore({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
   const coreRef = React.useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
@@ -88,34 +89,46 @@ function DeveloperCore({ reducedMotion }: { reducedMotion: boolean }) {
       <mesh>
         <icosahedronGeometry args={[1.22, 4]} />
         <meshPhysicalMaterial
-          color="#11182b"
+          color={lightMode ? "#d7e5ff" : "#11182b"}
           roughness={0.1}
-          metalness={0.18}
-          transmission={0.54}
+          metalness={0.16}
+          transmission={lightMode ? 0.32 : 0.54}
           thickness={1.1}
           transparent
-          opacity={0.9}
+          opacity={0.92}
           clearcoat={1}
           clearcoatRoughness={0.08}
-          emissive="#20175b"
-          emissiveIntensity={0.32}
+          emissive={lightMode ? "#6178e8" : "#20175b"}
+          emissiveIntensity={lightMode ? 0.14 : 0.32}
         />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.62, 0.018, 12, 120]} />
-        <meshBasicMaterial color="#3be8ff" transparent opacity={0.55} />
+        <meshBasicMaterial color="#28d7f4" transparent opacity={0.62} />
       </mesh>
       <mesh rotation={[0.42, 0.1, 0.65]}>
         <torusGeometry args={[1.82, 0.012, 12, 120]} />
-        <meshBasicMaterial color="#7c5cff" transparent opacity={0.42} />
+        <meshBasicMaterial color="#8067ff" transparent opacity={0.5} />
       </mesh>
-      <Text position={[0, 0.08, 1.26]} fontSize={0.48} color="#ffffff" anchorX="center" anchorY="middle">
+      <Text
+        position={[0, 0.08, 1.26]}
+        fontSize={0.48}
+        color={lightMode ? "#152448" : "#ffffff"}
+        anchorX="center"
+        anchorY="middle"
+      >
         NVT
       </Text>
-      <Text position={[0, -0.38, 1.24]} fontSize={0.105} color="#aab4d0" anchorX="center" anchorY="middle">
+      <Text
+        position={[0, -0.38, 1.24]}
+        fontSize={0.105}
+        color={lightMode ? "#53627f" : "#aab4d0"}
+        anchorX="center"
+        anchorY="middle"
+      >
         FRONTEND SYSTEMS
       </Text>
-      <pointLight color="#6f63ff" intensity={7} distance={8} decay={2} />
+      <pointLight color="#6f63ff" intensity={lightMode ? 4 : 7} distance={8} decay={2} />
     </group>
   );
 }
@@ -126,10 +139,19 @@ interface OrbitLayerProps {
   y: number;
   speed: number;
   reducedMotion: boolean;
+  lightMode: boolean;
   offset?: number;
 }
 
-function OrbitLayer({ labels, radius, y, speed, reducedMotion, offset = 0 }: OrbitLayerProps) {
+function OrbitLayer({
+  labels,
+  radius,
+  y,
+  speed,
+  reducedMotion,
+  lightMode,
+  offset = 0,
+}: OrbitLayerProps) {
   const groupRef = React.useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
@@ -141,7 +163,7 @@ function OrbitLayer({ labels, radius, y, speed, reducedMotion, offset = 0 }: Orb
     <group ref={groupRef} rotation={[0.08, offset, 0]}>
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, y, 0]}>
         <torusGeometry args={[radius, 0.008, 8, 160]} />
-        <meshBasicMaterial color="#7c8bb7" transparent opacity={0.18} />
+        <meshBasicMaterial color={lightMode ? "#526aab" : "#7c8bb7"} transparent opacity={0.24} />
       </mesh>
       {labels.map((label, index) => (
         <TechCard
@@ -151,13 +173,14 @@ function OrbitLayer({ labels, radius, y, speed, reducedMotion, offset = 0 }: Orb
           radius={radius}
           y={y + Math.sin(index * 1.7) * 0.18}
           color={CARD_COLORS[index % CARD_COLORS.length] ?? CARD_COLORS[0]}
+          lightMode={lightMode}
         />
       ))}
     </group>
   );
 }
 
-function AmbientParticles() {
+function AmbientParticles({ lightMode }: { lightMode: boolean }) {
   const positions = React.useMemo(() => {
     const points = new Float32Array(150 * 3);
     for (let index = 0; index < 150; index += 1) {
@@ -175,33 +198,60 @@ function AmbientParticles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#89a7ff" size={0.025} transparent opacity={0.46} sizeAttenuation />
+      <pointsMaterial
+        color={lightMode ? "#536ea8" : "#89a7ff"}
+        size={0.025}
+        transparent
+        opacity={lightMode ? 0.32 : 0.46}
+        sizeAttenuation
+      />
     </points>
   );
 }
 
 interface TechCardsSceneProps {
   reducedMotion: boolean;
+  lightMode: boolean;
 }
 
-export function TechCardsScene({ reducedMotion }: TechCardsSceneProps) {
+export function TechCardsScene({ reducedMotion, lightMode }: TechCardsSceneProps) {
   const compactScene = useThree((state) => state.size.width < 640);
   const innerTech = heroHighlightTech.slice(0, compactScene ? 4 : 6);
   const outerTech = compactScene ? heroHighlightTech.slice(4, 8) : heroHighlightTech.slice(6, 12);
+  const background = lightMode ? "#edf4ff" : "#070a14";
 
   return (
     <>
-      <color attach="background" args={["#070a14"]} />
-      <fog attach="fog" args={["#070a14", 8, 15]} />
-      <ambientLight intensity={0.78} />
-      <directionalLight position={[5, 7, 4]} intensity={2.2} color="#d8e1ff" />
+      <color attach="background" args={[background]} />
+      <fog attach="fog" args={[background, 8, 15]} />
+      <ambientLight intensity={lightMode ? 1.25 : 0.78} />
+      <directionalLight
+        position={[5, 7, 4]}
+        intensity={lightMode ? 2.8 : 2.2}
+        color={lightMode ? "#ffffff" : "#d8e1ff"}
+      />
       <directionalLight position={[-4, -2, -3]} intensity={1.1} color="#3be8ff" />
-      <pointLight position={[0, 3, 4]} intensity={3.2} color="#7c5cff" />
+      <pointLight position={[0, 3, 4]} intensity={lightMode ? 2.4 : 3.2} color="#7c5cff" />
 
-      <AmbientParticles />
-      <DeveloperCore reducedMotion={reducedMotion} />
-      <OrbitLayer labels={innerTech} radius={INNER_RADIUS} y={0.02} speed={0.13} reducedMotion={reducedMotion} />
-      <OrbitLayer labels={outerTech} radius={OUTER_RADIUS} y={-0.14} speed={-0.075} reducedMotion={reducedMotion} offset={Math.PI / 6} />
+      <AmbientParticles lightMode={lightMode} />
+      <DeveloperCore reducedMotion={reducedMotion} lightMode={lightMode} />
+      <OrbitLayer
+        labels={innerTech}
+        radius={INNER_RADIUS}
+        y={0.02}
+        speed={0.13}
+        reducedMotion={reducedMotion}
+        lightMode={lightMode}
+      />
+      <OrbitLayer
+        labels={outerTech}
+        radius={OUTER_RADIUS}
+        y={-0.14}
+        speed={-0.075}
+        reducedMotion={reducedMotion}
+        lightMode={lightMode}
+        offset={Math.PI / 6}
+      />
       <OrbitControls
         makeDefault
         enablePan={false}
