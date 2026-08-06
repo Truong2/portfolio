@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 
-import { TechCardsScene } from "./tech-cards-scene";
 import { StaticFallback } from "./static-fallback";
+import { TechCardsScene } from "./tech-cards-scene";
 
 function detectWebGL(): boolean {
   try {
@@ -22,9 +22,9 @@ function detectWebGL(): boolean {
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 function subscribeReducedMotion(callback: () => void) {
-  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
+  const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
 }
 
 function getReducedMotionSnapshot() {
@@ -32,40 +32,19 @@ function getReducedMotionSnapshot() {
 }
 
 function useReducedMotion(): boolean {
-  // useSyncExternalStore is the correct primitive for subscribing to an
-  // external browser API (matchMedia) — avoids the setState-in-effect
-  // cascading-render pattern that useState+useEffect would produce here.
-  return React.useSyncExternalStore(
-    subscribeReducedMotion,
-    getReducedMotionSnapshot,
-    () => false, // server snapshot — unused since this component is ssr:false
-  );
+  return React.useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
 }
 
 function CanvasLoadingSkeleton() {
   return (
     <div
       aria-hidden="true"
-      className="aspect-square w-full max-w-md animate-pulse rounded-2xl border border-border bg-muted"
+      className="h-full min-h-[30rem] w-full animate-pulse rounded-[2rem] border border-white/10 bg-white/[0.03]"
     />
   );
 }
 
-/**
- * Public entry point for the hero 3D scene. Handles:
- * - WebGL support detection (falls back to static markup if unavailable)
- * - prefers-reduced-motion (falls back to static markup, per a11y requirement)
- * - Suspense loading state while the scene mounts
- * - Capped devicePixelRatio + continuous canvas frameloop for the idle scene
- *
- * This component is itself only ever mounted through a `next/dynamic`
- * (`ssr: false`) boundary — see `hero-3d-canvas-loader.tsx` — since it
- * touches `window`/WebGL and must never run during SSR/static export.
- */
 export function Hero3DCanvas() {
-  // Lazy init runs on first client render — safe because this component is
-  // only ever mounted through a `next/dynamic(..., { ssr: false })`
-  // boundary, so there's no SSR pass to mismatch against.
   const [webglSupported] = React.useState(() => detectWebGL());
   const reducedMotion = useReducedMotion();
 
@@ -76,19 +55,23 @@ export function Hero3DCanvas() {
   return (
     <div
       aria-hidden="true"
-      className="aspect-square w-full max-w-md overflow-hidden rounded-2xl border border-border"
+      className="relative aspect-[4/5] min-h-[30rem] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a14] shadow-[0_40px_120px_rgba(24,31,84,0.45)] sm:aspect-square"
     >
       <React.Suspense fallback={<CanvasLoadingSkeleton />}>
         <Canvas
           dpr={[1, 1.5]}
           frameloop="always"
-          gl={{ antialias: true, alpha: true }}
+          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
           fallback={<StaticFallback />}
         >
-          <PerspectiveCamera makeDefault position={[0, 0.6, 7]} fov={45} />
+          <PerspectiveCamera makeDefault position={[0, 0.52, 8.35]} fov={44} />
           <TechCardsScene reducedMotion={false} />
         </Canvas>
       </React.Suspense>
+      <div className="pointer-events-none absolute inset-x-6 bottom-5 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">
+        <span>Interactive technology orbit</span>
+        <span>Move pointer</span>
+      </div>
     </div>
   );
 }
