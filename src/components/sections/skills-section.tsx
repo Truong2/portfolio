@@ -8,39 +8,53 @@ interface CapabilityPillar {
   description: string;
   icon: LucideIcon;
   categoryIds: string[];
-  outcome: string;
 }
 
 const pillars: CapabilityPillar[] = [
   {
-    title: "Product interface systems",
+    title: "Product Interface Systems",
     description:
-      "Architecture and reusable UI foundations for large workflows, design systems, forms, and multi-team products.",
+      "Scalable frontend architecture, reusable components, design-system implementation, complex forms, validation, and maintainable product foundations.",
     icon: Boxes,
     categoryIds: ["languages", "frontend", "forms", "tools"],
-    outcome: "Maintainable product delivery",
   },
   {
-    title: "Data and realtime applications",
+    title: "Data & Realtime Applications",
     description:
-      "Predictable client state, API integration, caching, live updates, and high-density operational interfaces.",
+      "Server-state management, REST integration, live updates, dashboards, operational workflows, and performance-conscious data interfaces.",
     icon: Database,
     categoryIds: ["state-data", "api-realtime", "backend-basics"],
-    outcome: "Reliable data workflows",
   },
   {
-    title: "Spatial and emerging platforms",
+    title: "Spatial & Emerging Platforms",
     description:
-      "Interactive maps, visualization, WebGL experiences, and Web3 product flows where clarity and performance matter.",
+      "GIS and map-based systems, high-density visualization, WebGL interaction, wallet integrations, NFT flows, and Web3 product experiences.",
     icon: Map,
     categoryIds: ["visualization", "web3"],
-    outcome: "Complex systems made usable",
   },
 ];
 
 function getSkills(categoryIds: string[]) {
-  return categoryIds.flatMap(
-    (id) => skillCategories.find((category) => category.id === id)?.skills ?? [],
+  return Array.from(
+    new Set(
+      categoryIds.flatMap(
+        (id) => skillCategories.find((category) => category.id === id)?.skills ?? [],
+      ),
+    ),
+  );
+}
+
+function CapabilityVisual({ icon: Icon, index }: { icon: LucideIcon; index: number }) {
+  return (
+    <div className="surface-grid relative flex h-52 items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-background/65">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--accent)_18%,transparent),transparent_56%)]" />
+      <div className="absolute size-32 rotate-45 rounded-3xl border border-primary/25 bg-primary/5 shadow-[0_0_50px_rgba(124,92,255,0.16)]" />
+      <div className="absolute size-24 -rotate-12 rounded-2xl border border-accent/30 bg-accent/8 shadow-[0_0_45px_rgba(34,211,238,0.14)]" />
+      <div className="relative flex size-16 items-center justify-center rounded-2xl border border-foreground/10 bg-card/85 text-accent shadow-xl backdrop-blur-xl">
+        <Icon className="size-8" aria-hidden="true" />
+      </div>
+      <span className="absolute left-4 top-4 number-label">0{index + 1}</span>
+    </div>
   );
 }
 
@@ -48,49 +62,39 @@ export function SkillsSection() {
   return (
     <section id="skills" className="section-shell scroll-mt-20">
       <RevealOnScroll>
-        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+        <div className="grid gap-7 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
           <div>
-            <p className="section-kicker">Core capabilities</p>
-            <h2 className="section-title mt-4">
-              A focused stack for <span className="text-gradient">enterprise product delivery.</span>
+            <p className="section-kicker">What I Do Best</p>
+            <h2 className="section-title mt-6">
+              Capability <span className="text-gradient">Pillars</span>
             </h2>
           </div>
           <p className="max-w-2xl text-base leading-8 text-muted-foreground lg:justify-self-end">
-            Technologies are selected around product constraints rather than trends: maintainability,
-            data complexity, team scale, performance, and the quality of the end-user workflow.
+            Three core capability groups describe how I approach enterprise frontend delivery:
+            product foundations, reliable data workflows, and complex spatial or emerging platforms.
           </p>
         </div>
       </RevealOnScroll>
 
-      <div className="mt-12 divide-y divide-border/70 border-y border-border/70">
+      <div className="mt-12 grid gap-5 lg:grid-cols-3">
         {pillars.map((pillar, index) => {
           const Icon = pillar.icon;
-          const skills = getSkills(pillar.categoryIds);
+          const skills = getSkills(pillar.categoryIds).slice(0, 8);
 
           return (
-            <RevealOnScroll key={pillar.title} delay={Math.min(index * 0.06, 0.18)}>
-              <article className="grid gap-7 py-9 md:grid-cols-[64px_0.75fr_1.25fr] md:items-start md:gap-8 lg:py-12">
-                <div className="flex size-14 items-center justify-center rounded-2xl border border-border/70 bg-card/60 text-accent shadow-sm">
-                  <Icon className="size-6" aria-hidden="true" />
-                </div>
-
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Capability 0{index + 1}
-                  </p>
-                  <h3 className="mt-3 text-xl font-semibold tracking-tight text-foreground">
+            <RevealOnScroll key={pillar.title} delay={index * 0.07}>
+              <article className="enterprise-panel card-hover h-full rounded-3xl p-4 sm:p-5">
+                <CapabilityVisual icon={Icon} index={index} />
+                <div className="px-1 pb-2 pt-7 sm:px-2">
+                  <h3 className="text-2xl font-semibold tracking-[-0.035em] text-foreground">
                     {pillar.title}
                   </h3>
-                  <p className="mt-3 text-sm font-medium text-accent">{pillar.outcome}</p>
-                </div>
-
-                <div>
-                  <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+                  <p className="mt-4 text-sm leading-7 text-muted-foreground">
                     {pillar.description}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+                  <div className="mt-6 flex flex-wrap gap-2">
                     {skills.map((skill) => (
-                      <span key={skill} className="text-sm font-medium text-foreground/80">
+                      <span key={skill} className="tech-chip">
                         {skill}
                       </span>
                     ))}
