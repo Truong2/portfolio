@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import { personalInfo, summary } from "@/data/profile";
 
 const siteTitle = `${personalInfo.name} — ${personalInfo.title}`;
 
-// ⚠️ Replace with the real production domain once deployed to Vercel (Q5).
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL("https://portfolio-truongtsus-projects.vercel.app"),
   title: siteTitle,
   description: summary,
   openGraph: {
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning className="h-full antialiased">
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <Navbar />
           {children}

@@ -13,7 +13,7 @@ import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { TrackedAnchor } from "@/components/tracked-anchor";
 import { education, personalInfo } from "@/data/profile";
 
-interface ContactLinkProps {
+interface ContactActionProps {
   event: string;
   href: string;
   icon: LucideIcon;
@@ -23,7 +23,15 @@ interface ContactLinkProps {
   download?: boolean;
 }
 
-function ContactLink({ event, href, icon: Icon, label, value, external, download }: ContactLinkProps) {
+function ContactAction({
+  event,
+  href,
+  icon: Icon,
+  label,
+  value,
+  external,
+  download,
+}: ContactActionProps) {
   return (
     <TrackedAnchor
       event={event}
@@ -31,18 +39,18 @@ function ContactLink({ event, href, icon: Icon, label, value, external, download
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       download={download}
-      className="group flex items-center gap-4 border-t border-border/60 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group flex items-center gap-4 rounded-2xl border border-border/70 bg-background/55 p-4 transition hover:border-accent/35 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/60 text-accent">
-        <Icon className="size-4" aria-hidden="true" />
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-accent/25 bg-accent/10 text-accent">
+        <Icon className="size-5" aria-hidden="true" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           {label}
         </span>
         <span className="mt-1 block truncate text-sm font-medium text-foreground">{value}</span>
       </span>
-      <ArrowUpRight className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden="true" />
+      <ArrowUpRight className="size-4 text-muted-foreground transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden="true" />
     </TrackedAnchor>
   );
 }
@@ -53,50 +61,56 @@ export function EducationContactSection() {
 
   return (
     <section id="contact" className="section-shell scroll-mt-20 pb-28 sm:pb-32">
-      <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-card/40">
-        <div className="surface-grid pointer-events-none absolute inset-0 opacity-25" />
-        <div className="absolute -right-20 -top-20 size-72 rounded-full bg-accent/10 blur-3xl" />
+      <div className="enterprise-panel surface-grid relative overflow-hidden rounded-[2rem]">
+        <div className="absolute -left-24 top-10 size-72 rounded-full bg-cyan-400/10 blur-3xl" />
+        <div className="absolute -right-20 bottom-0 size-80 rounded-full bg-violet-500/12 blur-3xl" />
 
-        <div className="relative grid lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="relative grid lg:grid-cols-[1.08fr_0.92fr]">
           <RevealOnScroll className="p-7 sm:p-10 lg:p-14">
-            <p className="section-kicker">Contact</p>
-            <h2 className="section-title mt-4 max-w-2xl">
-              Building a complex product or modernizing an existing interface?
+            <p className="section-kicker">Professional Profile</p>
+            <h2 className="section-title mt-6 max-w-3xl">
+              Let&apos;s build a reliable frontend for your next <span className="text-gradient">complex product.</span>
             </h2>
-            <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground">
-              I am open to frontend engineering roles and product collaborations where reliable
-              architecture, clear interaction design, and long-term maintainability matter.
+            <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground">
+              Open to frontend engineering roles and product collaborations involving architecture,
+              data-heavy workflows, realtime systems, GIS, enterprise operations, or platform modernization.
             </p>
 
-            <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-4 text-accent" aria-hidden="true" />
-              {personalInfo.location}
+            <div className="mt-8 flex flex-wrap gap-3 text-sm text-muted-foreground">
+              <span className="tech-chip">
+                <MapPin className="size-4 text-accent" aria-hidden="true" />
+                {personalInfo.location}
+              </span>
+              <span className="tech-chip">
+                <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_10px_currentColor]" />
+                Available for frontend roles
+              </span>
             </div>
 
-            <div className="mt-8 grid gap-x-8 sm:grid-cols-2">
-              <ContactLink
+            <div className="mt-10 grid gap-3 sm:grid-cols-2">
+              <ContactAction
                 event="social_link_click_email"
                 href={`mailto:${personalInfo.email}`}
                 icon={Mail}
                 label="Email"
                 value={personalInfo.email}
               />
-              <ContactLink
+              <ContactAction
                 event="social_link_click_phone"
                 href={`tel:${phoneHref}`}
                 icon={Phone}
                 label="Phone"
                 value={personalInfo.phone}
               />
-              <ContactLink
+              <ContactAction
                 event="social_link_click_linkedin"
                 href={personalInfo.linkedin}
                 icon={ExternalLink}
                 label="LinkedIn"
-                value="View professional profile"
+                value="Professional profile"
                 external
               />
-              <ContactLink
+              <ContactAction
                 event="cv_download_click"
                 href={personalInfo.resumeUrl}
                 icon={Download}
@@ -108,33 +122,45 @@ export function EducationContactSection() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={0.08} className="border-t border-border/70 bg-background/35 p-7 sm:p-10 lg:border-l lg:border-t-0 lg:p-14">
-            <div className="flex size-12 items-center justify-center rounded-2xl border border-border/70 bg-card/60 text-accent">
-              <GraduationCap className="size-5" aria-hidden="true" />
-            </div>
-            <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Education
-            </p>
-            {educationEntry ? (
-              <div className="mt-4">
-                <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                  {educationEntry.school}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  {educationEntry.degree}, {educationEntry.field}
-                </p>
-                <p className="mt-5 text-xs font-medium uppercase tracking-[0.15em] text-accent">
-                  {educationEntry.period}
-                </p>
-                {educationEntry.detail ? (
-                  <p className="mt-3 text-sm text-muted-foreground">{educationEntry.detail}</p>
-                ) : null}
+            <div className="flex items-center gap-4">
+              <div className="flex size-16 items-center justify-center rounded-2xl border border-accent/30 bg-accent/10 font-mono text-sm font-bold tracking-[0.16em] text-accent">
+                NVT
               </div>
-            ) : null}
+              <div>
+                <h3 className="text-xl font-semibold text-foreground">{personalInfo.name}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{personalInfo.title}</p>
+              </div>
+            </div>
 
-            <div className="mt-10 border-t border-border/60 pt-6">
-              <p className="text-sm leading-7 text-muted-foreground">
-                Preferred working context: product teams solving operational, data-heavy, or
-                workflow-intensive problems.
+            <div className="mt-10 border-t border-border/70 pt-8">
+              <div className="flex size-12 items-center justify-center rounded-xl border border-primary/25 bg-primary/10 text-primary">
+                <GraduationCap className="size-5" aria-hidden="true" />
+              </div>
+              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Education
+              </p>
+              {educationEntry ? (
+                <div className="mt-4">
+                  <h4 className="text-lg font-semibold leading-snug text-foreground">
+                    {educationEntry.school}
+                  </h4>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                    {educationEntry.degree}, {educationEntry.field}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <span className="tech-chip">{educationEntry.period}</span>
+                    {educationEntry.detail ? <span className="tech-chip">{educationEntry.detail}</span> : null}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-border/70 bg-card/55 p-5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
+                Preferred product context
+              </p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                Operational, data-heavy, workflow-intensive, map-based, or platform products where frontend quality directly affects business outcomes.
               </p>
             </div>
           </RevealOnScroll>

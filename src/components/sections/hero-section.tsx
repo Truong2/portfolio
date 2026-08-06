@@ -5,88 +5,78 @@ import { TrackedAnchor } from "@/components/tracked-anchor";
 import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/profile";
 
-const focusAreas = ["Frontend architecture", "Realtime systems", "Data-heavy UI"] as const;
+const focusAreas = [
+  "Frontend Architecture",
+  "Realtime Systems",
+  "Data-Heavy UI",
+] as const;
 
 export function HeroSection() {
   return (
     <section
       id="hero"
-      className="surface-grid relative isolate overflow-hidden px-5 pb-20 pt-10 sm:px-6 sm:pt-16 lg:px-10 lg:pb-28 lg:pt-20"
+      className="surface-grid relative isolate overflow-hidden border-b border-border/50"
     >
-      <div className="ambient-glow absolute -left-40 top-12 size-[30rem] rounded-full bg-violet-500/18 blur-[120px]" />
-      <div className="ambient-glow absolute -right-48 top-1/3 size-[34rem] rounded-full bg-cyan-400/14 blur-[140px]" />
+      <div className="ambient-glow absolute -left-48 top-8 size-[34rem] rounded-full bg-cyan-400/15 blur-[130px]" />
+      <div className="ambient-glow absolute -right-44 top-20 size-[38rem] rounded-full bg-violet-500/18 blur-[150px]" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-[0.86fr_1.14fr] lg:gap-14">
-        <div className="order-2 flex max-w-2xl flex-col items-start lg:order-1">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-xl">
-            <Sparkles className="size-3.5 text-accent" aria-hidden="true" />
-            Enterprise frontend engineering
+      <div className="relative mx-auto grid min-h-[calc(100vh-74px)] w-full max-w-[96rem] items-center gap-10 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:px-12 lg:py-20">
+        <div className="order-2 flex max-w-3xl flex-col items-start lg:order-1">
+          <div className="section-kicker">
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            Enterprise Frontend Engineer
           </div>
 
-          <p className="mt-7 text-xs font-semibold uppercase tracking-[0.25em] text-accent">
-            {personalInfo.title} · Hanoi, Vietnam
-          </p>
-          <h1 className="mt-4 max-w-3xl text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
-            <span className="block text-foreground">Building reliable digital products</span>
-            <span className="text-gradient block">for complex operations.</span>
+          <h1 className="mt-7 text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.06em] sm:text-6xl lg:text-[5.25rem]">
+            <span className="block text-foreground">Building enterprise</span>
+            <span className="block text-foreground">frontends for</span>
+            <span className="text-gradient block">complex products.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            I design and build maintainable frontend systems for banking, mobility, healthcare,
-            geospatial platforms, and real-time enterprise products.
+
+          <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+            Frontend developer with 3+ years of experience across banking, mobility, healthcare,
+            GIS, e-commerce, and Web3. Strong in React, Next.js, Vue, Nuxt, TypeScript, realtime
+            workflows, and reusable UI systems.
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-2">
+          <div className="mt-7 flex flex-wrap gap-2.5">
             {focusAreas.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-border/70 bg-card/55 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur-sm"
-              >
+              <span key={item} className="tech-chip">
+                <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_currentColor]" />
                 {item}
               </span>
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="rounded-full px-6">
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Button asChild size="lg" className="rounded-xl px-6 shadow-lg shadow-primary/20">
               <TrackedAnchor event="hero_cta_click_view_work" href="#experience">
-                View case studies
+                View Case Studies
                 <ArrowDownRight className="size-4" />
               </TrackedAnchor>
             </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full px-6">
+            <Button asChild variant="outline" size="lg" className="rounded-xl bg-card/55 px-6 backdrop-blur-xl">
               <TrackedAnchor event="hero_cta_click_contact" href="#contact">
-                Contact me
+                Contact Me
               </TrackedAnchor>
             </Button>
-            <Button asChild variant="ghost" size="lg" className="rounded-full px-5">
+            <Button asChild variant="ghost" size="lg" className="rounded-xl px-5">
               <TrackedAnchor event="cv_download_click" href={personalInfo.resumeUrl} download>
                 <Download className="size-4" />
                 Resume
               </TrackedAnchor>
             </Button>
           </div>
+
+          <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Based in Hanoi, Vietnam · Available for frontend product roles
+          </p>
         </div>
 
-        <div className="order-1 relative mx-auto w-full max-w-2xl lg:order-2">
-          <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-violet-500/18 via-transparent to-cyan-400/18 blur-2xl" />
+        <div className="order-1 relative mx-auto w-full max-w-3xl lg:order-2">
+          <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-cyan-400/12 via-transparent to-violet-500/18 blur-3xl" />
           <div className="relative">
             <Hero3DCanvasLoader />
-          </div>
-          <div className="glass-panel absolute bottom-4 left-4 right-4 rounded-2xl px-4 py-3 sm:left-5 sm:right-auto">
-            <div className="flex items-center justify-between gap-5 sm:block">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                  Interactive systems map
-                </p>
-                <p className="mt-1 text-xs text-foreground sm:text-sm">
-                  React · Next.js · TypeScript · WebGL
-                </p>
-              </div>
-              <span className="flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_currentColor]" />
-                Live
-              </span>
-            </div>
           </div>
         </div>
       </div>

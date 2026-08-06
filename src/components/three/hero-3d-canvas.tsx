@@ -3,6 +3,7 @@
 import * as React from "react";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { useTheme } from "next-themes";
 
 import { StaticFallback } from "./static-fallback";
 import { TechCardsScene } from "./tech-cards-scene";
@@ -38,6 +39,8 @@ function useReducedMotion(): boolean {
 export function Hero3DCanvas() {
   const [webglSupported] = React.useState(() => detectWebGL());
   const reducedMotion = useReducedMotion();
+  const { resolvedTheme } = useTheme();
+  const lightMode = resolvedTheme === "light";
 
   if (!webglSupported) {
     return <StaticFallback />;
@@ -46,7 +49,7 @@ export function Hero3DCanvas() {
   return (
     <div
       aria-label="Interactive 3D technology system. Drag to rotate and scroll or pinch to zoom."
-      className="group relative aspect-square min-h-[22rem] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a14] shadow-[0_32px_100px_rgba(24,31,84,0.38)] sm:min-h-[30rem]"
+      className="group relative aspect-square min-h-[22rem] w-full overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[0_32px_100px_rgba(24,31,84,0.22)] sm:min-h-[30rem]"
     >
       <Canvas
         dpr={[1, 1.5]}
@@ -55,14 +58,14 @@ export function Hero3DCanvas() {
         fallback={<StaticFallback />}
       >
         <PerspectiveCamera makeDefault position={[0, 0.45, 8.35]} fov={44} />
-        <TechCardsScene reducedMotion={reducedMotion} />
+        <TechCardsScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
 
-      <div className="pointer-events-none absolute inset-x-5 top-5 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.22em] text-white/45">
+      <div className="pointer-events-none absolute inset-x-5 top-5 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.22em] text-white/55 mix-blend-difference">
         <span>Enterprise technology graph</span>
         <span>{reducedMotion ? "Manual view" : "Live 3D"}</span>
       </div>
-      <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-center justify-between rounded-full border border-white/10 bg-black/25 px-4 py-2 text-[9px] font-medium uppercase tracking-[0.18em] text-white/55 backdrop-blur-md">
+      <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[9px] font-medium uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
         <span>Drag to rotate</span>
         <span>Scroll or pinch to zoom</span>
       </div>
