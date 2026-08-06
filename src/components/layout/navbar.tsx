@@ -3,70 +3,72 @@
 import * as React from "react";
 import { Menu, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { id: "hero", label: "Home" },
   { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Capabilities" },
+  { id: "experience", label: "Case Studies" },
+  { id: "standards", label: "Standards" },
   { id: "contact", label: "Contact" },
 ] as const;
 
 function useActiveSection(sectionIds: readonly string[]) {
-  const [activeId, setActiveId] = React.useState<string>(sectionIds[0]);
+  const [activeId, setActiveId] = React.useState<string>(sectionIds[0] ?? "about");
 
   React.useEffect(() => {
     const elements = sectionIds
       .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    if (elements.length === 0) return;
+      .filter((element): element is HTMLElement => element !== null);
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Pick the entry closest to the top of the viewport that's
-        // currently intersecting, to avoid flicker between adjacent
-        // sections while scrolling.
         const visible = entries
-          .filter((e) => e.isIntersecting)
+          .filter((entry) => entry.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) {
-          setActiveId(visible[0].target.id);
-        }
+        if (visible[0]) setActiveId(visible[0].target.id);
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 },
+      { rootMargin: "-38% 0px -52% 0px", threshold: 0 },
     );
 
-    elements.forEach((el) => observer.observe(el));
+    elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [sectionIds]);
 
   return activeId;
 }
 
-function NavLink({
-  id,
-  label,
-  active,
-  onNavigate,
-}: {
-  id: string;
-  label: string;
-  active: boolean;
-  onNavigate?: () => void;
-}) {
+function Brand() {
+  return (
+    <a href="#hero" className="group flex items-center gap-3" aria-label="Back to top">
+      <span className="relative flex size-10 items-center justify-center rounded-xl border border-accent/30 bg-accent/10 font-mono text-xs font-bold tracking-[0.16em] text-accent shadow-[0_0_28px_rgba(34,211,238,0.12)] transition group-hover:border-accent/55">
+        NVT
+      </span>
+      <span className="hidden sm:block">
+        <span className="block text-xs font-semibold uppercase tracking-[0.25em] text-foreground">
+          {personalInfo.name}
+        </span>
+        <span className="mt-1 block text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+          Frontend systems
+        </span>
+      </span>
+    </a>
+  );
+}
+
+function DesktopLink({ id, label, active }: { id: string; label: string; active: boolean }) {
   return (
     <a
       href={`#${id}`}
-      onClick={onNavigate}
-      aria-current={active ? "true" : undefined}
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "text-sm font-medium transition-colors hover:text-foreground",
-        active ? "text-foreground" : "text-muted-foreground",
+        "relative py-6 text-sm font-medium transition-colors after:absolute after:bottom-3 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-accent after:opacity-0 after:shadow-[0_0_12px_currentColor] after:transition-opacity",
+        active
+          ? "text-foreground after:opacity-100"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       {label}
@@ -76,73 +78,52 @@ function NavLink({
 
 function MobileDrawer({
   open,
-  onClose,
   activeId,
+  onClose,
 }: {
   open: boolean;
-  onClose: () => void;
   activeId: string;
+  onClose: () => void;
 }) {
-  const drawerRef = React.useRef<HTMLDivElement>(null);
   const firstLinkRef = React.useRef<HTMLAnchorElement>(null);
 
-  // Basic focus trap + Escape-to-close + focus first link on open.
   React.useEffect(() => {
     if (!open) return;
     firstLinkRef.current?.focus();
 
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab" || !drawerRef.current) return;
-      const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled])',
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [open, onClose]);
 
   if (!open) return null;
 
   return (
     <div
-      ref={drawerRef}
       role="dialog"
       aria-modal="true"
       aria-label="Mobile navigation"
-      className="fixed inset-0 z-50 flex flex-col bg-background p-6 md:hidden"
+      className="fixed inset-0 z-50 bg-background/98 p-5 backdrop-blur-2xl md:hidden"
     >
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-muted-foreground">Menu</span>
-        <Button variant="ghost" size="icon" aria-label="Close menu" onClick={onClose}>
+        <Brand />
+        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close menu">
           <X className="size-5" />
         </Button>
       </div>
-      <nav aria-label="Mobile" className="mt-10 flex flex-col gap-6">
-        {NAV_ITEMS.map((item, i) => (
+      <nav className="mt-16 flex flex-col" aria-label="Mobile">
+        {NAV_ITEMS.map((item, index) => (
           <a
             key={item.id}
-            ref={i === 0 ? firstLinkRef : undefined}
+            ref={index === 0 ? firstLinkRef : undefined}
             href={`#${item.id}`}
             onClick={onClose}
-            aria-current={activeId === item.id ? "true" : undefined}
             className={cn(
-              "text-2xl font-semibold",
-              activeId === item.id ? "text-primary" : "text-foreground",
+              "border-b border-border/60 py-5 text-3xl font-semibold tracking-[-0.04em]",
+              activeId === item.id ? "text-gradient" : "text-foreground",
             )}
           >
             {item.label}
@@ -155,38 +136,19 @@ function MobileDrawer({
 
 export function Navbar() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [scrolled, setScrolled] = React.useState(false);
-  const activeId = useActiveSection(NAV_ITEMS.map((n) => n.id));
-
-  React.useEffect(() => {
-    function handleScroll() {
-      setScrolled(window.scrollY > 8);
-    }
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const activeId = useActiveSection(NAV_ITEMS.map((item) => item.id));
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 border-b transition-colors",
-        scrolled
-          ? "border-border bg-background/90 backdrop-blur-sm"
-          : "border-transparent bg-transparent",
-      )}
-    >
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-2xl">
       <nav
-        aria-label="Main"
-        className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6"
+        aria-label="Main navigation"
+        className="mx-auto flex h-[74px] max-w-[96rem] items-center justify-between px-5 sm:px-8 lg:px-12"
       >
-        <a href="#hero" className="text-sm font-semibold">
-          {personalInfo.name}
-        </a>
+        <Brand />
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-7 md:flex lg:gap-10">
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.id} {...item} active={activeId === item.id} />
+            <DesktopLink key={item.id} {...item} active={activeId === item.id} />
           ))}
           <ThemeToggle />
         </div>
@@ -196,16 +158,16 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
+            className="rounded-xl border border-border/70 bg-card/60"
+            onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
             aria-expanded={drawerOpen}
-            onClick={() => setDrawerOpen(true)}
           >
             <Menu className="size-5" />
           </Button>
         </div>
       </nav>
-
-      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} activeId={activeId} />
+      <MobileDrawer open={drawerOpen} activeId={activeId} onClose={() => setDrawerOpen(false)} />
     </header>
   );
 }
