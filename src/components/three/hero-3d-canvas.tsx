@@ -21,17 +21,12 @@ function detectWebGL(): boolean {
 }
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
 function subscribeReducedMotion(callback: () => void) {
   const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
   mediaQuery.addEventListener("change", callback);
   return () => mediaQuery.removeEventListener("change", callback);
 }
-
-function getReducedMotionSnapshot() {
-  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
-}
-
+function getReducedMotionSnapshot() { return window.matchMedia(REDUCED_MOTION_QUERY).matches; }
 function useReducedMotion(): boolean {
   return React.useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
 }
@@ -42,32 +37,17 @@ export function Hero3DCanvas() {
   const { resolvedTheme } = useTheme();
   const lightMode = resolvedTheme === "light";
 
-  if (!webglSupported) {
-    return <StaticFallback />;
-  }
+  if (!webglSupported) return <StaticFallback />;
 
   return (
-    <div
-      aria-label="Interactive 3D technology system. Drag to rotate and scroll or pinch to zoom."
-      className="group relative aspect-square min-h-[22rem] w-full overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[0_32px_100px_rgba(24,31,84,0.22)] sm:min-h-[30rem]"
-    >
-      <Canvas
-        dpr={[1, 1.5]}
-        frameloop={reducedMotion ? "demand" : "always"}
-        gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-        fallback={<StaticFallback />}
-      >
-        <PerspectiveCamera makeDefault position={[0, 0.45, 8.35]} fov={44} />
+    <div aria-label="Interactive 3D enterprise crystal. Drag to rotate and scroll or pinch to zoom." className="relative aspect-[1.12/1] min-h-[24rem] w-full overflow-hidden rounded-2xl border border-border/60 bg-[#050711] shadow-[0_34px_120px_rgba(17,24,85,0.42)] sm:min-h-[34rem]">
+      <Canvas dpr={[1, 1.5]} frameloop={reducedMotion ? "demand" : "always"} gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }} fallback={<StaticFallback />}>
+        <PerspectiveCamera makeDefault position={[0, 1.05, 8.8]} fov={43} />
         <TechCardsScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
-
-      <div className="pointer-events-none absolute inset-x-5 top-5 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.22em] text-white/55 mix-blend-difference">
-        <span>Enterprise technology graph</span>
+      <div className="pointer-events-none absolute inset-x-5 top-4 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.2em] text-white/45">
+        <span>Enterprise spatial system</span>
         <span>{reducedMotion ? "Manual view" : "Live 3D"}</span>
-      </div>
-      <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-center justify-between rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[9px] font-medium uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
-        <span>Drag to rotate</span>
-        <span>Scroll or pinch to zoom</span>
       </div>
     </div>
   );

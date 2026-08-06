@@ -1,193 +1,115 @@
 "use client";
 
 import * as React from "react";
-import { Float, OrbitControls, RoundedBox, Text } from "@react-three/drei";
+import { Float, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { heroHighlightTech } from "@/data/profile";
-
-const INNER_RADIUS = 2.45;
-const OUTER_RADIUS = 3.65;
-const CARD_WIDTH = 1.45;
-const CARD_HEIGHT = 0.78;
-const CARD_COLORS = ["#6f5cf5", "#13bfe8", "#8874ff", "#2aa9df"];
-
-interface TechCardProps {
-  label: string;
-  angle: number;
-  radius: number;
-  y: number;
-  color: string;
-  lightMode: boolean;
-}
-
-function TechCard({ label, angle, radius, y, color, lightMode }: TechCardProps) {
+function CrystalCore({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
   const groupRef = React.useRef<THREE.Group>(null);
-  const [hovered, setHovered] = React.useState(false);
-  const x = Math.sin(angle) * radius;
-  const z = Math.cos(angle) * radius;
 
   useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    const targetScale = hovered ? 1.08 : 1;
-    groupRef.current.scale.x = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 8, delta);
-    groupRef.current.scale.y = THREE.MathUtils.damp(groupRef.current.scale.y, targetScale, 8, delta);
-    groupRef.current.scale.z = THREE.MathUtils.damp(groupRef.current.scale.z, targetScale, 8, delta);
+    if (reducedMotion || !groupRef.current) return;
+    groupRef.current.rotation.y += delta * 0.14;
+    groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, -0.08, 3, delta);
   });
 
   return (
-    <Float speed={1.2} rotationIntensity={0.18} floatIntensity={0.36}>
-      <group
-        ref={groupRef}
-        position={[x, y, z]}
-        rotation={[0, angle, 0]}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-      >
-        <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, 0.1]} radius={0.1} smoothness={5}>
+    <Float speed={1.1} rotationIntensity={0.12} floatIntensity={0.35}>
+      <group ref={groupRef} position={[0, 0.65, 0]}>
+        <mesh>
+          <icosahedronGeometry args={[1.72, 2]} />
           <meshPhysicalMaterial
-            color={color}
-            roughness={lightMode ? 0.28 : 0.2}
-            metalness={0.12}
-            transmission={lightMode ? 0.08 : 0.2}
+            color={lightMode ? "#c9dcff" : "#111936"}
+            roughness={0.08}
+            metalness={0.2}
+            transmission={lightMode ? 0.3 : 0.48}
+            thickness={1.6}
             transparent
-            opacity={0.94}
-            clearcoat={0.85}
-            clearcoatRoughness={0.18}
-            emissive={color}
-            emissiveIntensity={hovered ? 0.38 : lightMode ? 0.08 : 0.14}
+            opacity={0.96}
+            clearcoat={1}
+            clearcoatRoughness={0.05}
+            emissive={lightMode ? "#526cdb" : "#241164"}
+            emissiveIntensity={lightMode ? 0.18 : 0.55}
+            flatShading
           />
-        </RoundedBox>
-        <Text
-          position={[0, 0, 0.065]}
-          fontSize={0.18}
-          maxWidth={CARD_WIDTH - 0.2}
-          textAlign="center"
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {label}
-        </Text>
+        </mesh>
+        <mesh scale={1.012}>
+          <icosahedronGeometry args={[1.72, 2]} />
+          <meshBasicMaterial color="#7f67ff" wireframe transparent opacity={0.68} />
+        </mesh>
+        <mesh scale={0.72}>
+          <icosahedronGeometry args={[1.72, 1]} />
+          <meshPhysicalMaterial color="#38dfff" roughness={0.1} emissive="#3be8ff" emissiveIntensity={1.8} transparent opacity={0.78} />
+        </mesh>
+        <pointLight color="#7c5cff" intensity={8} distance={9} decay={2} />
+        <pointLight color="#3be8ff" position={[0, -1.2, 0]} intensity={6} distance={8} decay={2} />
       </group>
     </Float>
   );
 }
 
-function DeveloperCore({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
-  const coreRef = React.useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (reducedMotion || !coreRef.current) return;
-    coreRef.current.rotation.y += delta * 0.08;
-    coreRef.current.rotation.z += delta * 0.035;
-  });
-
+function Pedestal() {
   return (
-    <group ref={coreRef}>
-      <mesh>
-        <icosahedronGeometry args={[1.22, 4]} />
-        <meshPhysicalMaterial
-          color={lightMode ? "#d7e5ff" : "#11182b"}
-          roughness={0.1}
-          metalness={0.16}
-          transmission={lightMode ? 0.32 : 0.54}
-          thickness={1.1}
-          transparent
-          opacity={0.92}
-          clearcoat={1}
-          clearcoatRoughness={0.08}
-          emissive={lightMode ? "#6178e8" : "#20175b"}
-          emissiveIntensity={lightMode ? 0.14 : 0.32}
-        />
+    <group position={[0, -1.55, 0]}>
+      <mesh receiveShadow>
+        <cylinderGeometry args={[2.35, 2.65, 0.22, 96]} />
+        <meshPhysicalMaterial color="#0a1023" roughness={0.28} metalness={0.72} clearcoat={0.9} />
       </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.62, 0.018, 12, 120]} />
-        <meshBasicMaterial color="#28d7f4" transparent opacity={0.62} />
+      <mesh position={[0, 0.17, 0]}>
+        <torusGeometry args={[2.06, 0.055, 18, 160]} />
+        <meshBasicMaterial color="#7c5cff" transparent opacity={0.95} />
       </mesh>
-      <mesh rotation={[0.42, 0.1, 0.65]}>
-        <torusGeometry args={[1.82, 0.012, 12, 120]} />
-        <meshBasicMaterial color="#8067ff" transparent opacity={0.5} />
+      <mesh position={[0, 0.21, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[1.1, 1.18, 128]} />
+        <meshBasicMaterial color="#3be8ff" transparent opacity={0.75} side={THREE.DoubleSide} />
       </mesh>
-      <Text
-        position={[0, 0.08, 1.26]}
-        fontSize={0.48}
-        color={lightMode ? "#152448" : "#ffffff"}
-        anchorX="center"
-        anchorY="middle"
-      >
-        NVT
-      </Text>
-      <Text
-        position={[0, -0.38, 1.24]}
-        fontSize={0.105}
-        color={lightMode ? "#53627f" : "#aab4d0"}
-        anchorX="center"
-        anchorY="middle"
-      >
-        FRONTEND SYSTEMS
-      </Text>
-      <pointLight color="#6f63ff" intensity={lightMode ? 4 : 7} distance={8} decay={2} />
-    </group>
-  );
-}
-
-interface OrbitLayerProps {
-  labels: string[];
-  radius: number;
-  y: number;
-  speed: number;
-  reducedMotion: boolean;
-  lightMode: boolean;
-  offset?: number;
-}
-
-function OrbitLayer({
-  labels,
-  radius,
-  y,
-  speed,
-  reducedMotion,
-  lightMode,
-  offset = 0,
-}: OrbitLayerProps) {
-  const groupRef = React.useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (reducedMotion || !groupRef.current) return;
-    groupRef.current.rotation.y += delta * speed;
-  });
-
-  return (
-    <group ref={groupRef} rotation={[0.08, offset, 0]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, y, 0]}>
-        <torusGeometry args={[radius, 0.008, 8, 160]} />
-        <meshBasicMaterial color={lightMode ? "#526aab" : "#7c8bb7"} transparent opacity={0.24} />
-      </mesh>
-      {labels.map((label, index) => (
-        <TechCard
-          key={label}
-          label={label}
-          angle={(index / labels.length) * Math.PI * 2}
-          radius={radius}
-          y={y + Math.sin(index * 1.7) * 0.18}
-          color={CARD_COLORS[index % CARD_COLORS.length] ?? CARD_COLORS[0]}
-          lightMode={lightMode}
-        />
+      {[0.72, 1.45, 2.65].map((radius, index) => (
+        <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.18]} position={[0, 0.25 + index * 0.01, 0]}>
+          <torusGeometry args={[radius, index === 2 ? 0.018 : 0.012, 12, 160]} />
+          <meshBasicMaterial color={index % 2 === 0 ? "#3be8ff" : "#7c5cff"} transparent opacity={0.38} />
+        </mesh>
       ))}
     </group>
   );
 }
 
-function AmbientParticles({ lightMode }: { lightMode: boolean }) {
+function Satellites({ reducedMotion }: { reducedMotion: boolean }) {
+  const groupRef = React.useRef<THREE.Group>(null);
+  const compact = useThree((state) => state.size.width < 640);
+  const count = compact ? 5 : 9;
+
+  useFrame((_, delta) => {
+    if (reducedMotion || !groupRef.current) return;
+    groupRef.current.rotation.y -= delta * 0.12;
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0.1, 0]}>
+      {Array.from({ length: count }).map((_, index) => {
+        const angle = (index / count) * Math.PI * 2;
+        const radius = 3.15 + (index % 2) * 0.45;
+        return (
+          <Float key={index} speed={1 + index * 0.04} rotationIntensity={0.2} floatIntensity={0.25}>
+            <mesh position={[Math.sin(angle) * radius, Math.sin(index * 1.7) * 0.5, Math.cos(angle) * radius]}>
+              <sphereGeometry args={[0.08 + (index % 3) * 0.025, 18, 18]} />
+              <meshStandardMaterial color={index % 2 === 0 ? "#3be8ff" : "#8067ff"} emissive={index % 2 === 0 ? "#3be8ff" : "#8067ff"} emissiveIntensity={1.1} />
+            </mesh>
+          </Float>
+        );
+      })}
+    </group>
+  );
+}
+
+function ParticleField({ lightMode }: { lightMode: boolean }) {
   const positions = React.useMemo(() => {
-    const points = new Float32Array(150 * 3);
-    for (let index = 0; index < 150; index += 1) {
+    const points = new Float32Array(180 * 3);
+    for (let index = 0; index < 180; index += 1) {
       const angle = index * 2.399963;
-      const radius = 4.6 + (index % 9) * 0.22;
+      const radius = 4.5 + (index % 11) * 0.25;
       points[index * 3] = Math.cos(angle) * radius;
-      points[index * 3 + 1] = ((index % 17) - 8) * 0.22;
+      points[index * 3 + 1] = ((index % 23) - 11) * 0.24;
       points[index * 3 + 2] = Math.sin(angle) * radius;
     }
     return points;
@@ -195,79 +117,43 @@ function AmbientParticles({ lightMode }: { lightMode: boolean }) {
 
   return (
     <points>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial
-        color={lightMode ? "#536ea8" : "#89a7ff"}
-        size={0.025}
-        transparent
-        opacity={lightMode ? 0.32 : 0.46}
-        sizeAttenuation
-      />
+      <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
+      <pointsMaterial color={lightMode ? "#526a9d" : "#718cff"} size={0.025} transparent opacity={lightMode ? 0.25 : 0.48} sizeAttenuation />
     </points>
   );
 }
 
-interface TechCardsSceneProps {
-  reducedMotion: boolean;
-  lightMode: boolean;
-}
-
-export function TechCardsScene({ reducedMotion, lightMode }: TechCardsSceneProps) {
-  const compactScene = useThree((state) => state.size.width < 640);
-  const innerTech = heroHighlightTech.slice(0, compactScene ? 4 : 6);
-  const outerTech = compactScene ? heroHighlightTech.slice(4, 8) : heroHighlightTech.slice(6, 12);
-  const background = lightMode ? "#edf4ff" : "#070a14";
+export function TechCardsScene({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
+  const background = lightMode ? "#eaf2ff" : "#050711";
 
   return (
     <>
       <color attach="background" args={[background]} />
-      <fog attach="fog" args={[background, 8, 15]} />
-      <ambientLight intensity={lightMode ? 1.25 : 0.78} />
-      <directionalLight
-        position={[5, 7, 4]}
-        intensity={lightMode ? 2.8 : 2.2}
-        color={lightMode ? "#ffffff" : "#d8e1ff"}
-      />
-      <directionalLight position={[-4, -2, -3]} intensity={1.1} color="#3be8ff" />
-      <pointLight position={[0, 3, 4]} intensity={lightMode ? 2.4 : 3.2} color="#7c5cff" />
-
-      <AmbientParticles lightMode={lightMode} />
-      <DeveloperCore reducedMotion={reducedMotion} lightMode={lightMode} />
-      <OrbitLayer
-        labels={innerTech}
-        radius={INNER_RADIUS}
-        y={0.02}
-        speed={0.13}
-        reducedMotion={reducedMotion}
-        lightMode={lightMode}
-      />
-      <OrbitLayer
-        labels={outerTech}
-        radius={OUTER_RADIUS}
-        y={-0.14}
-        speed={-0.075}
-        reducedMotion={reducedMotion}
-        lightMode={lightMode}
-        offset={Math.PI / 6}
-      />
+      <fog attach="fog" args={[background, 9, 16]} />
+      <ambientLight intensity={lightMode ? 1.35 : 0.55} />
+      <directionalLight position={[5, 7, 4]} intensity={lightMode ? 3 : 2.4} color={lightMode ? "#ffffff" : "#dce5ff"} />
+      <directionalLight position={[-4, 0, -3]} intensity={1.5} color="#3be8ff" />
+      <spotLight position={[0, 6, 2]} angle={0.45} penumbra={0.8} intensity={5} color="#8067ff" />
+      <ParticleField lightMode={lightMode} />
+      <CrystalCore reducedMotion={reducedMotion} lightMode={lightMode} />
+      <Pedestal />
+      <Satellites reducedMotion={reducedMotion} />
       <OrbitControls
         makeDefault
         enablePan={false}
         enableZoom
         enableRotate
         minDistance={6.4}
-        maxDistance={10.5}
-        minPolarAngle={Math.PI * 0.28}
-        maxPolarAngle={Math.PI * 0.72}
-        rotateSpeed={0.65}
-        zoomSpeed={0.7}
-        dampingFactor={0.08}
+        maxDistance={10.2}
+        minPolarAngle={Math.PI * 0.27}
+        maxPolarAngle={Math.PI * 0.68}
+        rotateSpeed={0.62}
+        zoomSpeed={0.72}
+        dampingFactor={0.075}
         enableDamping
         autoRotate={!reducedMotion}
-        autoRotateSpeed={0.35}
-        target={[0, 0, 0]}
+        autoRotateSpeed={0.25}
+        target={[0, -0.15, 0]}
       />
     </>
   );
