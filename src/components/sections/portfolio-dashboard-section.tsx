@@ -23,6 +23,18 @@ interface FeaturedCase {
   accent: string;
 }
 
+interface BrandItem {
+  name: string;
+  iconUrl: string;
+  color: string;
+}
+
+const SIMPLE_ICONS_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@v16/icons";
+
+function simpleIcon(slug: string) {
+  return `${SIMPLE_ICONS_BASE}/${slug}.svg`;
+}
+
 const featuredCases: FeaturedCase[] = [
   { title: "AML BackOffice", label: "Banking operations", match: /AML/i, icon: ShieldCheck, accent: "from-violet-500/28 to-cyan-400/8" },
   { title: "Taxi Admin Platform", label: "Realtime mobility", match: /Taxi Admin/i, icon: Car, accent: "from-cyan-400/24 to-blue-500/8" },
@@ -37,8 +49,27 @@ const standards = [
   { title: "Collaboration", description: "Backend alignment, code review, QA support, and mentoring.", icon: ShieldCheck },
 ] as const;
 
-const stack = ["React", "Next.js", "Vue 3", "Nuxt 3", "TypeScript", "Tailwind CSS", "OpenLayers", "Node.js"];
-const tooling = ["Git", "Jira", "Storybook", "React Query", "Zustand", "React Hook Form", "Zod", "i18n"];
+const stack: BrandItem[] = [
+  { name: "React", iconUrl: simpleIcon("react"), color: "#61DAFB" },
+  { name: "Next.js", iconUrl: simpleIcon("nextdotjs"), color: "var(--foreground)" },
+  { name: "Vue 3", iconUrl: simpleIcon("vuedotjs"), color: "#4FC08D" },
+  { name: "Nuxt 3", iconUrl: simpleIcon("nuxt"), color: "#00DC82" },
+  { name: "TypeScript", iconUrl: simpleIcon("typescript"), color: "#3178C6" },
+  { name: "Tailwind CSS", iconUrl: simpleIcon("tailwindcss"), color: "#06B6D4" },
+  { name: "OpenLayers", iconUrl: simpleIcon("openlayers"), color: "#1F6B75" },
+  { name: "Node.js", iconUrl: simpleIcon("nodedotjs"), color: "#5FA04E" },
+];
+
+const tooling: BrandItem[] = [
+  { name: "Git", iconUrl: simpleIcon("git"), color: "#F05032" },
+  { name: "Jira", iconUrl: simpleIcon("jira"), color: "#0052CC" },
+  { name: "Storybook", iconUrl: simpleIcon("storybook"), color: "#FF4785" },
+  { name: "React Query", iconUrl: simpleIcon("reactquery"), color: "#FF4154" },
+  { name: "Zustand", iconUrl: "https://api.iconify.design/logos:zustand.svg", color: "#C5A46D" },
+  { name: "React Hook Form", iconUrl: simpleIcon("reacthookform"), color: "#EC5990" },
+  { name: "Zod", iconUrl: simpleIcon("zod"), color: "#3E67B1" },
+  { name: "i18next", iconUrl: simpleIcon("i18next"), color: "#26A69A" },
+];
 
 function findProject(match: RegExp): Project | undefined {
   return experience.flatMap((entry) => entry.projects).find((project) => match.test(project.name));
@@ -87,15 +118,45 @@ function ProjectCard({ item }: { item: FeaturedCase }) {
   );
 }
 
-function IconGrid({ items }: { items: string[] }) {
+function BrandIcon({ item }: { item: BrandItem }) {
+  const maskImage = `url("${item.iconUrl}")`;
+
   return (
-    <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-8">
-      {items.map((item, index) => (
-        <div key={item} className="dashboard-subpanel flex min-h-16 flex-col items-center justify-center rounded-lg p-2 text-center">
-          <span className="flex size-7 items-center justify-center rounded-md border border-primary/25 bg-primary/10 font-mono text-[9px] font-bold text-primary">
-            {String(index + 1).padStart(2, "0")}
+    <span className="flex size-10 items-center justify-center rounded-lg border border-foreground/10 bg-background/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+      <span
+        role="img"
+        aria-label={`${item.name} logo`}
+        className="block size-5"
+        style={{
+          backgroundColor: item.color,
+          WebkitMaskImage: maskImage,
+          maskImage,
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
+      />
+    </span>
+  );
+}
+
+function IconGrid({ items }: { items: BrandItem[] }) {
+  return (
+    <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-8" role="list">
+      {items.map((item) => (
+        <div
+          key={item.name}
+          role="listitem"
+          title={item.name}
+          className="dashboard-subpanel group flex min-h-20 flex-col items-center justify-center rounded-lg p-2 text-center transition duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[0_0_24px_rgba(59,232,255,0.12)]"
+        >
+          <BrandIcon item={item} />
+          <span className="mt-2 text-[9px] font-medium leading-4 text-muted-foreground transition-colors group-hover:text-foreground">
+            {item.name}
           </span>
-          <span className="mt-2 text-[9px] font-medium text-muted-foreground">{item}</span>
         </div>
       ))}
     </div>
