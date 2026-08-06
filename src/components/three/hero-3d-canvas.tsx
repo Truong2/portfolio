@@ -12,7 +12,7 @@ function detectWebGL(): boolean {
     const canvas = document.createElement("canvas");
     return !!(
       window.WebGLRenderingContext &&
-      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      (canvas.getContext("webgl2") || canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
     );
   } catch {
     return false;
@@ -35,42 +35,39 @@ function useReducedMotion(): boolean {
   return React.useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
 }
 
-function CanvasLoadingSkeleton() {
-  return (
-    <div
-      aria-hidden="true"
-      className="h-full min-h-[30rem] w-full animate-pulse rounded-[2rem] border border-white/10 bg-white/[0.03]"
-    />
-  );
-}
-
 export function Hero3DCanvas() {
-  const [webglSupported] = React.useState(() => detectWebGL());
+  const [webglSupported, setWebglSupported] = React.useState<boolean | null>(null);
   const reducedMotion = useReducedMotion();
 
-  if (!webglSupported || reducedMotion) {
+  React.useEffect(() => {
+    setWebglSupported(detectWebGL());
+  }, []);
+
+  if (webglSupported === false) {
     return <StaticFallback />;
   }
 
   return (
     <div
-      aria-hidden="true"
-      className="relative aspect-[4/5] min-h-[30rem] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a14] shadow-[0_40px_120px_rgba(24,31,84,0.45)] sm:aspect-square"
+      aria-label="Interactive 3D technology system"
+      className="relative aspect-square min-h-[22rem] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a14] shadow-[0_32px_100px_rgba(24,31,84,0.38)] sm:min-h-[30rem]"
     >
-      <React.Suspense fallback={<CanvasLoadingSkeleton />}>
+      {webglSupported === null ? (
+        <div className="absolute inset-0 animate-pulse bg-[radial-gradient(circle_at_center,rgba(124,92,255,0.18),transparent_55%)]" />
+      ) : (
         <Canvas
           dpr={[1, 1.5]}
-          frameloop="always"
+          frameloop={reducedMotion ? "demand" : "always"}
           gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
           fallback={<StaticFallback />}
         >
-          <PerspectiveCamera makeDefault position={[0, 0.52, 8.35]} fov={44} />
-          <TechCardsScene reducedMotion={false} />
+          <PerspectiveCamera makeDefault position={[0, 0.45, 8.35]} fov={44} />
+          <TechCardsScene reducedMotion={reducedMotion} />
         </Canvas>
-      </React.Suspense>
-      <div className="pointer-events-none absolute inset-x-6 bottom-5 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.24em] text-white/45">
-        <span>Interactive technology orbit</span>
-        <span>Move pointer</span>
+      )}
+      <div className="pointer-events-none absolute inset-x-5 top-5 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.22em] text-white/45">
+        <span>Enterprise technology graph</span>
+        <span>{reducedMotion ? "Static 3D" : "Live 3D"}</span>
       </div>
     </div>
   );
