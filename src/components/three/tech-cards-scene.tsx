@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Float, RoundedBox, Text } from "@react-three/drei";
+import { Float, OrbitControls, RoundedBox, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -11,7 +11,6 @@ const INNER_RADIUS = 2.45;
 const OUTER_RADIUS = 3.65;
 const CARD_WIDTH = 1.45;
 const CARD_HEIGHT = 0.78;
-
 const CARD_COLORS = ["#7c5cff", "#3be8ff", "#9b8cff", "#55d6ff"];
 
 interface TechCardProps {
@@ -30,7 +29,6 @@ function TechCard({ label, angle, radius, y, color }: TechCardProps) {
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-
     const targetScale = hovered ? 1.08 : 1;
     groupRef.current.scale.x = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 8, delta);
     groupRef.current.scale.y = THREE.MathUtils.damp(groupRef.current.scale.y, targetScale, 8, delta);
@@ -76,11 +74,11 @@ function TechCard({ label, angle, radius, y, color }: TechCardProps) {
   );
 }
 
-function DeveloperCore() {
+function DeveloperCore({ reducedMotion }: { reducedMotion: boolean }) {
   const coreRef = React.useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
-    if (!coreRef.current) return;
+    if (reducedMotion || !coreRef.current) return;
     coreRef.current.rotation.y += delta * 0.08;
     coreRef.current.rotation.z += delta * 0.035;
   });
@@ -103,7 +101,6 @@ function DeveloperCore() {
           emissiveIntensity={0.32}
         />
       </mesh>
-
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.62, 0.018, 12, 120]} />
         <meshBasicMaterial color="#3be8ff" transparent opacity={0.55} />
@@ -112,17 +109,10 @@ function DeveloperCore() {
         <torusGeometry args={[1.82, 0.012, 12, 120]} />
         <meshBasicMaterial color="#7c5cff" transparent opacity={0.42} />
       </mesh>
-
       <Text position={[0, 0.08, 1.26]} fontSize={0.48} color="#ffffff" anchorX="center" anchorY="middle">
         NVT
       </Text>
-      <Text
-        position={[0, -0.38, 1.24]}
-        fontSize={0.105}
-        color="#aab4d0"
-        anchorX="center"
-        anchorY="middle"
-      >
+      <Text position={[0, -0.38, 1.24]} fontSize={0.105} color="#aab4d0" anchorX="center" anchorY="middle">
         FRONTEND SYSTEMS
       </Text>
       <pointLight color="#6f63ff" intensity={7} distance={8} decay={2} />
@@ -170,7 +160,6 @@ function OrbitLayer({ labels, radius, y, speed, reducedMotion, offset = 0 }: Orb
 function AmbientParticles() {
   const positions = React.useMemo(() => {
     const points = new Float32Array(150 * 3);
-
     for (let index = 0; index < 150; index += 1) {
       const angle = index * 2.399963;
       const radius = 4.6 + (index % 9) * 0.22;
@@ -178,7 +167,6 @@ function AmbientParticles() {
       points[index * 3 + 1] = ((index % 17) - 8) * 0.22;
       points[index * 3 + 2] = Math.sin(angle) * radius;
     }
-
     return points;
   }, []);
 
@@ -190,20 +178,6 @@ function AmbientParticles() {
       <pointsMaterial color="#89a7ff" size={0.025} transparent opacity={0.46} sizeAttenuation />
     </points>
   );
-}
-
-function CameraRig({ reducedMotion }: { reducedMotion: boolean }) {
-  useFrame((state, delta) => {
-    if (reducedMotion) return;
-
-    const targetX = state.pointer.x * 0.42;
-    const targetY = 0.52 + state.pointer.y * 0.24;
-    state.camera.position.x = THREE.MathUtils.damp(state.camera.position.x, targetX, 4, delta);
-    state.camera.position.y = THREE.MathUtils.damp(state.camera.position.y, targetY, 4, delta);
-    state.camera.lookAt(0, 0, 0);
-  });
-
-  return null;
 }
 
 interface TechCardsSceneProps {
@@ -225,10 +199,26 @@ export function TechCardsScene({ reducedMotion }: TechCardsSceneProps) {
       <pointLight position={[0, 3, 4]} intensity={3.2} color="#7c5cff" />
 
       <AmbientParticles />
-      <DeveloperCore />
-      <OrbitLayer labels={innerTech} radius={INNER_RADIUS} y={0.02} speed={reducedMotion ? 0 : 0.13} reducedMotion={reducedMotion} />
-      <OrbitLayer labels={outerTech} radius={OUTER_RADIUS} y={-0.14} speed={reducedMotion ? 0 : -0.075} reducedMotion={reducedMotion} offset={Math.PI / 6} />
-      <CameraRig reducedMotion={reducedMotion} />
+      <DeveloperCore reducedMotion={reducedMotion} />
+      <OrbitLayer labels={innerTech} radius={INNER_RADIUS} y={0.02} speed={0.13} reducedMotion={reducedMotion} />
+      <OrbitLayer labels={outerTech} radius={OUTER_RADIUS} y={-0.14} speed={-0.075} reducedMotion={reducedMotion} offset={Math.PI / 6} />
+      <OrbitControls
+        makeDefault
+        enablePan={false}
+        enableZoom
+        enableRotate
+        minDistance={6.4}
+        maxDistance={10.5}
+        minPolarAngle={Math.PI * 0.28}
+        maxPolarAngle={Math.PI * 0.72}
+        rotateSpeed={0.65}
+        zoomSpeed={0.7}
+        dampingFactor={0.08}
+        enableDamping
+        autoRotate={!reducedMotion}
+        autoRotateSpeed={0.35}
+        target={[0, 0, 0]}
+      />
     </>
   );
 }
