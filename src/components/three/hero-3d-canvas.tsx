@@ -50,7 +50,7 @@ export function Hero3DCanvas() {
     >
       <Canvas
         dpr={[1, 1.5]}
-        frameloop={reducedMotion ? "demand" : "always"}
+        frameloop="always"
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
         fallback={<StaticFallback />}
       >
@@ -81,7 +81,7 @@ export function Hero3DCanvas() {
       </div>
 
       <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/25 px-4 py-2 text-center text-[9px] uppercase tracking-[0.18em] text-white/45 backdrop-blur-xl">
-        {reducedMotion ? "Manual navigation" : "Interactive camera navigation"}
+        {reducedMotion ? "Reduced motion · manual orbit enabled" : "Interactive camera navigation"}
       </div>
     </div>
   );
