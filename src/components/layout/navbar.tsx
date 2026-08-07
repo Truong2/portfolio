@@ -3,45 +3,34 @@
 import * as React from "react";
 import { ExternalLink, Mail, Menu, X } from "lucide-react";
 
+import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/profile";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
-  { id: "hero", label: "Home" },
-  { id: "experience", label: "Work" },
-  { id: "about", label: "About" },
-  { id: "standards", label: "Engineering" },
-  { id: "skills", label: "Stack" },
+const NAV_ITEMS: Array<{ view: CvView; label: string }> = [
+  { view: "overview", label: "Home" },
+  { view: "experience", label: "Work" },
+  { view: "projects", label: "Projects" },
+  { view: "skills", label: "Skills" },
+  { view: "education", label: "Education" },
 ] as const;
 
-function useActiveSection(sectionIds: readonly string[]) {
-  const [activeId, setActiveId] = React.useState<string>(sectionIds[0] ?? "hero");
-
-  React.useEffect(() => {
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((element): element is HTMLElement => element !== null);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActiveId(visible[0].target.id);
-      },
-      { rootMargin: "-35% 0px -55% 0px", threshold: 0 },
-    );
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
-  }, [sectionIds]);
-
-  return activeId;
-}
-
 function Brand() {
+  const { focusView } = useSpatialCv();
+
   return (
-    <a href="#hero" className="group flex items-center gap-3" aria-label="Back to top">
+    <a
+      href="#hero"
+      onClick={(event) => {
+        event.preventDefault();
+        focusView("overview");
+        document.getElementById("hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }}
+      className="group flex items-center gap-3"
+      aria-label="Open spatial CV overview"
+    >
       <span className="relative flex size-9 items-center justify-center rounded-lg border border-primary/35 bg-primary/10 font-mono text-[10px] font-bold tracking-[0.14em] text-primary neon-border">
         NVT
       </span>
@@ -49,16 +38,22 @@ function Brand() {
         <span className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground">
           {personalInfo.name}
         </span>
-        <span className="mt-0.5 block text-[9px] text-muted-foreground">Frontend Developer</span>
+        <span className="mt-0.5 block text-[9px] text-muted-foreground">Spatial Frontend CV</span>
       </span>
     </a>
   );
 }
 
-function DesktopLink({ id, label, active }: { id: string; label: string; active: boolean }) {
+function DesktopLink({ view, label, active }: { view: CvView; label: string; active: boolean }) {
+  const { focusView } = useSpatialCv();
+
   return (
     <a
-      href={`#${id}`}
+      href="#hero"
+      onClick={(event) => {
+        event.preventDefault();
+        focusView(view);
+      }}
       aria-current={active ? "page" : undefined}
       className={cn(
         "relative py-5 text-xs font-medium transition-colors after:absolute after:bottom-2.5 after:left-1/2 after:h-px after:w-5 after:-translate-x-1/2 after:bg-primary after:opacity-0 after:shadow-[0_0_10px_currentColor] after:transition-opacity",
@@ -70,8 +65,9 @@ function DesktopLink({ id, label, active }: { id: string; label: string; active:
   );
 }
 
-function MobileDrawer({ open, activeId, onClose }: { open: boolean; activeId: string; onClose: () => void }) {
+function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const firstLinkRef = React.useRef<HTMLAnchorElement>(null);
+  const { activeView, focusView } = useSpatialCv();
 
   React.useEffect(() => {
     if (!open) return;
@@ -85,26 +81,41 @@ function MobileDrawer({ open, activeId, onClose }: { open: boolean; activeId: st
 
   if (!open) return null;
 
+  const navigate = (view: CvView) => {
+    focusView(view);
+    onClose();
+  };
+
   return (
-    <div role="dialog" aria-modal="true" aria-label="Mobile navigation" className="fixed inset-0 z-50 bg-background/98 p-5 backdrop-blur-2xl md:hidden">
+    <div role="dialog" aria-modal="true" aria-label="Spatial CV navigation" className="fixed inset-0 z-50 bg-background/98 p-5 backdrop-blur-2xl md:hidden">
       <div className="flex items-center justify-between">
         <Brand />
         <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close menu"><X className="size-5" /></Button>
       </div>
-      <nav className="mt-14 flex flex-col" aria-label="Mobile">
+      <nav className="mt-14 flex flex-col" aria-label="Mobile spatial CV navigation">
         {NAV_ITEMS.map((item, index) => (
           <a
-            key={item.id}
+            key={item.view}
             ref={index === 0 ? firstLinkRef : undefined}
-            href={`#${item.id}`}
-            onClick={onClose}
-            className={cn("border-b border-border/60 py-5 text-3xl font-semibold tracking-[-0.04em]", activeId === item.id ? "text-gradient" : "text-foreground")}
+            href="#hero"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate(item.view);
+            }}
+            className={cn("border-b border-border/60 py-5 text-3xl font-semibold tracking-[-0.04em]", activeView === item.view ? "text-gradient" : "text-foreground")}
           >
             {item.label}
           </a>
         ))}
-        <a href="#contact" onClick={onClose} className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 px-6 text-sm font-semibold text-white">
-          Let&apos;s Connect
+        <a
+          href="#hero"
+          onClick={(event) => {
+            event.preventDefault();
+            navigate("contact");
+          }}
+          className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 px-6 text-sm font-semibold text-white"
+        >
+          Focus Contact
         </a>
       </nav>
     </div>
@@ -113,15 +124,15 @@ function MobileDrawer({ open, activeId, onClose }: { open: boolean; activeId: st
 
 export function Navbar() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const activeId = useActiveSection(NAV_ITEMS.map((item) => item.id));
+  const { activeView, focusView } = useSpatialCv();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/82 backdrop-blur-2xl">
       <nav aria-label="Main navigation" className="mx-auto flex h-16 max-w-[96rem] items-center justify-between px-5 sm:px-8 lg:px-12">
         <Brand />
 
-        <div className="hidden items-center gap-7 md:flex lg:gap-9">
-          {NAV_ITEMS.map((item) => <DesktopLink key={item.id} {...item} active={activeId === item.id} />)}
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
+          {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={activeView === item.view} />)}
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
@@ -132,9 +143,13 @@ export function Navbar() {
             <Mail className="size-4" />
           </a>
           <ThemeToggle />
-          <a href="#contact" className="ml-2 inline-flex h-9 items-center rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 px-4 text-xs font-semibold text-white shadow-lg shadow-primary/20">
-            Let&apos;s Connect
-          </a>
+          <button
+            type="button"
+            onClick={() => focusView("contact")}
+            className="ml-2 inline-flex h-9 items-center rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 px-4 text-xs font-semibold text-white shadow-lg shadow-primary/20"
+          >
+            Contact View
+          </button>
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
@@ -144,7 +159,7 @@ export function Navbar() {
           </Button>
         </div>
       </nav>
-      <MobileDrawer open={drawerOpen} activeId={activeId} onClose={() => setDrawerOpen(false)} />
+      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </header>
   );
 }
