@@ -3,6 +3,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { SpatialCvProvider } from "@/components/spatial-cv-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { personalInfo, summary } from "@/data/profile";
 
@@ -31,9 +32,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" suppressHydrationWarning className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <SpatialCvProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </SpatialCvProvider>
         </ThemeProvider>
         <Analytics />
       </body>
