@@ -1,38 +1,36 @@
-import { heroHighlightTech } from "@/data/profile";
-
-const positions = [
-  "left-[8%] top-[18%]",
-  "right-[7%] top-[16%]",
-  "left-[2%] top-[48%]",
-  "right-[1%] top-[48%]",
-  "left-[12%] bottom-[16%]",
-  "right-[10%] bottom-[18%]",
-];
+const panels = [
+  { label: "Skills", detail: "React · Next.js · TypeScript", className: "left-[4%] top-[18%]" },
+  { label: "Experience", detail: "Banking · Mobility · GIS", className: "right-[3%] top-[18%]" },
+  { label: "Education", detail: "HUST · Engineer", className: "left-[5%] bottom-[18%]" },
+  { label: "Projects", detail: "AML · Taxi · MARINER25", className: "right-[4%] bottom-[18%]" },
+] as const;
 
 export function StaticFallback() {
   return (
     <div
       role="img"
-      aria-label="Technology orbit showcasing React, Next.js, TypeScript, Vue, Web3, and GIS skills"
-      className="relative aspect-square min-h-[22rem] w-full overflow-hidden rounded-[2rem] border border-border/70 bg-[#edf4ff] dark:bg-[#070a14] sm:min-h-[30rem]"
+      aria-label="Spatial CV overview for Nguyen Van Truong with profile, skills, experience, projects, education, and contact panels"
+      className="relative aspect-[1.25/1] min-h-[26rem] w-full overflow-hidden rounded-2xl border border-border/70 bg-[#edf4ff] dark:bg-[#040610] sm:min-h-[36rem]"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(124,92,255,0.2),transparent_32%),radial-gradient(circle_at_65%_65%,rgba(59,232,255,0.16),transparent_30%)]" />
-      <div className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-500/20 dark:border-cyan-300/20" />
-      <div className="absolute left-1/2 top-1/2 size-[25rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-500/15 dark:border-violet-300/15" />
-      <div className="absolute left-1/2 top-1/2 flex size-40 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[2rem] border border-foreground/15 bg-card/70 shadow-[0_0_80px_rgba(124,92,255,0.2)] backdrop-blur-xl">
-        <span className="text-3xl font-semibold tracking-[0.2em] text-foreground">NVT</span>
-        <span className="mt-2 text-[9px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-          Frontend systems
-        </span>
+      <div className="surface-grid absolute inset-0 opacity-60" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(124,92,255,0.22),transparent_28%),radial-gradient(circle_at_58%_62%,rgba(59,232,255,0.14),transparent_34%)]" />
+
+      <div className="absolute left-1/2 top-[44%] z-10 flex w-[42%] min-w-56 -translate-x-1/2 -translate-y-1/2 flex-col rounded-2xl border border-violet-400/25 bg-card/80 p-5 shadow-[0_0_70px_rgba(124,92,255,0.18)] backdrop-blur-xl">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-cyan-500 dark:text-cyan-300">Frontend Developer</span>
+        <strong className="mt-2 text-xl tracking-tight text-foreground sm:text-2xl">Nguyen Van Truong</strong>
+        <span className="mt-2 text-[10px] leading-5 text-muted-foreground">React · Next.js · Vue · Nuxt · TypeScript<br />Enterprise UI · Realtime · GIS · Web3</span>
       </div>
-      {heroHighlightTech.slice(0, 6).map((tech, index) => (
-        <span
-          key={tech}
-          className={`absolute ${positions[index]} rounded-xl border border-border/70 bg-card/75 px-3 py-2 text-xs font-medium text-foreground/80 shadow-lg backdrop-blur-md`}
-        >
-          {tech}
-        </span>
+
+      {panels.map((panel) => (
+        <div key={panel.label} className={`absolute w-[30%] min-w-36 rounded-xl border border-border/70 bg-card/75 p-3 shadow-xl backdrop-blur-md ${panel.className}`}>
+          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-primary">{panel.label}</span>
+          <span className="mt-1 block text-[9px] leading-4 text-muted-foreground">{panel.detail}</span>
+        </div>
       ))}
+
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-border/70 bg-card/70 px-4 py-2 text-[9px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-xl">
+        Static accessible CV overview
+      </div>
     </div>
   );
 }
