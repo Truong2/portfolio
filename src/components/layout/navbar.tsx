@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { personalInfo } from "@/data/profile";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS: Array<{ view: CvView; label: string }> = [
+const NAV_ITEMS: ReadonlyArray<{ view: CvView; label: string }> = [
   { view: "overview", label: "Home" },
   { view: "experience", label: "Work" },
   { view: "projects", label: "Projects" },
