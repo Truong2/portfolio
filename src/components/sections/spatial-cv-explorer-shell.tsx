@@ -1,13 +1,14 @@
 "use client";
 
+import type { ComponentType } from "react";
 import {
-  BriefcaseBusiness,
-  Code2,
+  Activity,
+  Blocks,
+  Braces,
   GraduationCap,
   Mail,
   MousePointer2,
-  TerminalSquare,
-  UserRound,
+  UsersRound,
 } from "lucide-react";
 
 import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
@@ -20,13 +21,13 @@ const items: Array<{
   index: string;
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   side: "left" | "right";
 }> = [
-  { view: "profile", index: "01", title: "Profile", description: "Background, product mindset and frontend focus.", icon: UserRound, side: "left" },
-  { view: "experience", index: "02", title: "Experience", description: "Career timeline, responsibilities and delivery domains.", icon: BriefcaseBusiness, side: "left" },
-  { view: "projects", index: "03", title: "Projects", description: "Selected enterprise, realtime, GIS and Web3 work.", icon: Code2, side: "left" },
-  { view: "skills", index: "04", title: "Skills", description: "Frontend architecture, data, realtime and tooling.", icon: TerminalSquare, side: "right" },
+  { view: "profile", index: "01", title: "Profile", description: "Background, product mindset and frontend focus.", icon: UsersRound, side: "left" },
+  { view: "experience", index: "02", title: "Experience", description: "Career timeline, responsibilities and delivery domains.", icon: Activity, side: "left" },
+  { view: "projects", index: "03", title: "Projects", description: "Selected enterprise, realtime, GIS and Web3 work.", icon: Braces, side: "left" },
+  { view: "skills", index: "04", title: "Skills", description: "Frontend architecture, data, realtime and tooling.", icon: Blocks, side: "right" },
   { view: "education", index: "05", title: "Education", description: "Engineering background and academic foundation.", icon: GraduationCap, side: "right" },
   { view: "contact", index: "06", title: "Contact", description: "Email, LinkedIn, location and downloadable CV.", icon: Mail, side: "right" },
 ];
