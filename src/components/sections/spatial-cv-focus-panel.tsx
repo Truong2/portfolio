@@ -1,26 +1,26 @@
 "use client";
 
-import * as React from "react";
+import type { ComponentType } from "react";
 import {
+  Activity,
   ArrowLeft,
-  BriefcaseBusiness,
-  Code2,
+  Blocks,
+  Braces,
   ExternalLink,
   GraduationCap,
   Mail,
   MapPin,
-  UserRound,
-  Wrench,
+  UsersRound,
 } from "lucide-react";
 
 import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
 import { education, experience, personalInfo, skillCategories, summary } from "@/data/profile";
 
-const viewMeta: Record<Exclude<CvView, "overview">, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
-  profile: { label: "Profile", icon: UserRound },
-  experience: { label: "Experience", icon: BriefcaseBusiness },
-  projects: { label: "Projects", icon: Code2 },
-  skills: { label: "Skills", icon: Wrench },
+const viewMeta: Record<Exclude<CvView, "overview">, { label: string; icon: ComponentType<{ className?: string }> }> = {
+  profile: { label: "Profile", icon: UsersRound },
+  experience: { label: "Experience", icon: Activity },
+  projects: { label: "Projects", icon: Braces },
+  skills: { label: "Skills", icon: Blocks },
   education: { label: "Education", icon: GraduationCap },
   contact: { label: "Contact", icon: Mail },
 };
@@ -35,7 +35,7 @@ function ProfileContent() {
     <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
       <div className="spatial-focus-card p-5 sm:p-6">
         <p className="spatial-focus-kicker">Professional summary</p>
-        <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">{personalInfo.name}</h3>
+        <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-white sm:text-3xl">{personalInfo.name}</h3>
         <p className="mt-1 text-sm font-medium text-cyan-300">{personalInfo.title}</p>
         <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-300/80">{summary}</p>
       </div>
@@ -75,9 +75,7 @@ function ExperienceContent() {
           <h3 className="mt-3 text-xl font-semibold tracking-tight text-white">Frontend Developer <span className="font-normal text-violet-300">| EKOTEK Technology JSC</span></h3>
           <p className="mt-4 text-sm leading-6 text-slate-300/80">Building enterprise products across banking, mobility, healthcare, e-commerce, and Web3, with ownership across architecture, complex workflows, API integration, code review, and frontend team support.</p>
           <div className="mt-5 flex flex-wrap gap-2">
-            {["React", "Next.js", "Nuxt 3", "Vue 3", "TypeScript", "React Query", "Zod", "Socket.IO", "OpenLayers"].map((tech) => (
-              <span key={tech} className="spatial-tech-chip">{tech}</span>
-            ))}
+            {["React", "Next.js", "Nuxt 3", "Vue 3", "TypeScript", "React Query", "Zod", "Socket.IO", "OpenLayers"].map((tech) => <span key={tech} className="spatial-tech-chip">{tech}</span>)}
           </div>
         </div>
 
@@ -124,9 +122,7 @@ function SkillsContent() {
       {skillCategories.map((category) => (
         <div key={category.id} className="spatial-focus-card p-5">
           <p className="spatial-focus-kicker">{category.label}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {category.skills.map((skill) => <span key={skill} className="spatial-tech-chip">{skill}</span>)}
-          </div>
+          <div className="mt-4 flex flex-wrap gap-2">{category.skills.map((skill) => <span key={skill} className="spatial-tech-chip">{skill}</span>)}</div>
         </div>
       ))}
     </div>
@@ -184,25 +180,14 @@ function renderContent(view: Exclude<CvView, "overview">) {
 
 export function SpatialCvFocusPanel() {
   const { activeView, focusView } = useSpatialCv();
-  const [visibleView, setVisibleView] = React.useState<CvView>("overview");
+  if (activeView === "overview") return null;
 
-  React.useEffect(() => {
-    if (activeView === "overview") {
-      setVisibleView("overview");
-      return;
-    }
-    const timeout = window.setTimeout(() => setVisibleView(activeView), 420);
-    return () => window.clearTimeout(timeout);
-  }, [activeView]);
-
-  if (activeView === "overview" || visibleView === "overview") return null;
-
-  const view = visibleView as Exclude<CvView, "overview">;
+  const view = activeView as Exclude<CvView, "overview">;
   const meta = viewMeta[view];
   const Icon = meta.icon;
 
   return (
-    <div className="absolute inset-3 z-20 overflow-y-auto rounded-2xl border border-cyan-300/15 bg-[#050a17]/94 p-4 shadow-[0_32px_120px_rgba(3,8,30,.72)] backdrop-blur-2xl sm:inset-5 sm:p-6 lg:p-7">
+    <div key={view} className="spatial-focus-enter absolute inset-3 z-20 overflow-y-auto rounded-2xl border border-cyan-300/15 bg-[#050a17]/94 p-4 shadow-[0_32px_120px_rgba(3,8,30,.72)] backdrop-blur-2xl sm:inset-5 sm:p-6 lg:p-7">
       <div className="sticky top-0 z-10 mb-5 flex items-start justify-between gap-4 rounded-xl border border-white/8 bg-[#071020]/90 p-3 backdrop-blur-xl sm:p-4">
         <div className="flex min-w-0 items-start gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/8 text-cyan-300"><Icon className="size-5" /></span>
