@@ -60,7 +60,7 @@ function SectionCard({ item }: { item: (typeof items)[number] }) {
 
 function ConnectorColumn({ side }: { side: "left" | "right" }) {
   return (
-    <div aria-hidden="true" className={`pointer-events-none absolute top-0 hidden h-full w-16 lg:block ${side === "left" ? "-right-16" : "-left-16"}`}>
+    <div aria-hidden="true" className={`pointer-events-none absolute top-0 hidden h-full w-12 xl:block ${side === "left" ? "-right-12" : "-left-12"}`}>
       {[17, 50, 83].map((top) => (
         <div key={top} className="absolute h-px w-full bg-gradient-to-r from-cyan-300/50 via-cyan-300/25 to-transparent" style={{ top: `${top}%`, transform: side === "right" ? "scaleX(-1)" : undefined }} />
       ))}
@@ -73,36 +73,46 @@ export function SpatialCvExplorerShell() {
   const overview = activeView === "overview";
 
   return (
-    <div className="relative mx-auto w-full max-w-[100rem] px-4 pb-6 pt-6 sm:px-6 lg:px-8 lg:pb-8">
-      <div className="mb-5 flex flex-col gap-2 lg:mb-3 lg:max-w-sm">
+    <div className={`relative mx-auto w-full px-3 pb-4 pt-4 transition-[max-width,padding] duration-500 sm:px-4 lg:px-5 ${overview ? "max-w-[112rem]" : "max-w-none xl:px-6"}`}>
+      <div className={`flex flex-col gap-2 transition-all duration-300 ${overview ? "mb-4 lg:max-w-sm" : "mb-2 max-w-none opacity-70"}`}>
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">3D CV Explorer</p>
-        <h1 className="text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl">Explore the CV as one interactive 3D object.</h1>
-        <p className="max-w-md text-sm leading-6 text-muted-foreground">Select a section to zoom into the CV and reveal its full content.</p>
+        {overview && (
+          <>
+            <h1 className="text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl">Explore the CV as one interactive 3D object.</h1>
+            <p className="max-w-md text-sm leading-6 text-muted-foreground">Select a section to zoom into the CV and reveal its full content.</p>
+          </>
+        )}
       </div>
 
-      <div className="relative grid min-h-[720px] items-center gap-4 lg:grid-cols-[0.72fr_1.56fr_0.72fr] lg:gap-8">
-        <div className={`relative z-10 order-2 grid gap-3 sm:grid-cols-3 lg:order-1 lg:grid-cols-1 ${overview ? "opacity-100" : "pointer-events-none opacity-20"}`}>
-          <ConnectorColumn side="left" />
-          {items.filter((item) => item.side === "left").map((item) => <SectionCard key={item.view} item={item} />)}
-        </div>
+      <div className={`relative grid items-center transition-all duration-500 ${overview ? "min-h-[720px] gap-3 xl:grid-cols-[0.58fr_1.84fr_0.58fr] xl:gap-5" : "min-h-[calc(100vh-7.5rem)] grid-cols-1"}`}>
+        {overview && (
+          <div className="relative z-10 order-2 grid gap-3 sm:grid-cols-3 xl:order-1 xl:grid-cols-1">
+            <ConnectorColumn side="left" />
+            {items.filter((item) => item.side === "left").map((item) => <SectionCard key={item.view} item={item} />)}
+          </div>
+        )}
 
-        <div className="relative order-1 min-w-0 lg:order-2">
+        <div className={`relative min-w-0 ${overview ? "order-1 xl:order-2" : "col-span-full w-full"}`}>
           <div className="absolute inset-x-10 bottom-4 h-32 rounded-full bg-cyan-400/8 blur-3xl" />
           <Hero3DCanvasLoader />
           <SpatialCvFocusPanel />
         </div>
 
-        <div className={`relative z-10 order-3 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 ${overview ? "opacity-100" : "pointer-events-none opacity-20"}`}>
-          <ConnectorColumn side="right" />
-          {items.filter((item) => item.side === "right").map((item) => <SectionCard key={item.view} item={item} />)}
-        </div>
+        {overview && (
+          <div className="relative z-10 order-3 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+            <ConnectorColumn side="right" />
+            {items.filter((item) => item.side === "right").map((item) => <SectionCard key={item.view} item={item} />)}
+          </div>
+        )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/55 px-4 py-2"><MousePointer2 className="size-3.5 text-cyan-400" /> Drag to rotate</span>
-        <span className="rounded-full border border-border/60 bg-card/55 px-4 py-2">Scroll / pinch to zoom</span>
-        <span className="rounded-full border border-border/60 bg-card/55 px-4 py-2">{overview ? "Overview" : `Focused: ${activeView}`}</span>
-      </div>
+      {overview && (
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/55 px-4 py-2"><MousePointer2 className="size-3.5 text-cyan-400" /> Drag to rotate</span>
+          <span className="rounded-full border border-border/60 bg-card/55 px-4 py-2">Scroll / pinch to zoom</span>
+          <span className="rounded-full border border-border/60 bg-card/55 px-4 py-2">Overview</span>
+        </div>
+      )}
     </div>
   );
 }
