@@ -14,7 +14,20 @@ import {
 } from "lucide-react";
 
 import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
-import { education, experience, personalInfo, skillCategories, summary } from "@/data/profile";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  education,
+  experience,
+  personalInfo,
+  skillCategories,
+  summary,
+  type Project,
+} from "@/data/profile";
 
 const viewMeta: Record<Exclude<CvView, "overview">, { label: string; icon: ComponentType<{ className?: string }> }> = {
   profile: { label: "Profile", icon: UsersRound },
@@ -51,49 +64,73 @@ function ProfileContent() {
   );
 }
 
+function ExperienceProjectDetail({ project }: { project: Project }) {
+  return (
+    <article className="grid gap-4 border-t border-white/8 py-5 xl:grid-cols-[0.82fr_1.18fr] xl:gap-8">
+      <div>
+        <h4 className="text-sm font-semibold tracking-tight text-white sm:text-base">{project.name}</h4>
+        <p className="mt-2 text-xs leading-5 text-slate-400 sm:text-sm sm:leading-6">{project.description}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {project.techStack.map((tech) => <span key={tech} className="spatial-tech-chip">{tech}</span>)}
+        </div>
+      </div>
+      <div className="space-y-2">
+        {project.highlights.map((highlight) => (
+          <div key={highlight} className="flex gap-3 text-xs leading-5 text-slate-400 sm:text-sm sm:leading-6">
+            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_10px_currentColor]" />
+            <span>{highlight}</span>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
 function ExperienceContent() {
   return (
-    <div className="grid gap-3 xl:grid-cols-[0.68fr_1.32fr]">
-      <div className="spatial-focus-card p-4 sm:p-5">
-        <p className="spatial-focus-kicker">Career timeline</p>
-        <div className="relative mt-4 space-y-4 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-gradient-to-b before:from-violet-400 before:via-cyan-400/60 before:to-transparent">
-          {experience.map((entry) => (
-            <div key={entry.id} className="relative pl-6">
-              <span className="absolute left-0 top-1 size-[11px] rounded-full border-2 border-cyan-300 bg-[#07101f] shadow-[0_0_16px_rgba(34,211,238,.65)]" />
-              <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-cyan-300/80">{entry.period}</p>
-              <h4 className="mt-1 text-sm font-semibold text-white">{entry.role}</h4>
-              <p className="text-xs text-violet-300">{entry.company}</p>
-              {entry.location && <p className="mt-0.5 text-[11px] text-slate-400">{entry.location}</p>}
-            </div>
-          ))}
+    <div className="space-y-3">
+      <div className="grid gap-3 xl:grid-cols-[0.78fr_1.22fr] xl:items-end">
+        <div className="spatial-focus-card p-4 sm:p-5">
+          <p className="spatial-focus-kicker">Complete experience</p>
+          <h3 className="mt-2 text-2xl font-semibold leading-[1.05] tracking-[-0.045em] text-white sm:text-3xl">
+            Roles, products, and <span className="text-gradient">delivery ownership.</span>
+          </h3>
+        </div>
+        <div className="spatial-focus-card p-4 sm:p-5">
+          <p className="text-xs leading-5 text-slate-400 sm:text-sm sm:leading-6">
+            CV-backed experience across financial operations, mobility, healthcare, commerce, GIS intelligence,
+            enterprise platforms, and Web3 integrations. Open a role to inspect the products, stack, and delivery details.
+          </p>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="spatial-focus-card p-4 sm:p-5">
-          <p className="spatial-focus-kicker">Current role</p>
-          <h3 className="mt-2 text-lg font-semibold tracking-tight text-white sm:text-xl">Frontend Developer <span className="font-normal text-violet-300">| EKOTEK Technology JSC</span></h3>
-          <p className="mt-3 text-sm leading-5 text-slate-300/80">Building enterprise products across banking, mobility, healthcare, e-commerce, and Web3, with ownership across architecture, complex workflows, API integration, code review, and frontend team support.</p>
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {["React", "Next.js", "Nuxt 3", "Vue 3", "TypeScript", "React Query", "Zod", "Socket.IO", "OpenLayers"].map((tech) => <span key={tech} className="spatial-tech-chip">{tech}</span>)}
-          </div>
+      <div className="spatial-focus-card overflow-hidden">
+        <div className="flex items-center gap-3 border-b border-white/8 px-4 py-3 sm:px-5">
+          <Activity className="size-4 text-cyan-300" aria-hidden="true" />
+          <span className="spatial-focus-kicker">Professional journey</span>
         </div>
-
-        <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">
-          {[
-            ["Banking / AML", "AML screening, risk assessment, transaction monitoring and backoffice workflows."],
-            ["Mobility", "Taxi administration, booking flows, realtime status and operational tooling."],
-            ["Healthcare", "Wearable-data dashboards, analytics and wellness administration."],
-            ["GIS / Maritime", "Map-heavy monitoring, vessel tracking, spatial layers and realtime alerts."],
-            ["Web3", "Wallet onboarding, NFT/token flows and realtime transaction tracking."],
-            ["Enterprise DX", "Reusable design systems and shared frontend modules for business platforms."],
-          ].map(([title, description]) => (
-            <div key={title} className="spatial-focus-card p-3.5">
-              <p className="text-sm font-semibold text-white">{title}</p>
-              <p className="mt-1.5 text-[11px] leading-4 text-slate-400">{description}</p>
-            </div>
+        <Accordion type="multiple" defaultValue={[experience[0]?.id ?? ""]}>
+          {experience.map((entry, index) => (
+            <AccordionItem key={entry.id} value={entry.id} className="border-b border-white/8 last:border-b-0">
+              <AccordionTrigger className="px-4 py-4 hover:no-underline sm:px-5 sm:py-5">
+                <span className="grid min-w-0 flex-1 gap-2 pr-4 text-left sm:grid-cols-[42px_1fr_auto] sm:items-center sm:gap-5">
+                  <span className="font-mono text-[10px] text-cyan-300 sm:text-xs">0{index + 1}</span>
+                  <span>
+                    <span className="block text-sm font-semibold text-white sm:text-base">{entry.role}</span>
+                    <span className="mt-0.5 block text-xs text-violet-300 sm:text-sm">{entry.company}</span>
+                  </span>
+                  <span className="text-[10px] font-normal text-slate-400 sm:text-right sm:text-xs">
+                    {entry.period}
+                    {entry.location ? <span className="mt-0.5 block">{entry.location}</span> : null}
+                  </span>
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-1 sm:px-5 sm:pl-[5.9rem]">
+                {entry.projects.map((project) => <ExperienceProjectDetail key={project.name} project={project} />)}
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </div>
     </div>
   );
