@@ -74,14 +74,8 @@ export function SpatialCvExplorerShell() {
 
   return (
     <div className={`relative mx-auto w-full px-3 pb-4 pt-4 transition-[max-width,padding] duration-500 sm:px-4 lg:px-5 ${overview ? "max-w-[112rem]" : "max-w-none xl:px-6"}`}>
-      <div className={`flex flex-col gap-2 transition-all duration-300 ${overview ? "mb-4 lg:max-w-sm" : "mb-2 max-w-none opacity-70"}`}>
+      <div className={`transition-all duration-300 ${overview ? "mb-3" : "mb-2 opacity-70"}`}>
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">3D CV Explorer</p>
-        {overview && (
-          <>
-            <h1 className="text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl">Explore the CV as one interactive 3D object.</h1>
-            <p className="max-w-md text-sm leading-6 text-muted-foreground">Select a section to zoom into the CV and reveal its full content.</p>
-          </>
-        )}
       </div>
 
       <div className={`relative grid items-center transition-all duration-500 ${overview ? "min-h-[720px] gap-3 xl:grid-cols-[0.58fr_1.84fr_0.58fr] xl:gap-5" : "min-h-[calc(100vh-7.5rem)] grid-cols-1"}`}>
