@@ -3,7 +3,7 @@ name: Visual Evidence
 on:
   push:
     branches:
-      - feature/book-reference-fidelity-v2
+      - feature/focus-reading-mode
   workflow_dispatch:
 
 permissions:
@@ -50,6 +50,9 @@ jobs:
       - name: Capture experience
         run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=4500 "http://127.0.0.1:3000/?view=experience" evidence-experience.png
 
+      - name: Capture focus reading
+        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=4500 "http://127.0.0.1:3000/?view=profile&focus=1" evidence-reading-focus.png
+
       - name: Upload evidence
         uses: actions/upload-artifact@v4
         with:
@@ -57,5 +60,6 @@ jobs:
           path: |
             evidence-cover.png
             evidence-experience.png
+            evidence-reading-focus.png
           if-no-files-found: error
           retention-days: 7
