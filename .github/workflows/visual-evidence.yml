@@ -1,0 +1,46 @@
+name: Visual Evidence
+
+on:
+  push:
+    branches:
+      - feature/book-reference-fidelity-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      BASE_URL: https://portfolio-git-feature-book-reference-1528b8-truongtsus-projects.vercel.app
+    steps:
+      - name: Wait for preview
+        run: |
+          for i in {1..18}; do
+            if curl -fsS "$BASE_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Install Chromium
+        run: npx --yes playwright@1.55.0 install --with-deps chromium
+
+      - name: Capture cover
+        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=3500 "$BASE_URL/" evidence-cover.png
+
+      - name: Capture experience
+        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=3500 "$BASE_URL/?view=experience" evidence-experience.png
+
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-evidence
+          path: |
+            evidence-cover.png
+            evidence-experience.png
+          if-no-files-found: error
+          retention-days: 7
