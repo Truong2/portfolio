@@ -25,7 +25,6 @@ function PageSurface({ side }: { side: "left" | "right" }) {
   const geometry = React.useMemo(() => {
     const geo = new THREE.PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 48, 10);
     const position = geo.attributes.position as THREE.BufferAttribute;
-
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index);
       const y = position.getY(index);
@@ -33,15 +32,10 @@ function PageSurface({ side }: { side: "left" | "right" }) {
       const gutter = side === "left" ? u : 1 - u;
       const outer = side === "left" ? 1 - u : u;
       const vertical = Math.abs(y) / (PAGE_HEIGHT / 2);
-
-      const z = -0.23 * Math.pow(gutter, 1.85)
-        + 0.18 * Math.pow(outer, 2.05)
-        + 0.035 * Math.sin(u * Math.PI);
+      const z = -0.23 * Math.pow(gutter, 1.85) + 0.18 * Math.pow(outer, 2.05) + 0.035 * Math.sin(u * Math.PI);
       const yLift = 0.29 * Math.pow(outer, 1.65) * (0.38 + 0.62 * vertical);
-
       position.setXYZ(index, x, y + yLift, z);
     }
-
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
@@ -51,14 +45,7 @@ function PageSurface({ side }: { side: "left" | "right" }) {
 
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshStandardMaterial
-        color="#07101f"
-        roughness={0.9}
-        metalness={0}
-        emissive="#020611"
-        emissiveIntensity={0.035}
-        side={THREE.DoubleSide}
-      />
+      <meshStandardMaterial color="#07101f" roughness={0.9} metalness={0} emissive="#020611" emissiveIntensity={0.035} side={THREE.DoubleSide} />
     </mesh>
   );
 }
@@ -67,13 +54,7 @@ function PageFrame({ side, children }: { side: "left" | "right"; children: React
   return (
     <>
       <PageSurface side={side} />
-      <Html
-        transform
-        occlude={false}
-        position={[0, 0.01, 0.15]}
-        distanceFactor={3.62}
-        style={{ width: 500, height: 640, pointerEvents: "auto" }}
-      >
+      <Html transform occlude={false} position={[0, 0.01, 0.15]} distanceFactor={3.62} style={{ width: 500, height: 640, pointerEvents: "auto" }}>
         <div className="relative h-[640px] w-[500px] overflow-hidden px-8 py-8 text-slate-100">
           <div className="pointer-events-none absolute left-6 top-6 h-px w-14 bg-gradient-to-r from-cyan-300/45 to-transparent" />
           <div className="pointer-events-none absolute bottom-6 right-6 h-px w-14 bg-gradient-to-l from-violet-300/40 to-transparent" />
@@ -94,12 +75,7 @@ const coverTech = [
 
 function CoverContent() {
   return (
-    <Html
-      transform
-      position={[0, 0.02, 0.225]}
-      distanceFactor={3.82}
-      style={{ width: 510, height: 650, pointerEvents: "none" }}
-    >
+    <Html transform position={[0, 0.02, 0.225]} distanceFactor={3.82} style={{ width: 510, height: 650, pointerEvents: "none" }}>
       <div className="relative h-[650px] w-[510px] overflow-hidden px-11 py-11 text-white">
         <div className="absolute inset-4 rounded-[18px] border border-cyan-200/[0.1]" />
         <div className="absolute left-8 top-8 h-10 w-10 border-l border-t border-cyan-300/42" />
@@ -108,132 +84,29 @@ function CoverContent() {
           <p className="mt-6 text-[8px] font-mono uppercase tracking-[0.34em] text-slate-400">Welcome to my</p>
           <p className="mt-2 text-[13px] font-semibold uppercase tracking-[0.42em] text-gradient">Portfolio</p>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
-
-          <div className="mt-16">
-            <h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2>
-            <p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p>
-          </div>
-
-          <p className="mt-8 max-w-[330px] text-[9px] leading-[1.15rem] text-slate-400">
-            Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.
-          </p>
-
-          <div className="mt-8 flex gap-2.5">
-            {coverTech.map((item) => (
-              <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>
-                {item.label}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-auto flex items-center gap-3 text-[7px] font-mono uppercase tracking-[0.16em] text-slate-500">
-            <span>Let&apos;s build something</span><span className="text-cyan-300">great together</span>
-          </div>
+          <div className="mt-16"><h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2><p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p></div>
+          <p className="mt-8 max-w-[330px] text-[9px] leading-[1.15rem] text-slate-400">Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.</p>
+          <div className="mt-8 flex gap-2.5">{coverTech.map((item) => <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>{item.label}</div>)}</div>
+          <div className="mt-auto flex items-center gap-3 text-[7px] font-mono uppercase tracking-[0.16em] text-slate-500"><span>Let&apos;s build something</span><span className="text-cyan-300">great together</span></div>
         </div>
       </div>
     </Html>
   );
 }
 
-const coreStrengths = [
-  "Frontend architecture",
-  "Reusable component systems",
-  "Complex business workflows",
-  "Cross-functional collaboration",
-  "Code review & mentoring",
-];
-
-const experienceHighlights = [
-  ["FE Lead", "Taxi Admin · SANO"],
-  ["Migration", "Nuxt 2 → Nuxt 3"],
-  ["Spatial scale", "MARINER25 · up to 1M records"],
-  ["Domains", "Enterprise · GIS · Web3"],
-] as const;
+const coreStrengths = ["Frontend architecture", "Reusable component systems", "Complex business workflows", "Cross-functional collaboration", "Code review & mentoring"];
+const experienceHighlights = [["FE Lead", "Taxi Admin · SANO"], ["Migration", "Nuxt 2 → Nuxt 3"], ["Spatial scale", "MARINER25 · up to 1M records"], ["Domains", "Enterprise · GIS · Web3"]] as const;
 
 function ExperiencePage({ side }: { side: "left" | "right" }) {
   if (side === "left") {
-    return (
-      <>
-        <div className="flex items-start justify-between">
-          <div>
-            <Kicker>02 · Chapter</Kicker>
-            <h2 className="mt-3 text-[36px] font-semibold leading-none tracking-[-0.055em]">Experience</h2>
-            <p className="mt-2 text-[12px] text-violet-300">My professional journey and impact</p>
-          </div>
-          <div className="mt-5 flex size-9 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-lg">▣</div>
-        </div>
-
-        <p className="mt-6 max-w-[405px] text-[10px] leading-[1.1rem] text-slate-400">
-          3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.
-        </p>
-
-        <div className="mt-6 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4">
-          <Kicker>Professional summary</Kicker>
-          <ul className="mt-3 space-y-2">
-            {["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => (
-              <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-4 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4">
-          <Kicker>Core strengths</Kicker>
-          <ul className="mt-3 grid gap-2">
-            {coreStrengths.map((item) => (
-              <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </>
-    );
+    return <><div className="flex items-start justify-between"><div><Kicker>02 · Chapter</Kicker><h2 className="mt-3 text-[36px] font-semibold leading-none tracking-[-0.055em]">Experience</h2><p className="mt-2 text-[12px] text-violet-300">My professional journey and impact</p></div><div className="mt-5 flex size-9 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-lg">▣</div></div><p className="mt-6 max-w-[405px] text-[10px] leading-[1.1rem] text-slate-400">3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.</p><div className="mt-6 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Professional summary</Kicker><ul className="mt-3 space-y-2">{["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>)}</ul></div><div className="mt-4 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Core strengths</Kicker><ul className="mt-3 grid gap-2">{coreStrengths.map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>)}</ul></div></>;
   }
 
-  return (
-    <>
-      <div className="flex items-center justify-between">
-        <Kicker>Experience timeline</Kicker>
-        <span className="rounded-md border border-cyan-300/10 px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-cyan-300">Key highlights</span>
-      </div>
-
-      <div className="mt-5 grid grid-cols-[1fr_100px] gap-4">
-        <div className="relative space-y-5 before:absolute before:bottom-3 before:left-[6px] before:top-3 before:w-px before:bg-gradient-to-b before:from-cyan-300 before:via-violet-300/55 before:to-transparent">
-          {experience.map((entry) => (
-            <div key={entry.id} className="relative pl-7">
-              <span className="absolute left-0 top-1 size-[12px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" />
-              <p className="text-[7px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p>
-              <h3 className="mt-1 text-[11px] font-semibold text-white">{entry.role}</h3>
-              <p className="text-[8px] text-slate-400">{entry.company}</p>
-              <p className="mt-1.5 text-[7px] leading-3 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-3">
-          {[["3+", "Years experience"], ["FE", "Lead ownership"], ["Multi", "Domain delivery"]].map(([value, label]) => (
-            <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3">
-              <p className="text-[15px] font-semibold text-cyan-200">{value}</p>
-              <p className="mt-1 text-[7px] leading-3 text-slate-500">{label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        {experienceHighlights.map(([label, value]) => (
-          <div key={label} className="rounded-xl border border-white/[0.07] bg-white/[0.018] px-3 py-3">
-            <p className="text-[7px] font-mono uppercase tracking-[0.12em] text-violet-300">{label}</p>
-            <p className="mt-1.5 text-[8px] leading-3 text-slate-400">{value}</p>
-          </div>
-        ))}
-      </div>
-    </>
-  );
+  return <><div className="flex items-center justify-between"><Kicker>Experience timeline</Kicker><span className="rounded-md border border-cyan-300/10 px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-cyan-300">Key highlights</span></div><div className="mt-5 grid grid-cols-[1fr_100px] gap-4"><div className="relative space-y-5 before:absolute before:bottom-3 before:left-[6px] before:top-3 before:w-px before:bg-gradient-to-b before:from-cyan-300 before:via-violet-300/55 before:to-transparent">{experience.map((entry) => <div key={entry.id} className="relative pl-7"><span className="absolute left-0 top-1 size-[12px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" /><p className="text-[7px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p><h3 className="mt-1 text-[11px] font-semibold text-white">{entry.role}</h3><p className="text-[8px] text-slate-400">{entry.company}</p><p className="mt-1.5 text-[7px] leading-3 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p></div>)}</div><div className="space-y-3">{[["3+", "Years experience"], ["FE", "Lead ownership"], ["Multi", "Domain delivery"]].map(([value, label]) => <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3"><p className="text-[15px] font-semibold text-cyan-200">{value}</p><p className="mt-1 text-[7px] leading-3 text-slate-500">{label}</p></div>)}</div></div><div className="mt-6 grid grid-cols-2 gap-3">{experienceHighlights.map(([label, value]) => <div key={label} className="rounded-xl border border-white/[0.07] bg-white/[0.018] px-3 py-3"><p className="text-[7px] font-mono uppercase tracking-[0.12em] text-violet-300">{label}</p><p className="mt-1.5 text-[8px] leading-3 text-slate-400">{value}</p></div>)}</div></>;
 }
 
 function ProfilePage({ side }: { side: "left" | "right" }) {
-  if (side === "left") {
-    return <><Kicker>01 · Profile</Kicker><h2 className="mt-4 text-4xl font-semibold tracking-[-0.05em]">Professional profile.</h2><p className="mt-6 text-sm leading-7 text-slate-300/80">{summary}</p></>;
-  }
+  if (side === "left") return <><Kicker>01 · Profile</Kicker><h2 className="mt-4 text-4xl font-semibold tracking-[-0.05em]">Professional profile.</h2><p className="mt-6 text-sm leading-7 text-slate-300/80">{summary}</p></>;
   return <><Kicker>Core focus</Kicker><div className="mt-6 space-y-4">{["Frontend architecture", "Enterprise workflows", "Reusable UI systems", "Realtime interfaces"].map((item) => <div key={item} className="rounded-xl border border-white/8 bg-white/[0.02] p-4 text-xs text-slate-300">{item}</div>)}</div></>;
 }
 
@@ -280,150 +153,60 @@ function PaperStack({ side, layers }: { side: "left" | "right"; layers: number }
   const x = side === "left" ? -HALF_PAGE : HALF_PAGE;
   const direction = side === "left" ? -1 : 1;
   const visible = Math.max(2, Math.min(PAPER_LAYERS, layers));
-
-  return (
-    <group>
-      {Array.from({ length: visible }, (_, index) => (
-        <mesh
-          key={`${side}-${index}`}
-          position={[x + direction * index * 0.012, -0.12 + index * 0.004, -0.32 + index * 0.015]}
-          rotation={[0, side === "left" ? 0.014 : -0.014, direction * index * 0.0008]}
-        >
-          <boxGeometry args={[PAGE_WIDTH - 0.3 - index * 0.012, PAGE_HEIGHT - 0.68 - index * 0.008, 0.013]} />
-          <meshStandardMaterial
-            color={index % 4 === 0 ? "#171936" : "#0b1322"}
-            roughness={0.9}
-            emissive={index % 4 === 0 ? (side === "left" ? "#164e63" : "#4c1d95") : "#040713"}
-            emissiveIntensity={index % 4 === 0 ? 0.14 : 0.012}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
+  return <group>{Array.from({ length: visible }, (_, index) => <mesh key={`${side}-${index}`} position={[x + direction * index * 0.012, -0.12 + index * 0.004, -0.32 + index * 0.015]} rotation={[0, side === "left" ? 0.014 : -0.014, direction * index * 0.0008]}><boxGeometry args={[PAGE_WIDTH - 0.3 - index * 0.012, PAGE_HEIGHT - 0.68 - index * 0.008, 0.013]} /><meshStandardMaterial color={index % 4 === 0 ? "#171936" : "#0b1322"} roughness={0.9} emissive={index % 4 === 0 ? (side === "left" ? "#164e63" : "#4c1d95") : "#040713"} emissiveIntensity={index % 4 === 0 ? 0.14 : 0.012} /></mesh>)}</group>;
 }
 
 function Hardcover({ position }: { position: [number, number, number] }) {
-  return (
-    <RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5} position={position}>
-      <meshPhysicalMaterial color="#07122b" roughness={0.8} metalness={0.035} clearcoat={0.12} clearcoatRoughness={0.58} emissive="#091026" emissiveIntensity={0.018} />
-    </RoundedBox>
-  );
+  return <RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5} position={position}><meshPhysicalMaterial color="#07122b" roughness={0.8} metalness={0.035} clearcoat={0.12} clearcoatRoughness={0.58} emissive="#091026" emissiveIntensity={0.018} /></RoundedBox>;
 }
 
 function OpenBookEdgeGlow() {
-  return (
-    <>
-      <mesh position={[-PAGE_WIDTH - 0.02, 0.03, 0.05]}>
-        <boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.42} />
-      </mesh>
-      <mesh position={[PAGE_WIDTH + 0.02, 0.03, 0.05]}>
-        <boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} />
-        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.48} />
-      </mesh>
-    </>
-  );
+  return <><mesh position={[-PAGE_WIDTH - 0.02, 0.03, 0.05]}><boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} /><meshBasicMaterial color="#22d3ee" transparent opacity={0.42} /></mesh><mesh position={[PAGE_WIDTH + 0.02, 0.03, 0.05]}><boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} /><meshBasicMaterial color="#8b5cf6" transparent opacity={0.48} /></mesh></>;
+}
+
+function CoverRimGlow() {
+  return <><mesh position={[0, PAGE_HEIGHT / 2 + 0.145, 0.23]}><boxGeometry args={[PAGE_WIDTH - 0.08, 0.025, 0.025]} /><meshBasicMaterial color="#22d3ee" transparent opacity={0.5} /></mesh><mesh position={[PAGE_WIDTH / 2 + 0.145, 0, 0.23]}><boxGeometry args={[0.025, PAGE_HEIGHT - 0.08, 0.025]} /><meshBasicMaterial color="#8b5cf6" transparent opacity={0.48} /></mesh></>;
 }
 
 function CurledOuterPage() {
   const geometry = React.useMemo(() => {
-    const width = 0.94;
-    const height = PAGE_HEIGHT - 0.5;
-    const geo = new THREE.PlaneGeometry(width, height, 36, 10);
+    const width = 1.38;
+    const height = PAGE_HEIGHT - 0.42;
+    const geo = new THREE.PlaneGeometry(width, height, 42, 12);
     geo.translate(width / 2, 0, 0);
     const position = geo.attributes.position as THREE.BufferAttribute;
-
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index);
       const y = position.getY(index);
       const u = Math.max(0, Math.min(1, x / width));
       const vertical = Math.abs(y) / (height / 2);
-      const fold = Math.pow(u, 1.4);
-      position.setXYZ(
-        index,
-        x - 1.22 * Math.pow(u, 1.55),
-        y + 0.28 * fold * (0.38 + 0.62 * vertical),
-        0.07 + 1.12 * fold + Math.sin(u * Math.PI) * 0.16,
-      );
+      const fold = Math.pow(u, 1.34);
+      position.setXYZ(index, x - 2.16 * Math.pow(u, 1.48), y + 0.34 * fold * (0.34 + 0.66 * vertical), 0.08 + 1.42 * fold + Math.sin(u * Math.PI) * 0.2);
     }
-
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
   }, []);
-
   React.useEffect(() => () => geometry.dispose(), [geometry]);
-
-  return (
-    <mesh geometry={geometry} position={[PAGE_WIDTH - 0.03, -0.03, 0.26]} rotation={[0, -0.07, -0.012]} castShadow>
-      <meshPhysicalMaterial
-        color="#1c2552"
-        roughness={0.5}
-        metalness={0}
-        clearcoat={0.28}
-        clearcoatRoughness={0.42}
-        emissive="#6d28d9"
-        emissiveIntensity={0.18}
-        transparent
-        opacity={0.7}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
-  );
+  return <mesh geometry={geometry} position={[PAGE_WIDTH + 0.02, -0.02, 0.28]} rotation={[0, -0.055, -0.012]} castShadow><meshPhysicalMaterial color="#2a2f72" roughness={0.42} metalness={0} clearcoat={0.36} clearcoatRoughness={0.32} emissive="#7c3aed" emissiveIntensity={0.26} transparent opacity={0.78} side={THREE.DoubleSide} /></mesh>;
 }
 
 function TurningPage({ currentSpread, direction, reducedMotion }: { currentSpread: number; direction: -1 | 0 | 1; reducedMotion: boolean }) {
   const meshRef = React.useRef<THREE.Mesh>(null);
   const previous = React.useRef(currentSpread);
   const progress = React.useRef(1);
-
-  const geometry = React.useMemo(() => {
-    const geo = new THREE.PlaneGeometry(PAGE_WIDTH - 0.08, PAGE_HEIGHT - 0.12, 40, 4);
-    geo.translate((PAGE_WIDTH - 0.08) / 2, 0, 0);
-    geo.userData.original = new Float32Array(geo.attributes.position.array as Float32Array);
-    return geo;
-  }, []);
-
+  const geometry = React.useMemo(() => { const geo = new THREE.PlaneGeometry(PAGE_WIDTH - 0.08, PAGE_HEIGHT - 0.12, 40, 4); geo.translate((PAGE_WIDTH - 0.08) / 2, 0, 0); geo.userData.original = new Float32Array(geo.attributes.position.array as Float32Array); return geo; }, []);
   React.useEffect(() => () => geometry.dispose(), [geometry]);
-
   useFrame((_, delta) => {
-    if (previous.current !== currentSpread) {
-      previous.current = currentSpread;
-      progress.current = reducedMotion ? 1 : 0;
-    }
-
-    const mesh = meshRef.current;
-    if (!mesh) return;
-
+    if (previous.current !== currentSpread) { previous.current = currentSpread; progress.current = reducedMotion ? 1 : 0; }
+    const mesh = meshRef.current; if (!mesh) return;
     progress.current = Math.min(1, progress.current + delta * 1.45);
-    const eased = 1 - Math.pow(1 - progress.current, 3);
-    mesh.visible = currentSpread > 0 && eased < 0.999;
-
-    const position = geometry.attributes.position as THREE.BufferAttribute;
-    const original = geometry.userData.original as Float32Array;
-    const dir = direction || 1;
-    const width = PAGE_WIDTH - 0.08;
-    const strength = Math.sin(eased * Math.PI);
-    const baseAngle = (dir > 0 ? -1 : 1) * Math.PI * eased;
-
-    for (let index = 0; index < position.count; index += 1) {
-      const baseX = original[index * 3];
-      const baseY = original[index * 3 + 1];
-      const u = Math.max(0, Math.min(1, baseX / width));
-      const startX = dir > 0 ? baseX : -baseX;
-      const angle = baseAngle + (dir > 0 ? -1 : 1) * strength * 0.72 * (u - 0.42);
-      position.setXYZ(index, Math.cos(angle) * startX, baseY + Math.sin(u * Math.PI) * strength * 0.08, -Math.sin(angle) * startX + Math.sin(u * Math.PI) * strength * 0.7);
-    }
-
-    position.needsUpdate = true;
-    geometry.computeVertexNormals();
+    const eased = 1 - Math.pow(1 - progress.current, 3); mesh.visible = currentSpread > 0 && eased < 0.999;
+    const position = geometry.attributes.position as THREE.BufferAttribute; const original = geometry.userData.original as Float32Array; const dir = direction || 1; const width = PAGE_WIDTH - 0.08; const strength = Math.sin(eased * Math.PI); const baseAngle = (dir > 0 ? -1 : 1) * Math.PI * eased;
+    for (let index = 0; index < position.count; index += 1) { const baseX = original[index * 3]; const baseY = original[index * 3 + 1]; const u = Math.max(0, Math.min(1, baseX / width)); const startX = dir > 0 ? baseX : -baseX; const angle = baseAngle + (dir > 0 ? -1 : 1) * strength * 0.72 * (u - 0.42); position.setXYZ(index, Math.cos(angle) * startX, baseY + Math.sin(u * Math.PI) * strength * 0.08, -Math.sin(angle) * startX + Math.sin(u * Math.PI) * strength * 0.7); }
+    position.needsUpdate = true; geometry.computeVertexNormals();
   });
-
-  return (
-    <mesh ref={meshRef} geometry={geometry} position={[0, 0.02, 0.34]} castShadow>
-      <meshPhysicalMaterial color="#dce5ef" side={THREE.DoubleSide} roughness={0.75} clearcoat={0.08} emissive="#57428c" emissiveIntensity={0.02} />
-    </mesh>
-  );
+  return <mesh ref={meshRef} geometry={geometry} position={[0, 0.02, 0.34]} castShadow><meshPhysicalMaterial color="#dce5ef" side={THREE.DoubleSide} roughness={0.75} clearcoat={0.08} emissive="#57428c" emissiveIntensity={0.02} /></mesh>;
 }
 
 function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
@@ -433,109 +216,43 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
   const frontCoverRef = React.useRef<THREE.Group>(null);
   const leftLayers = Math.max(3, currentSpread + 3);
   const rightLayers = Math.max(3, PAPER_LAYERS - currentSpread);
-
   useFrame((_, delta) => {
-    const root = rootRef.current;
-    const cover = frontCoverRef.current;
-    if (!root || !cover) return;
-
+    const root = rootRef.current; const cover = frontCoverRef.current; if (!root || !cover) return;
     const speed = reducedMotion ? 18 : 4.5;
     root.position.x = THREE.MathUtils.damp(root.position.x, open ? 0 : -HALF_PAGE + 0.24, speed, delta);
     root.position.y = THREE.MathUtils.damp(root.position.y, open ? 0.34 : 0.14, speed, delta);
-    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.205 : -0.07, speed, delta);
+    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.2 : -0.07, speed, delta);
     root.rotation.y = THREE.MathUtils.damp(root.rotation.y, open ? 0 : -0.5, speed, delta);
     root.rotation.z = THREE.MathUtils.damp(root.rotation.z, open ? 0 : -0.018, speed, delta);
-
     root.scale.x = THREE.MathUtils.damp(root.scale.x, open ? 0.98 : 1.08, speed, delta);
     root.scale.y = THREE.MathUtils.damp(root.scale.y, open ? 1.0 : 0.98, speed, delta);
     root.scale.z = THREE.MathUtils.damp(root.scale.z, open ? 1.0 : 0.98, speed, delta);
     cover.rotation.y = THREE.MathUtils.damp(cover.rotation.y, open ? -Math.PI : 0, reducedMotion ? 20 : 4, delta);
   });
-
-  return (
-    <group ref={rootRef} position={[-HALF_PAGE + 0.24, 0.14, 0]} rotation={[-0.07, -0.5, -0.018]} scale={[1.08, 0.98, 0.98]}>
-      <Hardcover position={[HALF_PAGE + 0.16, 0, -0.3]} />
-      {open && <Hardcover position={[-HALF_PAGE - 0.11, 0, -0.3]} />}
-      {open && <PaperStack side="left" layers={leftLayers} />}
-      <PaperStack side="right" layers={rightLayers} />
-
-      {!open && <mesh position={[HALF_PAGE + 0.26, 0.04, -0.055]}><boxGeometry args={[PAGE_WIDTH - 0.14, PAGE_HEIGHT - 0.18, 0.045]} /><meshStandardMaterial color="#a8b8cc" roughness={0.9} emissive="#6d28d9" emissiveIntensity={0.04} /></mesh>}
-      {!open && <mesh position={[HALF_PAGE + 0.39, -0.02, -0.11]}><boxGeometry args={[PAGE_WIDTH - 0.2, PAGE_HEIGHT - 0.18, 0.04]} /><meshStandardMaterial color="#261a5b" roughness={0.8} emissive="#6d28d9" emissiveIntensity={0.11} /></mesh>}
-
-      {open && <group position={[-HALF_PAGE - 0.012, 0, 0.22]} rotation={[0, 0.12, -0.018]}><PageFrame side="left"><SpreadContent index={currentSpread} side="left" /></PageFrame></group>}
-      {open && <group position={[HALF_PAGE + 0.012, 0, 0.22]} rotation={[0, -0.12, 0.018]}><PageFrame side="right"><SpreadContent index={currentSpread} side="right" /></PageFrame></group>}
-      {open && <OpenBookEdgeGlow />}
-      {open && <CurledOuterPage />}
-
-      <group ref={frontCoverRef} position={[0, 0, 0.21]}>
-        <group position={[HALF_PAGE, 0, 0]} onClick={() => { if (!open) nextSpread(); }}>
-          <RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5}>
-            <meshPhysicalMaterial color="#07122b" roughness={0.84} metalness={0.025} clearcoat={0.08} clearcoatRoughness={0.62} emissive="#070d1d" emissiveIntensity={0.012} />
-          </RoundedBox>
-          {!open && <CoverContent />}
-        </group>
-      </group>
-
-      <mesh position={[0, 0, -0.08]}><boxGeometry args={[0.09, PAGE_HEIGHT + 0.06, 0.34]} /><meshStandardMaterial color="#061426" roughness={0.84} emissive="#22d3ee" emissiveIntensity={0.025} /></mesh>
-      {!open && <Text position={[0.02, 0, 0.25]} rotation={[0, 0, Math.PI / 2]} fontSize={0.085} color="#67e8f9" letterSpacing={0.12}>PORTFOLIO · NVT</Text>}
-      {open && <mesh position={[0, 0, 0.12]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.045, 0.08, PAGE_HEIGHT - 0.24, 24]} /><meshStandardMaterial color="#020611" emissive="#17285b" emissiveIntensity={0.06} /></mesh>}
-      {open && <TurningPage currentSpread={currentSpread} direction={direction} reducedMotion={reducedMotion} />}
-
-      {open && <mesh position={[-PAGE_WIDTH - 0.08, 0, 0.42]} onClick={previousSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
-      {open && <mesh position={[PAGE_WIDTH + 0.08, 0, 0.42]} onClick={nextSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
-
-      <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.3} /></mesh>
-    </group>
-  );
+  return <group ref={rootRef} position={[-HALF_PAGE + 0.24, 0.14, 0]} rotation={[-0.07, -0.5, -0.018]} scale={[1.08, 0.98, 0.98]}>
+    <Hardcover position={[HALF_PAGE + 0.16, 0, -0.3]} />{open && <Hardcover position={[-HALF_PAGE - 0.11, 0, -0.3]} />}{open && <PaperStack side="left" layers={leftLayers} />}<PaperStack side="right" layers={rightLayers} />
+    {!open && <mesh position={[HALF_PAGE + 0.26, 0.04, -0.055]}><boxGeometry args={[PAGE_WIDTH - 0.14, PAGE_HEIGHT - 0.18, 0.045]} /><meshStandardMaterial color="#a8b8cc" roughness={0.9} emissive="#6d28d9" emissiveIntensity={0.04} /></mesh>}{!open && <mesh position={[HALF_PAGE + 0.39, -0.02, -0.11]}><boxGeometry args={[PAGE_WIDTH - 0.2, PAGE_HEIGHT - 0.18, 0.04]} /><meshStandardMaterial color="#261a5b" roughness={0.8} emissive="#6d28d9" emissiveIntensity={0.11} /></mesh>}
+    {open && <group position={[-HALF_PAGE + 0.04, 0, 0.22]} rotation={[0, 0.105, -0.018]}><PageFrame side="left"><SpreadContent index={currentSpread} side="left" /></PageFrame></group>}
+    {open && <group position={[HALF_PAGE - 0.04, 0, 0.22]} rotation={[0, -0.105, 0.018]}><PageFrame side="right"><SpreadContent index={currentSpread} side="right" /></PageFrame></group>}
+    {open && <OpenBookEdgeGlow />}{open && <CurledOuterPage />}
+    <group ref={frontCoverRef} position={[0, 0, 0.21]}><group position={[HALF_PAGE, 0, 0]} onClick={() => { if (!open) nextSpread(); }}><RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5}><meshPhysicalMaterial color="#07122b" roughness={0.84} metalness={0.025} clearcoat={0.08} clearcoatRoughness={0.62} emissive="#070d1d" emissiveIntensity={0.012} /></RoundedBox>{!open && <CoverRimGlow />}{!open && <CoverContent />}</group></group>
+    <mesh position={[0, 0, -0.095]}><boxGeometry args={[0.045, PAGE_HEIGHT + 0.02, 0.26]} /><meshStandardMaterial color="#061426" roughness={0.86} emissive="#22d3ee" emissiveIntensity={0.018} /></mesh>
+    {!open && <Text position={[0.02, 0, 0.25]} rotation={[0, 0, Math.PI / 2]} fontSize={0.085} color="#67e8f9" letterSpacing={0.12}>PORTFOLIO · NVT</Text>}
+    {open && <mesh position={[0, 0, 0.1]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.028, 0.055, PAGE_HEIGHT - 0.3, 24]} /><meshStandardMaterial color="#020611" emissive="#17285b" emissiveIntensity={0.05} /></mesh>}
+    {open && <TurningPage currentSpread={currentSpread} direction={direction} reducedMotion={reducedMotion} />}
+    {open && <mesh position={[-PAGE_WIDTH - 0.08, 0, 0.42]} onClick={previousSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
+    {open && <mesh position={[PAGE_WIDTH + 0.08, 0, 0.42]} onClick={nextSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
+    <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.3} /></mesh>
+  </group>;
 }
 
 function Stage({ lightMode }: { lightMode: boolean }) {
-  return (
-    <group position={[0, -2.5, -0.4]}>
-      <gridHelper args={[12, 24, lightMode ? "#7da4c8" : "#102d4b", lightMode ? "#bed1e5" : "#071728"]} position={[0, -0.05, 0]} />
-      {[1.72, 2.35, 3.05, 3.82].map((radius, index) => (
-        <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.14]}>
-          <torusGeometry args={[radius, index === 1 ? 0.022 : 0.011, 8, 144]} />
-          <meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={lightMode ? 0.08 : 0.31 - index * 0.04} />
-        </mesh>
-      ))}
-    </group>
-  );
+  return <group position={[0, -2.5, -0.4]}><gridHelper args={[12, 24, lightMode ? "#7da4c8" : "#102d4b", lightMode ? "#bed1e5" : "#071728"]} position={[0, -0.05, 0]} />{[1.72, 2.35, 3.05, 3.82].map((radius, index) => <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.14]}><torusGeometry args={[radius, index === 1 ? 0.022 : 0.011, 8, 144]} /><meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={lightMode ? 0.08 : 0.31 - index * 0.04} /></mesh>)}</group>;
 }
 
 export function SpatialCvScene({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
   const { currentSpread } = useSpatialCv();
   const open = currentSpread > 0;
   const background = lightMode ? "#eaf2ff" : "#020711";
-
-  return (
-    <>
-      <color attach="background" args={[background]} />
-      <fog attach="fog" args={[background, 13, 24]} />
-      {!lightMode && <Stars radius={20} depth={14} count={180} factor={1.5} saturation={0} fade speed={0.15} />}
-      <ambientLight intensity={lightMode ? 1.25 : 0.28} />
-      <directionalLight position={[5, 8, 9]} intensity={lightMode ? 2 : 0.95} color={lightMode ? "#ffffff" : "#dce8ff"} />
-      <directionalLight position={[-8, 2, 5]} intensity={lightMode ? 0.5 : 0.25} color="#22d3ee" />
-      <directionalLight position={[8, 2, 4]} intensity={lightMode ? 0.45 : 0.22} color="#8b5cf6" />
-      <pointLight position={[0, -2.1, 2.2]} intensity={lightMode ? 0.4 : 1.2} color="#22d3ee" distance={7} />
-      <pointLight position={[2.8, -1.4, 1.6]} intensity={lightMode ? 0.25 : 0.75} color="#8b5cf6" distance={6} />
-      <Stage lightMode={lightMode} />
-      <BookModel reducedMotion={reducedMotion} />
-      <OrbitControls
-        makeDefault
-        enablePan={false}
-        enableZoom
-        enableRotate={!open}
-        minDistance={open ? 8.8 : 7.6}
-        maxDistance={15.5}
-        minPolarAngle={Math.PI * 0.3}
-        maxPolarAngle={Math.PI * 0.68}
-        rotateSpeed={0.36}
-        zoomSpeed={0.56}
-        dampingFactor={0.08}
-        enableDamping
-        target={[0, 0.1, 0]}
-      />
-    </>
-  );
+  return <><color attach="background" args={[background]} /><fog attach="fog" args={[background, 13, 24]} />{!lightMode && <Stars radius={20} depth={14} count={180} factor={1.5} saturation={0} fade speed={0.15} />}<ambientLight intensity={lightMode ? 1.25 : 0.28} /><directionalLight position={[5, 8, 9]} intensity={lightMode ? 2 : 0.95} color={lightMode ? "#ffffff" : "#dce8ff"} /><directionalLight position={[-8, 2, 5]} intensity={lightMode ? 0.5 : 0.25} color="#22d3ee" /><directionalLight position={[8, 2, 4]} intensity={lightMode ? 0.45 : 0.22} color="#8b5cf6" /><pointLight position={[0, -2.1, 2.2]} intensity={lightMode ? 0.4 : 1.2} color="#22d3ee" distance={7} /><pointLight position={[2.8, -1.4, 1.6]} intensity={lightMode ? 0.25 : 0.75} color="#8b5cf6" distance={6} /><Stage lightMode={lightMode} /><BookModel reducedMotion={reducedMotion} /><OrbitControls makeDefault enablePan={false} enableZoom enableRotate={!open} minDistance={open ? 8.8 : 7.6} maxDistance={15.5} minPolarAngle={Math.PI * 0.3} maxPolarAngle={Math.PI * 0.68} rotateSpeed={0.36} zoomSpeed={0.56} dampingFactor={0.08} enableDamping target={[0, 0.1, 0]} /></>;
 }
