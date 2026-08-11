@@ -46,7 +46,7 @@ export function Hero3DCanvas() {
   return (
     <div
       aria-label="Interactive 3D CV book. Open the cover, turn pages, or select a CV section to jump directly to its chapter."
-      className={`relative w-full overflow-hidden transition-[height,min-height] duration-500 ${open ? "h-[calc(100vh-6.5rem)] min-h-[45rem] max-h-[70rem]" : "h-[calc(100vh-7rem)] min-h-[42rem] max-h-[64rem]"}`}
+      className={`relative w-full overflow-hidden transition-[height,min-height] duration-500 ${open ? "h-[calc(100vh-5.7rem)] min-h-[42rem] max-h-[61rem]" : "h-[calc(100vh-5.8rem)] min-h-[38rem] max-h-[54rem]"}`}
     >
       <Canvas
         dpr={[1, 1.5]}
@@ -54,10 +54,10 @@ export function Hero3DCanvas() {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         fallback={<StaticFallback />}
       >
-        <PerspectiveCamera makeDefault position={[0, 0.18, open ? 10.15 : 9.15]} fov={open ? 39 : 41} />
+        <PerspectiveCamera makeDefault position={[0, open ? 0.36 : 0.28, open ? 12.3 : 11.7]} fov={open ? 37 : 36} />
         <SpatialCvScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
-      <div className="pointer-events-none absolute inset-x-4 top-3 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.18em] text-white/38">
+      <div className="pointer-events-none absolute inset-x-3 top-2.5 flex items-center justify-between text-[8px] font-medium uppercase tracking-[0.18em] text-white/24">
         <span>{open ? "Interactive CV · open book" : "Interactive CV · cover"}</span>
         <span>{isTurning ? "Turning pages" : open ? activeView : reducedMotion ? "Reduced motion" : "Drag · zoom · open"}</span>
       </div>
