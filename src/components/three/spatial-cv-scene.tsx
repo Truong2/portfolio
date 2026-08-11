@@ -25,6 +25,7 @@ function PageSurface({ side }: { side: "left" | "right" }) {
   const geometry = React.useMemo(() => {
     const geo = new THREE.PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 48, 10);
     const position = geo.attributes.position as THREE.BufferAttribute;
+
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index);
       const y = position.getY(index);
@@ -36,6 +37,7 @@ function PageSurface({ side }: { side: "left" | "right" }) {
       const yLift = 0.29 * Math.pow(outer, 1.65) * (0.38 + 0.62 * vertical);
       position.setXYZ(index, x, y + yLift, z);
     }
+
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
@@ -84,9 +86,14 @@ function CoverContent() {
           <p className="mt-6 text-[8px] font-mono uppercase tracking-[0.34em] text-slate-400">Welcome to my</p>
           <p className="mt-2 text-[13px] font-semibold uppercase tracking-[0.42em] text-gradient">Portfolio</p>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
-          <div className="mt-16"><h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2><p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p></div>
+          <div className="mt-16">
+            <h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2>
+            <p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p>
+          </div>
           <p className="mt-8 max-w-[330px] text-[9px] leading-[1.15rem] text-slate-400">Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.</p>
-          <div className="mt-8 flex gap-2.5">{coverTech.map((item) => <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>{item.label}</div>)}</div>
+          <div className="mt-8 flex gap-2.5">
+            {coverTech.map((item) => <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>{item.label}</div>)}
+          </div>
           <div className="mt-auto flex items-center gap-3 text-[7px] font-mono uppercase tracking-[0.16em] text-slate-500"><span>Let&apos;s build something</span><span className="text-cyan-300">great together</span></div>
         </div>
       </div>
@@ -99,10 +106,27 @@ const experienceHighlights = [["FE Lead", "Taxi Admin · SANO"], ["Migration", "
 
 function ExperiencePage({ side }: { side: "left" | "right" }) {
   if (side === "left") {
-    return <><div className="flex items-start justify-between"><div><Kicker>02 · Chapter</Kicker><h2 className="mt-3 text-[36px] font-semibold leading-none tracking-[-0.055em]">Experience</h2><p className="mt-2 text-[12px] text-violet-300">My professional journey and impact</p></div><div className="mt-5 flex size-9 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-lg">▣</div></div><p className="mt-6 max-w-[405px] text-[10px] leading-[1.1rem] text-slate-400">3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.</p><div className="mt-6 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Professional summary</Kicker><ul className="mt-3 space-y-2">{["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>)}</ul></div><div className="mt-4 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Core strengths</Kicker><ul className="mt-3 grid gap-2">{coreStrengths.map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>)}</ul></div></>;
+    return <>
+      <div className="flex items-start justify-between">
+        <div><Kicker>02 · Chapter</Kicker><h2 className="mt-3 text-[36px] font-semibold leading-none tracking-[-0.055em]">Experience</h2><p className="mt-2 text-[12px] text-violet-300">My professional journey and impact</p></div>
+        <div className="mt-5 flex size-9 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-lg">▣</div>
+      </div>
+      <p className="mt-6 max-w-[405px] text-[10px] leading-[1.1rem] text-slate-400">3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.</p>
+      <div className="mt-6 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Professional summary</Kicker><ul className="mt-3 space-y-2">{["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>)}</ul></div>
+      <div className="mt-4 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4"><Kicker>Core strengths</Kicker><ul className="mt-3 grid gap-2">{coreStrengths.map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>)}</ul></div>
+    </>;
   }
 
-  return <><div className="flex items-center justify-between"><Kicker>Experience timeline</Kicker><span className="rounded-md border border-cyan-300/10 px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-cyan-300">Key highlights</span></div><div className="mt-5 grid grid-cols-[1fr_100px] gap-4"><div className="relative space-y-5 before:absolute before:bottom-3 before:left-[6px] before:top-3 before:w-px before:bg-gradient-to-b before:from-cyan-300 before:via-violet-300/55 before:to-transparent">{experience.map((entry) => <div key={entry.id} className="relative pl-7"><span className="absolute left-0 top-1 size-[12px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" /><p className="text-[7px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p><h3 className="mt-1 text-[11px] font-semibold text-white">{entry.role}</h3><p className="text-[8px] text-slate-400">{entry.company}</p><p className="mt-1.5 text-[7px] leading-3 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p></div>)}</div><div className="space-y-3">{[["3+", "Years experience"], ["FE", "Lead ownership"], ["Multi", "Domain delivery"]].map(([value, label]) => <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3"><p className="text-[15px] font-semibold text-cyan-200">{value}</p><p className="mt-1 text-[7px] leading-3 text-slate-500">{label}</p></div>)}</div></div><div className="mt-6 grid grid-cols-2 gap-3">{experienceHighlights.map(([label, value]) => <div key={label} className="rounded-xl border border-white/[0.07] bg-white/[0.018] px-3 py-3"><p className="text-[7px] font-mono uppercase tracking-[0.12em] text-violet-300">{label}</p><p className="mt-1.5 text-[8px] leading-3 text-slate-400">{value}</p></div>)}</div></>;
+  return <>
+    <div className="flex items-center justify-between"><Kicker>Experience timeline</Kicker><span className="rounded-md border border-cyan-300/10 px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-cyan-300">Key highlights</span></div>
+    <div className="mt-5 grid grid-cols-[1fr_100px] gap-4">
+      <div className="relative space-y-5 before:absolute before:bottom-3 before:left-[6px] before:top-3 before:w-px before:bg-gradient-to-b before:from-cyan-300 before:via-violet-300/55 before:to-transparent">
+        {experience.map((entry) => <div key={entry.id} className="relative pl-7"><span className="absolute left-0 top-1 size-[12px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" /><p className="text-[7px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p><h3 className="mt-1 text-[11px] font-semibold text-white">{entry.role}</h3><p className="text-[8px] text-slate-400">{entry.company}</p><p className="mt-1.5 text-[7px] leading-3 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p></div>)}
+      </div>
+      <div className="space-y-3">{[["3+", "Years experience"], ["FE", "Lead ownership"], ["Multi", "Domain delivery"]].map(([value, label]) => <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3"><p className="text-[15px] font-semibold text-cyan-200">{value}</p><p className="mt-1 text-[7px] leading-3 text-slate-500">{label}</p></div>)}</div>
+    </div>
+    <div className="mt-6 grid grid-cols-2 gap-3">{experienceHighlights.map(([label, value]) => <div key={label} className="rounded-xl border border-white/[0.07] bg-white/[0.018] px-3 py-3"><p className="text-[7px] font-mono uppercase tracking-[0.12em] text-violet-300">{label}</p><p className="mt-1.5 text-[8px] leading-3 text-slate-400">{value}</p></div>)}</div>
+  </>;
 }
 
 function ProfilePage({ side }: { side: "left" | "right" }) {
@@ -170,25 +194,36 @@ function CoverRimGlow() {
 
 function CurledOuterPage() {
   const geometry = React.useMemo(() => {
-    const width = 1.38;
-    const height = PAGE_HEIGHT - 0.42;
+    const width = 1.45;
+    const height = PAGE_HEIGHT - 0.38;
     const geo = new THREE.PlaneGeometry(width, height, 42, 12);
-    geo.translate(width / 2, 0, 0);
+    geo.translate(-width / 2, 0, 0);
     const position = geo.attributes.position as THREE.BufferAttribute;
+
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index);
       const y = position.getY(index);
-      const u = Math.max(0, Math.min(1, x / width));
-      const vertical = Math.abs(y) / (height / 2);
-      const fold = Math.pow(u, 1.34);
-      position.setXYZ(index, x - 2.16 * Math.pow(u, 1.48), y + 0.34 * fold * (0.34 + 0.66 * vertical), 0.08 + 1.42 * fold + Math.sin(u * Math.PI) * 0.2);
+      const u = THREE.MathUtils.clamp(-x / width, 0, 1);
+      const vertical = Math.min(1, Math.abs(y) / (height / 2));
+      const taper = 0.58 + 0.42 * (1 - Math.pow(vertical, 1.55));
+      const bowedX = x * taper;
+      const z = 0.08 + 0.38 * Math.sin(u * Math.PI * 0.5) + 0.13 * Math.sin(u * Math.PI);
+      const yLift = 0.16 * u * (1 - vertical * 0.3);
+      position.setXYZ(index, bowedX, y + yLift, z);
     }
+
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
   }, []);
+
   React.useEffect(() => () => geometry.dispose(), [geometry]);
-  return <mesh geometry={geometry} position={[PAGE_WIDTH + 0.02, -0.02, 0.28]} rotation={[0, -0.055, -0.012]} castShadow><meshPhysicalMaterial color="#2a2f72" roughness={0.42} metalness={0} clearcoat={0.36} clearcoatRoughness={0.32} emissive="#7c3aed" emissiveIntensity={0.26} transparent opacity={0.78} side={THREE.DoubleSide} /></mesh>;
+
+  return (
+    <mesh geometry={geometry} position={[PAGE_WIDTH + 0.02, -0.02, 0.31]} rotation={[0, 0.62, -0.018]} castShadow>
+      <meshPhysicalMaterial color="#a6a3ff" roughness={0.48} metalness={0} clearcoat={0.22} clearcoatRoughness={0.4} emissive="#6d28d9" emissiveIntensity={0.15} transparent opacity={0.7} side={THREE.DoubleSide} />
+    </mesh>
+  );
 }
 
 function TurningPage({ currentSpread, direction, reducedMotion }: { currentSpread: number; direction: -1 | 0 | 1; reducedMotion: boolean }) {
@@ -197,15 +232,32 @@ function TurningPage({ currentSpread, direction, reducedMotion }: { currentSprea
   const progress = React.useRef(1);
   const geometry = React.useMemo(() => { const geo = new THREE.PlaneGeometry(PAGE_WIDTH - 0.08, PAGE_HEIGHT - 0.12, 40, 4); geo.translate((PAGE_WIDTH - 0.08) / 2, 0, 0); geo.userData.original = new Float32Array(geo.attributes.position.array as Float32Array); return geo; }, []);
   React.useEffect(() => () => geometry.dispose(), [geometry]);
+
   useFrame((_, delta) => {
     if (previous.current !== currentSpread) { previous.current = currentSpread; progress.current = reducedMotion ? 1 : 0; }
-    const mesh = meshRef.current; if (!mesh) return;
+    const mesh = meshRef.current;
+    if (!mesh) return;
     progress.current = Math.min(1, progress.current + delta * 1.45);
-    const eased = 1 - Math.pow(1 - progress.current, 3); mesh.visible = currentSpread > 0 && eased < 0.999;
-    const position = geometry.attributes.position as THREE.BufferAttribute; const original = geometry.userData.original as Float32Array; const dir = direction || 1; const width = PAGE_WIDTH - 0.08; const strength = Math.sin(eased * Math.PI); const baseAngle = (dir > 0 ? -1 : 1) * Math.PI * eased;
-    for (let index = 0; index < position.count; index += 1) { const baseX = original[index * 3]; const baseY = original[index * 3 + 1]; const u = Math.max(0, Math.min(1, baseX / width)); const startX = dir > 0 ? baseX : -baseX; const angle = baseAngle + (dir > 0 ? -1 : 1) * strength * 0.72 * (u - 0.42); position.setXYZ(index, Math.cos(angle) * startX, baseY + Math.sin(u * Math.PI) * strength * 0.08, -Math.sin(angle) * startX + Math.sin(u * Math.PI) * strength * 0.7); }
-    position.needsUpdate = true; geometry.computeVertexNormals();
+    const eased = 1 - Math.pow(1 - progress.current, 3);
+    mesh.visible = currentSpread > 0 && eased < 0.999;
+    const position = geometry.attributes.position as THREE.BufferAttribute;
+    const original = geometry.userData.original as Float32Array;
+    const dir = direction || 1;
+    const width = PAGE_WIDTH - 0.08;
+    const strength = Math.sin(eased * Math.PI);
+    const baseAngle = (dir > 0 ? -1 : 1) * Math.PI * eased;
+    for (let index = 0; index < position.count; index += 1) {
+      const baseX = original[index * 3];
+      const baseY = original[index * 3 + 1];
+      const u = Math.max(0, Math.min(1, baseX / width));
+      const startX = dir > 0 ? baseX : -baseX;
+      const angle = baseAngle + (dir > 0 ? -1 : 1) * strength * 0.72 * (u - 0.42);
+      position.setXYZ(index, Math.cos(angle) * startX, baseY + Math.sin(u * Math.PI) * strength * 0.08, -Math.sin(angle) * startX + Math.sin(u * Math.PI) * strength * 0.7);
+    }
+    position.needsUpdate = true;
+    geometry.computeVertexNormals();
   });
+
   return <mesh ref={meshRef} geometry={geometry} position={[0, 0.02, 0.34]} castShadow><meshPhysicalMaterial color="#dce5ef" side={THREE.DoubleSide} roughness={0.75} clearcoat={0.08} emissive="#57428c" emissiveIntensity={0.02} /></mesh>;
 }
 
@@ -216,8 +268,11 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
   const frontCoverRef = React.useRef<THREE.Group>(null);
   const leftLayers = Math.max(3, currentSpread + 3);
   const rightLayers = Math.max(3, PAPER_LAYERS - currentSpread);
+
   useFrame((_, delta) => {
-    const root = rootRef.current; const cover = frontCoverRef.current; if (!root || !cover) return;
+    const root = rootRef.current;
+    const cover = frontCoverRef.current;
+    if (!root || !cover) return;
     const speed = reducedMotion ? 18 : 4.5;
     root.position.x = THREE.MathUtils.damp(root.position.x, open ? 0 : -HALF_PAGE + 0.24, speed, delta);
     root.position.y = THREE.MathUtils.damp(root.position.y, open ? 0.34 : 0.14, speed, delta);
@@ -225,16 +280,22 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
     root.rotation.y = THREE.MathUtils.damp(root.rotation.y, open ? 0 : -0.5, speed, delta);
     root.rotation.z = THREE.MathUtils.damp(root.rotation.z, open ? 0 : -0.018, speed, delta);
     root.scale.x = THREE.MathUtils.damp(root.scale.x, open ? 0.98 : 1.08, speed, delta);
-    root.scale.y = THREE.MathUtils.damp(root.scale.y, open ? 1.0 : 0.98, speed, delta);
-    root.scale.z = THREE.MathUtils.damp(root.scale.z, open ? 1.0 : 0.98, speed, delta);
+    root.scale.y = THREE.MathUtils.damp(root.scale.y, open ? 1 : 0.98, speed, delta);
+    root.scale.z = THREE.MathUtils.damp(root.scale.z, open ? 1 : 0.98, speed, delta);
     cover.rotation.y = THREE.MathUtils.damp(cover.rotation.y, open ? -Math.PI : 0, reducedMotion ? 20 : 4, delta);
   });
+
   return <group ref={rootRef} position={[-HALF_PAGE + 0.24, 0.14, 0]} rotation={[-0.07, -0.5, -0.018]} scale={[1.08, 0.98, 0.98]}>
-    <Hardcover position={[HALF_PAGE + 0.16, 0, -0.3]} />{open && <Hardcover position={[-HALF_PAGE - 0.11, 0, -0.3]} />}{open && <PaperStack side="left" layers={leftLayers} />}<PaperStack side="right" layers={rightLayers} />
-    {!open && <mesh position={[HALF_PAGE + 0.26, 0.04, -0.055]}><boxGeometry args={[PAGE_WIDTH - 0.14, PAGE_HEIGHT - 0.18, 0.045]} /><meshStandardMaterial color="#a8b8cc" roughness={0.9} emissive="#6d28d9" emissiveIntensity={0.04} /></mesh>}{!open && <mesh position={[HALF_PAGE + 0.39, -0.02, -0.11]}><boxGeometry args={[PAGE_WIDTH - 0.2, PAGE_HEIGHT - 0.18, 0.04]} /><meshStandardMaterial color="#261a5b" roughness={0.8} emissive="#6d28d9" emissiveIntensity={0.11} /></mesh>}
+    <Hardcover position={[HALF_PAGE + 0.16, 0, -0.3]} />
+    {open && <Hardcover position={[-HALF_PAGE - 0.11, 0, -0.3]} />}
+    {open && <PaperStack side="left" layers={leftLayers} />}
+    <PaperStack side="right" layers={rightLayers} />
+    {!open && <mesh position={[HALF_PAGE + 0.26, 0.04, -0.055]}><boxGeometry args={[PAGE_WIDTH - 0.14, PAGE_HEIGHT - 0.18, 0.045]} /><meshStandardMaterial color="#a8b8cc" roughness={0.9} emissive="#6d28d9" emissiveIntensity={0.04} /></mesh>}
+    {!open && <mesh position={[HALF_PAGE + 0.39, -0.02, -0.11]}><boxGeometry args={[PAGE_WIDTH - 0.2, PAGE_HEIGHT - 0.18, 0.04]} /><meshStandardMaterial color="#261a5b" roughness={0.8} emissive="#6d28d9" emissiveIntensity={0.11} /></mesh>}
     {open && <group position={[-HALF_PAGE + 0.04, 0, 0.22]} rotation={[0, 0.105, -0.018]}><PageFrame side="left"><SpreadContent index={currentSpread} side="left" /></PageFrame></group>}
     {open && <group position={[HALF_PAGE - 0.04, 0, 0.22]} rotation={[0, -0.105, 0.018]}><PageFrame side="right"><SpreadContent index={currentSpread} side="right" /></PageFrame></group>}
-    {open && <OpenBookEdgeGlow />}{open && <CurledOuterPage />}
+    {open && <OpenBookEdgeGlow />}
+    {open && <CurledOuterPage />}
     <group ref={frontCoverRef} position={[0, 0, 0.21]}><group position={[HALF_PAGE, 0, 0]} onClick={() => { if (!open) nextSpread(); }}><RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5}><meshPhysicalMaterial color="#07122b" roughness={0.84} metalness={0.025} clearcoat={0.08} clearcoatRoughness={0.62} emissive="#070d1d" emissiveIntensity={0.012} /></RoundedBox>{!open && <CoverRimGlow />}{!open && <CoverContent />}</group></group>
     <mesh position={[0, 0, -0.095]}><boxGeometry args={[0.045, PAGE_HEIGHT + 0.02, 0.26]} /><meshStandardMaterial color="#061426" roughness={0.86} emissive="#22d3ee" emissiveIntensity={0.018} /></mesh>
     {!open && <Text position={[0.02, 0, 0.25]} rotation={[0, 0, Math.PI / 2]} fontSize={0.085} color="#67e8f9" letterSpacing={0.12}>PORTFOLIO · NVT</Text>}
