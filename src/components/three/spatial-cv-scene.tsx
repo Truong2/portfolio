@@ -31,7 +31,7 @@ function CurvedPageSurface({ side }: { side: "left" | "right" }) {
       const normalized = (x + PAGE_WIDTH / 2) / PAGE_WIDTH;
       const gutter = side === "left" ? 1 - normalized : normalized;
       const outer = side === "left" ? normalized : 1 - normalized;
-      const z = -0.16 * Math.pow(gutter, 2.15) + 0.11 * Math.pow(outer, 2.8) + 0.025 * Math.sin(normalized * Math.PI);
+      const z = -0.2 * Math.pow(gutter, 2.05) + 0.14 * Math.pow(outer, 2.65) + 0.035 * Math.sin(normalized * Math.PI);
       position.setXYZ(index, x, y, z);
     }
     position.needsUpdate = true;
@@ -43,16 +43,7 @@ function CurvedPageSurface({ side }: { side: "left" | "right" }) {
 
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshPhysicalMaterial
-        color="#081326"
-        roughness={0.5}
-        metalness={0.02}
-        clearcoat={0.38}
-        clearcoatRoughness={0.34}
-        emissive="#071326"
-        emissiveIntensity={0.23}
-        side={THREE.DoubleSide}
-      />
+      <meshStandardMaterial color="#07101f" roughness={0.88} metalness={0.01} emissive="#030817" emissiveIntensity={0.08} side={THREE.DoubleSide} />
     </mesh>
   );
 }
@@ -64,8 +55,8 @@ function PageFrame({ side, children }: { side: "left" | "right"; children: React
       <Html
         transform
         occlude={false}
-        position={[0, 0, 0.065]}
-        distanceFactor={5.75}
+        position={[0, 0, 0.075]}
+        distanceFactor={3.68}
         style={{ width: 500, height: 640, pointerEvents: "auto" }}
       >
         <div className="relative h-[640px] w-[500px] overflow-hidden px-8 py-8 text-slate-100">
@@ -89,26 +80,26 @@ const coverTech = [
 
 function CoverContent() {
   return (
-    <Html transform position={[0, 0.02, 0.225]} distanceFactor={6.05} style={{ width: 510, height: 650, pointerEvents: "none" }}>
+    <Html transform position={[0, 0.02, 0.225]} distanceFactor={3.85} style={{ width: 510, height: 650, pointerEvents: "none" }}>
       <div className="relative h-[650px] w-[510px] overflow-hidden px-11 py-11 text-white">
         <div className="absolute inset-4 rounded-[18px] border border-cyan-200/[0.11]" />
         <div className="absolute left-8 top-8 h-10 w-10 border-l border-t border-cyan-300/45" />
         <div className="absolute bottom-8 right-8 h-10 w-10 border-b border-r border-cyan-300/35" />
         <div className="relative z-10 flex h-full flex-col items-center text-center">
-          <p className="mt-5 text-[8px] font-mono uppercase tracking-[0.34em] text-slate-400">Welcome to my</p>
-          <p className="mt-2 text-sm font-semibold uppercase tracking-[0.42em] text-gradient">Portfolio</p>
+          <p className="mt-6 text-[8px] font-mono uppercase tracking-[0.34em] text-slate-400">Welcome to my</p>
+          <p className="mt-2 text-[13px] font-semibold uppercase tracking-[0.42em] text-gradient">Portfolio</p>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
 
-          <div className="mt-14">
-            <h2 className="text-[41px] font-semibold leading-none tracking-[-0.055em] text-white">{personalInfo.name}</h2>
-            <p className="mt-5 text-base font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p>
+          <div className="mt-16">
+            <h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2>
+            <p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p>
           </div>
 
-          <p className="mt-8 max-w-[350px] text-[10px] leading-5 text-slate-400">Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.</p>
+          <p className="mt-8 max-w-[330px] text-[9px] leading-[1.15rem] text-slate-400">Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.</p>
 
           <div className="mt-8 flex gap-2.5">
             {coverTech.map((item) => (
-              <div key={item.caption} title={item.caption} className={`flex size-10 items-center justify-center rounded-lg border border-white/[0.075] bg-[#07101e]/80 text-[11px] font-bold shadow-[inset_0_1px_0_rgba(255,255,255,.04)] ${item.className}`}>{item.label}</div>
+              <div key={item.caption} title={item.caption} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.075] bg-[#07101e]/80 text-[10px] font-bold shadow-[inset_0_1px_0_rgba(255,255,255,.04)] ${item.className}`}>{item.label}</div>
             ))}
           </div>
 
@@ -133,17 +124,17 @@ function ExperienceRolesPage({ side }: { side: "left" | "right" }) {
     return (
       <>
         <div className="flex items-start justify-between">
-          <div><Kicker>02 · Chapter</Kicker><h2 className="mt-3 text-[40px] font-semibold leading-none tracking-[-0.055em]">Experience</h2><p className="mt-2 text-sm text-violet-300">My professional journey and impact</p></div>
-          <div className="mt-5 flex size-10 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-xl">▣</div>
+          <div><Kicker>02 · Chapter</Kicker><h2 className="mt-3 text-[36px] font-semibold leading-none tracking-[-0.055em]">Experience</h2><p className="mt-2 text-[12px] text-violet-300">My professional journey and impact</p></div>
+          <div className="mt-5 flex size-9 items-center justify-center rounded-xl border border-violet-300/15 bg-violet-300/[0.05] text-lg">▣</div>
         </div>
-        <p className="mt-6 max-w-[405px] text-[11px] leading-5 text-slate-400">3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.</p>
+        <p className="mt-6 max-w-[405px] text-[10px] leading-[1.1rem] text-slate-400">3+ years building enterprise frontend applications with React, Next.js, Vue and TypeScript across product teams and client engagements.</p>
         <div className="mt-6 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4">
           <Kicker>Professional summary</Kicker>
-          <ul className="mt-3 space-y-2">{["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => <li key={item} className="flex gap-2 text-[10px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>)}</ul>
+          <ul className="mt-3 space-y-2">{["3+ years in frontend development", "Enterprise product delivery", "Strong focus on performance & UX", "Agile mindset and team collaboration"].map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-cyan-300">›</span>{item}</li>)}</ul>
         </div>
         <div className="mt-4 rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-4">
           <Kicker>Core strengths</Kicker>
-          <ul className="mt-3 grid grid-cols-1 gap-2">{coreStrengths.map((item) => <li key={item} className="flex gap-2 text-[10px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>)}</ul>
+          <ul className="mt-3 grid grid-cols-1 gap-2">{coreStrengths.map((item) => <li key={item} className="flex gap-2 text-[9px] text-slate-400"><span className="text-violet-300">›</span>{item}</li>)}</ul>
         </div>
       </>
     );
@@ -152,15 +143,15 @@ function ExperienceRolesPage({ side }: { side: "left" | "right" }) {
   return (
     <>
       <div className="flex items-center justify-between"><Kicker>Experience timeline</Kicker><span className="rounded-md border border-cyan-300/10 px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-cyan-300">Key highlights</span></div>
-      <div className="mt-5 grid grid-cols-[1fr_112px] gap-4">
+      <div className="mt-5 grid grid-cols-[1fr_100px] gap-4">
         <div className="relative space-y-5 before:absolute before:bottom-3 before:left-[6px] before:top-3 before:w-px before:bg-gradient-to-b before:from-cyan-300 before:via-violet-300/55 before:to-transparent">
-          {experience.map((entry) => <div key={entry.id} className="relative pl-7"><span className="absolute left-0 top-1 size-[13px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" /><p className="text-[8px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p><h3 className="mt-1 text-[12px] font-semibold text-white">{entry.role}</h3><p className="text-[9px] text-slate-400">{entry.company}</p><p className="mt-1.5 text-[8px] leading-4 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p></div>)}
+          {experience.map((entry) => <div key={entry.id} className="relative pl-7"><span className="absolute left-0 top-1 size-[12px] rounded-full border-2 border-cyan-200 bg-[#091427] shadow-[0_0_16px_rgba(34,211,238,.5)]" /><p className="text-[7px] font-mono uppercase tracking-[0.1em] text-violet-300">{entry.period}</p><h3 className="mt-1 text-[11px] font-semibold text-white">{entry.role}</h3><p className="text-[8px] text-slate-400">{entry.company}</p><p className="mt-1.5 text-[7px] leading-3 text-slate-500">{entry.projects.slice(0, 2).map((project) => project.name).join(" · ")}</p></div>)}
         </div>
         <div className="space-y-3">
-          {[['3+', 'Years experience'], ['FE', 'Lead ownership'], ['Multi', 'Domain delivery']].map(([value, label]) => <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3"><p className="text-[17px] font-semibold text-cyan-200">{value}</p><p className="mt-1 text-[8px] leading-3 text-slate-500">{label}</p></div>)}
+          {[["3+", "Years experience"], ["FE", "Lead ownership"], ["Multi", "Domain delivery"]].map(([value, label]) => <div key={label} className="rounded-xl border border-cyan-300/[0.08] bg-cyan-300/[0.018] p-3"><p className="text-[15px] font-semibold text-cyan-200">{value}</p><p className="mt-1 text-[7px] leading-3 text-slate-500">{label}</p></div>)}
         </div>
       </div>
-      <p className="absolute bottom-1 right-4 rotate-[-12deg] text-[8px] italic text-cyan-300/70">Performance · UX · Delivery</p>
+      <p className="absolute bottom-1 right-4 rotate-[-12deg] text-[7px] italic text-cyan-300/70">Performance · UX · Delivery</p>
     </>
   );
 }
@@ -221,13 +212,13 @@ function PaperStack({ side, layers }: { side: "left" | "right"; layers: number }
 }
 
 function Hardcover({ position }: { position: [number, number, number] }) {
-  return <RoundedBox args={[PAGE_WIDTH + 0.26, PAGE_HEIGHT + 0.28, 0.4]} radius={0.13} smoothness={5} position={position}><meshPhysicalMaterial color="#07122b" roughness={0.23} metalness={0.48} clearcoat={1} clearcoatRoughness={0.08} emissive="#17265a" emissiveIntensity={0.2} /></RoundedBox>;
+  return <RoundedBox args={[PAGE_WIDTH + 0.26, PAGE_HEIGHT + 0.28, 0.4]} radius={0.13} smoothness={5} position={position}><meshPhysicalMaterial color="#07122b" roughness={0.32} metalness={0.34} clearcoat={0.9} clearcoatRoughness={0.12} emissive="#111e48" emissiveIntensity={0.12} /></RoundedBox>;
 }
 
 function TurningPageContent({ index }: { index: number }) {
   const spread = BOOK_SPREADS[index];
   if (!spread || index === 0) return null;
-  return <Html transform occlude={false} position={[PAGE_WIDTH * 0.48, 0, 0.04]} distanceFactor={5.9} style={{ width: 420, height: 540, pointerEvents: "none" }}><div className="h-[540px] w-[420px] overflow-hidden px-7 py-7 text-slate-950"><p className="text-[9px] font-mono uppercase tracking-[0.2em] text-cyan-700">Turning to</p><h3 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.04em] text-slate-900">{spread.label}</h3></div></Html>;
+  return <Html transform occlude={false} position={[PAGE_WIDTH * 0.48, 0, 0.04]} distanceFactor={3.75} style={{ width: 420, height: 540, pointerEvents: "none" }}><div className="h-[540px] w-[420px] overflow-hidden px-7 py-7 text-slate-950"><p className="text-[8px] font-mono uppercase tracking-[0.2em] text-cyan-700">Turning to</p><h3 className="mt-3 text-xl font-semibold leading-tight tracking-[-0.04em] text-slate-900">{spread.label}</h3></div></Html>;
 }
 
 function CurvedTurningPage({ currentSpread, direction, reducedMotion }: { currentSpread: number; direction: -1 | 0 | 1; reducedMotion: boolean }) {
@@ -298,11 +289,11 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
     if (!root || !frontCover) return;
     const speed = reducedMotion ? 18 : 4.5;
     root.position.x = THREE.MathUtils.damp(root.position.x, open ? 0 : -HALF_PAGE + 0.24, speed, delta);
-    root.position.y = THREE.MathUtils.damp(root.position.y, open ? -0.14 : -0.12, speed, delta);
-    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.11 : -0.07, speed, delta);
+    root.position.y = THREE.MathUtils.damp(root.position.y, open ? -0.18 : -0.12, speed, delta);
+    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.16 : -0.07, speed, delta);
     root.rotation.y = THREE.MathUtils.damp(root.rotation.y, open ? 0 : -0.5, speed, delta);
     root.rotation.z = THREE.MathUtils.damp(root.rotation.z, open ? 0 : -0.018, speed, delta);
-    const targetScale = open ? 0.84 : 0.78;
+    const targetScale = open ? 0.8 : 0.78;
     root.scale.x = THREE.MathUtils.damp(root.scale.x, targetScale, speed, delta);
     root.scale.y = THREE.MathUtils.damp(root.scale.y, targetScale, speed, delta);
     root.scale.z = THREE.MathUtils.damp(root.scale.z, targetScale, speed, delta);
@@ -316,26 +307,26 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
       {open && <PaperStack side="left" layers={leftLayers} />}
       <PaperStack side="right" layers={rightLayers} />
 
-      {!open && <mesh position={[HALF_PAGE + 0.3, 0, -0.05]}><boxGeometry args={[PAGE_WIDTH - 0.12, PAGE_HEIGHT - 0.08, 0.06]} /><meshPhysicalMaterial color="#24125e" roughness={0.45} emissive="#7c3aed" emissiveIntensity={0.36} /></mesh>}
-      {!open && <mesh position={[HALF_PAGE + 0.4, 0, -0.1]}><boxGeometry args={[PAGE_WIDTH - 0.18, PAGE_HEIGHT - 0.15, 0.045]} /><meshPhysicalMaterial color="#0e4f80" roughness={0.5} emissive="#22d3ee" emissiveIntensity={0.16} /></mesh>}
+      {!open && <mesh position={[HALF_PAGE + 0.3, 0, -0.05]}><boxGeometry args={[PAGE_WIDTH - 0.12, PAGE_HEIGHT - 0.08, 0.06]} /><meshPhysicalMaterial color="#24125e" roughness={0.55} emissive="#7c3aed" emissiveIntensity={0.24} /></mesh>}
+      {!open && <mesh position={[HALF_PAGE + 0.4, 0, -0.1]}><boxGeometry args={[PAGE_WIDTH - 0.18, PAGE_HEIGHT - 0.15, 0.045]} /><meshPhysicalMaterial color="#0d3557" roughness={0.58} emissive="#22d3ee" emissiveIntensity={0.08} /></mesh>}
 
-      {open && <group position={[-HALF_PAGE - 0.045, 0, 0.22]} rotation={[0, 0.105, 0.012]}><PageFrame side="left"><SpreadPageContent index={currentSpread} side="left" /></PageFrame></group>}
-      {open && <group position={[HALF_PAGE + 0.045, 0, 0.22]} rotation={[0, -0.105, -0.012]}><PageFrame side="right"><SpreadPageContent index={currentSpread} side="right" /></PageFrame></group>}
+      {open && <group position={[-HALF_PAGE - 0.045, 0, 0.22]} rotation={[0, 0.14, 0.012]}><PageFrame side="left"><SpreadPageContent index={currentSpread} side="left" /></PageFrame></group>}
+      {open && <group position={[HALF_PAGE + 0.045, 0, 0.22]} rotation={[0, -0.14, -0.012]}><PageFrame side="right"><SpreadPageContent index={currentSpread} side="right" /></PageFrame></group>}
 
       <group ref={frontCoverRef} position={[0, 0, 0.21]}>
         <group position={[HALF_PAGE, 0, 0]} onClick={() => { if (!open) nextSpread(); }}>
-          <RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5}><meshPhysicalMaterial color="#07122b" roughness={0.22} metalness={0.5} clearcoat={1} clearcoatRoughness={0.07} emissive="#15275d" emissiveIntensity={0.22} /></RoundedBox>
+          <RoundedBox args={[PAGE_WIDTH + 0.27, PAGE_HEIGHT + 0.29, 0.42]} radius={0.135} smoothness={5}><meshPhysicalMaterial color="#07122b" roughness={0.38} metalness={0.3} clearcoat={0.88} clearcoatRoughness={0.14} emissive="#101b42" emissiveIntensity={0.1} /></RoundedBox>
           {!open && <CoverContent />}
         </group>
       </group>
 
-      <mesh position={[0, 0, -0.025]}><boxGeometry args={[0.25, PAGE_HEIGHT + 0.15, 0.54]} /><meshPhysicalMaterial color="#061d3b" roughness={0.3} metalness={0.5} clearcoat={0.85} emissive="#22d3ee" emissiveIntensity={0.19} /></mesh>
+      <mesh position={[0, 0, -0.025]}><boxGeometry args={[0.25, PAGE_HEIGHT + 0.15, 0.54]} /><meshPhysicalMaterial color="#061d3b" roughness={0.38} metalness={0.4} clearcoat={0.7} emissive="#22d3ee" emissiveIntensity={0.12} /></mesh>
       {!open && <Text position={[0.02, 0, 0.25]} rotation={[0, 0, Math.PI / 2]} fontSize={0.085} color="#67e8f9" letterSpacing={0.12}>PORTFOLIO · NVT</Text>}
-      {open && <mesh position={[0, 0, 0.16]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.1, 0.16, PAGE_HEIGHT - 0.2, 24]} /><meshStandardMaterial color="#030813" emissive="#17285b" emissiveIntensity={0.16} /></mesh>}
+      {open && <mesh position={[0, 0, 0.16]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.1, 0.16, PAGE_HEIGHT - 0.2, 24]} /><meshStandardMaterial color="#030813" emissive="#17285b" emissiveIntensity={0.12} /></mesh>}
       {open && <CurvedTurningPage currentSpread={currentSpread} direction={direction} reducedMotion={reducedMotion} />}
       {open && <mesh position={[-PAGE_WIDTH - 0.08, 0, 0.42]} onClick={previousSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
       {open && <mesh position={[PAGE_WIDTH + 0.08, 0, 0.42]} onClick={nextSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
-      <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.45} /></mesh>
+      <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.4} /></mesh>
     </group>
   );
 }
@@ -344,9 +335,9 @@ function HolographicStage({ lightMode }: { lightMode: boolean }) {
   return (
     <group position={[0, -3.02, -0.4]}>
       <gridHelper args={[12, 24, lightMode ? "#7da4c8" : "#102d4b", lightMode ? "#bed1e5" : "#071728"]} position={[0, -0.05, 0]} />
-      {[1.72, 2.35, 3.05, 3.82].map((radius, index) => <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.14]}><torusGeometry args={[radius, index === 1 ? 0.02 : 0.009, 8, 144]} /><meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={lightMode ? 0.11 : 0.38 - index * 0.06} /></mesh>)}
-      <pointLight position={[0, 0.65, 0]} intensity={lightMode ? 2.4 : 5.4} color="#22d3ee" distance={7} />
-      <pointLight position={[2.6, 0.3, 0.8]} intensity={lightMode ? 1.5 : 3.6} color="#8b5cf6" distance={7} />
+      {[1.72, 2.35, 3.05, 3.82].map((radius, index) => <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.14]}><torusGeometry args={[radius, index === 1 ? 0.02 : 0.009, 8, 144]} /><meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={lightMode ? 0.1 : 0.3 - index * 0.045} /></mesh>)}
+      <pointLight position={[0, 0.65, 0]} intensity={lightMode ? 1.8 : 2.7} color="#22d3ee" distance={7} />
+      <pointLight position={[2.6, 0.3, 0.8]} intensity={lightMode ? 1.2 : 2.1} color="#8b5cf6" distance={7} />
     </group>
   );
 }
@@ -361,10 +352,10 @@ export function SpatialCvScene({ reducedMotion, lightMode }: { reducedMotion: bo
       <color attach="background" args={[background]} />
       <fog attach="fog" args={[background, 13, 24]} />
       {!lightMode && <Stars radius={20} depth={14} count={180} factor={1.5} saturation={0} fade speed={0.15} />}
-      <ambientLight intensity={lightMode ? 1.55 : 0.54} />
-      <directionalLight position={[5, 7, 8]} intensity={lightMode ? 3.1 : 2.5} color={lightMode ? "#ffffff" : "#dce8ff"} />
-      <directionalLight position={[-6, 0, 4]} intensity={lightMode ? 0.9 : 1.4} color="#22d3ee" />
-      <directionalLight position={[5, 0.5, 2]} intensity={lightMode ? 0.7 : 1.2} color="#8b5cf6" />
+      <ambientLight intensity={lightMode ? 1.45 : 0.42} />
+      <directionalLight position={[5, 7, 8]} intensity={lightMode ? 2.6 : 1.8} color={lightMode ? "#ffffff" : "#dce8ff"} />
+      <directionalLight position={[-6, 0, 4]} intensity={lightMode ? 0.8 : 0.9} color="#22d3ee" />
+      <directionalLight position={[5, 0.5, 2]} intensity={lightMode ? 0.6 : 0.8} color="#8b5cf6" />
       <HolographicStage lightMode={lightMode} />
       <BookModel reducedMotion={reducedMotion} />
       <OrbitControls makeDefault enablePan={false} enableZoom enableRotate={!open} minDistance={open ? 9.4 : 8.2} maxDistance={open ? 15.5 : 15} minPolarAngle={Math.PI * 0.3} maxPolarAngle={Math.PI * 0.68} rotateSpeed={0.36} zoomSpeed={0.56} dampingFactor={0.08} enableDamping target={[0, -0.16, 0]} />
