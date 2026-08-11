@@ -44,16 +44,16 @@ function SectionCard({ item, compact = false }: { item: (typeof items)[number]; 
     <button
       type="button"
       onClick={() => focusView(item.view)}
-      className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-[16px] border text-left backdrop-blur-2xl transition duration-300 hover:-translate-y-0.5 ${compact ? "min-h-[64px] px-3 py-2.5" : "min-h-[90px] px-4 py-3.5"} ${active ? "border-violet-400/65 bg-gradient-to-r from-violet-500/[0.13] to-cyan-400/[0.04] shadow-[0_0_34px_rgba(124,58,237,.22),inset_0_1px_0_rgba(255,255,255,.05)]" : "border-white/[0.08] bg-[#06101e]/76 shadow-[inset_0_1px_0_rgba(255,255,255,.035)] hover:border-cyan-300/34"}`}
+      className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-[16px] border text-left backdrop-blur-2xl transition duration-300 hover:-translate-y-0.5 ${compact ? "min-h-[58px] px-3 py-2" : "min-h-[86px] px-4 py-3.5"} ${active ? "border-violet-400/65 bg-gradient-to-r from-violet-500/[0.13] to-cyan-400/[0.04] shadow-[0_0_34px_rgba(124,58,237,.22),inset_0_1px_0_rgba(255,255,255,.05)]" : "border-white/[0.08] bg-[#06101e]/76 shadow-[inset_0_1px_0_rgba(255,255,255,.035)] hover:border-cyan-300/34"}`}
     >
       <span className={`pointer-events-none absolute inset-y-0 left-0 w-px ${active || violet ? "bg-violet-400 shadow-[0_0_18px_#8b5cf6]" : "bg-cyan-300/70 shadow-[0_0_15px_#22d3ee]"}`} />
-      <span className={`${compact ? "size-9" : "size-11"} flex shrink-0 items-center justify-center rounded-[13px] border ${violet ? "border-violet-300/20 bg-violet-400/[0.07] text-violet-300" : "border-cyan-300/20 bg-cyan-300/[0.07] text-cyan-300"} shadow-[inset_0_1px_0_rgba(255,255,255,.05)]`}><Icon className={compact ? "size-4" : "size-[18px]"} /></span>
+      <span className={`${compact ? "size-8" : "size-11"} flex shrink-0 items-center justify-center rounded-[13px] border ${violet ? "border-violet-300/20 bg-violet-400/[0.07] text-violet-300" : "border-cyan-300/20 bg-cyan-300/[0.07] text-cyan-300"} shadow-[inset_0_1px_0_rgba(255,255,255,.05)]`}><Icon className={compact ? "size-3.5" : "size-[18px]"} /></span>
       <span className="min-w-0 flex-1">
-        <strong className={`${compact ? "text-[11px]" : "text-[13px]"} block font-semibold tracking-[-0.01em] text-slate-100`}>{item.title}</strong>
+        <strong className={`${compact ? "text-[10px]" : "text-[13px]"} block font-semibold tracking-[-0.01em] text-slate-100`}>{item.title}</strong>
         {!compact && <span className="mt-1 block max-w-[11rem] text-[10px] leading-[1.28rem] text-slate-500">{item.description}</span>}
       </span>
-      <span className={`${compact ? "text-sm" : "text-lg"} absolute right-4 top-3 font-mono font-medium ${active ? "text-violet-400" : "text-slate-600"}`}>{item.index}</span>
-      <span className="absolute bottom-3 right-3 flex size-6 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.025] text-slate-500 transition group-hover:border-cyan-300/20 group-hover:text-cyan-300"><ChevronRight className="size-3.5" /></span>
+      <span className={`${compact ? "text-xs" : "text-lg"} absolute right-4 top-3 font-mono font-medium ${active ? "text-violet-400" : "text-slate-600"}`}>{item.index}</span>
+      <span className={`absolute ${compact ? "bottom-2 right-2 size-5" : "bottom-3 right-3 size-6"} flex items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.025] text-slate-500 transition group-hover:border-cyan-300/20 group-hover:text-cyan-300`}><ChevronRight className="size-3.5" /></span>
     </button>
   );
 }
@@ -140,7 +140,7 @@ export function SpatialCvExplorerShell() {
   return (
     <div className="relative mx-auto w-full max-w-[118rem] px-4 pb-3 pt-1 sm:px-5 lg:px-6">
       {closed ? (
-        <div className="grid min-h-[calc(100vh-4.2rem)] items-start gap-5 pt-4 xl:grid-cols-[0.64fr_1.72fr_0.64fr] xl:gap-7">
+        <div className="grid min-h-[calc(100vh-4.2rem)] items-start gap-5 pt-4 xl:grid-cols-[0.56fr_1.88fr_0.56fr] xl:gap-6">
           <aside className="order-2 grid gap-3 pt-10 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:pt-24" aria-label="CV sections">
             {items.slice(0, 3).map((item) => <SectionCard key={item.view} item={item} />)}
           </aside>
@@ -154,15 +154,15 @@ export function SpatialCvExplorerShell() {
           </aside>
         </div>
       ) : (
-        <div className="grid min-h-[calc(100vh-4.15rem)] items-start gap-4 pt-3 xl:grid-cols-[0.42fr_2.08fr_0.54fr] xl:gap-5">
-          <aside className="order-2 grid gap-2 pt-10 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:pt-16" aria-label="CV chapters">
+        <div className="grid min-h-[calc(100vh-4.15rem)] items-start gap-3 pt-2 xl:grid-cols-[0.34fr_2.32fr_0.46fr] xl:gap-4">
+          <aside className="order-2 grid gap-1.5 pt-8 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:pt-14" aria-label="CV chapters">
             {items.map((item) => <SectionCard key={item.view} item={item} compact />)}
           </aside>
           <div className="relative order-1 min-w-0 xl:order-2">
             <Hero3DCanvasLoader />
             <BookControls />
           </div>
-          <div className="order-3 pt-10 xl:pt-24"><JumpToPage /></div>
+          <div className="order-3 pt-8 xl:pt-20"><JumpToPage /></div>
         </div>
       )}
       <SocialDock />
