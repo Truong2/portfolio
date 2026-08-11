@@ -83,7 +83,7 @@ function JumpToPage() {
   const experienceLabels = ["Professional Summary", "Experience Timeline", "Key Highlights", "Featured Roles", "Tech Stack"];
 
   return (
-    <aside className="hidden self-center xl:block" aria-label="Jump to CV page">
+    <aside className="hidden xl:block" aria-label="Jump to CV page">
       <div className="rounded-[17px] border border-white/[0.07] bg-[#06101e]/72 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl">
         <p className="text-[8px] font-mono uppercase tracking-[0.17em] text-slate-400">Jump to page</p>
         <div className="relative mt-3 space-y-1 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-white/[0.08]">
@@ -140,29 +140,29 @@ export function SpatialCvExplorerShell() {
   return (
     <div className="relative mx-auto w-full max-w-[118rem] px-4 pb-3 pt-1 sm:px-5 lg:px-6">
       {closed ? (
-        <div className="grid min-h-[calc(100vh-4.2rem)] items-center gap-5 xl:grid-cols-[0.64fr_1.72fr_0.64fr] xl:gap-7">
-          <aside className="order-2 grid gap-3 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:self-center" aria-label="CV sections">
+        <div className="grid min-h-[calc(100vh-4.2rem)] items-start gap-5 pt-4 xl:grid-cols-[0.64fr_1.72fr_0.64fr] xl:gap-7">
+          <aside className="order-2 grid gap-3 pt-10 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:pt-24" aria-label="CV sections">
             {items.slice(0, 3).map((item) => <SectionCard key={item.view} item={item} />)}
           </aside>
           <div className="relative order-1 min-w-0 xl:order-2">
             <Hero3DCanvasLoader />
             <BookControls />
           </div>
-          <aside className="order-3 grid gap-3 sm:grid-cols-3 xl:grid-cols-1 xl:self-center" aria-label="More CV sections">
+          <aside className="order-3 grid gap-3 pt-10 sm:grid-cols-3 xl:grid-cols-1 xl:pt-24" aria-label="More CV sections">
             {items.slice(3).map((item) => <SectionCard key={item.view} item={item} />)}
             <CoverInstruction />
           </aside>
         </div>
       ) : (
-        <div className="grid min-h-[calc(100vh-4.15rem)] items-center gap-4 xl:grid-cols-[0.42fr_2.08fr_0.54fr] xl:gap-5">
-          <aside className="order-2 grid gap-2 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:self-center" aria-label="CV chapters">
+        <div className="grid min-h-[calc(100vh-4.15rem)] items-start gap-4 pt-3 xl:grid-cols-[0.42fr_2.08fr_0.54fr] xl:gap-5">
+          <aside className="order-2 grid gap-2 pt-10 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:pt-16" aria-label="CV chapters">
             {items.map((item) => <SectionCard key={item.view} item={item} compact />)}
           </aside>
           <div className="relative order-1 min-w-0 xl:order-2">
             <Hero3DCanvasLoader />
             <BookControls />
           </div>
-          <div className="order-3"><JumpToPage /></div>
+          <div className="order-3 pt-10 xl:pt-24"><JumpToPage /></div>
         </div>
       )}
       <SocialDock />
