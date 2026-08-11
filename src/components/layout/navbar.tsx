@@ -11,11 +11,9 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS: ReadonlyArray<{ view: CvView; label: string }> = [
   { view: "overview", label: "Overview" },
-  { view: "profile", label: "Profile" },
-  { view: "experience", label: "Experience" },
-  { view: "projects", label: "Projects" },
-  { view: "skills", label: "Skills" },
-  { view: "contact", label: "Contact" },
+  { view: "profile", label: "About Me" },
+  { view: "projects", label: "Highlights" },
+  { view: "experience", label: "Achievements" },
 ] as const;
 
 function Brand() {
@@ -115,7 +113,7 @@ export function Navbar() {
         className="mx-auto flex h-12 max-w-[120rem] items-center justify-between rounded-2xl border border-white/[0.07] bg-[#030916]/88 px-4 shadow-[0_16px_60px_rgba(0,0,0,.34),inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl sm:px-5"
       >
         <Brand />
-        <div className="hidden items-center gap-2 md:flex lg:gap-5">
+        <div className="hidden items-center gap-4 md:flex lg:gap-7">
           {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={activeView === item.view} />)}
         </div>
         <div className="hidden items-center gap-2 md:flex">
