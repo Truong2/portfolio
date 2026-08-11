@@ -53,15 +53,23 @@ function clampSpread(index: number) {
   return Math.max(0, Math.min(BOOK_SPREADS.length - 1, index));
 }
 
+function readInitialSpread() {
+  if (typeof window === "undefined") return 0;
+  const view = new URLSearchParams(window.location.search).get("view") as CvView | null;
+  return view && view in VIEW_TO_SPREAD ? VIEW_TO_SPREAD[view] : 0;
+}
+
 export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
-  const [currentSpread, setCurrentSpread] = React.useState(0);
-  const [targetSpread, setTargetSpread] = React.useState(0);
+  const initialSpreadRef = React.useRef<number | null>(null);
+  if (initialSpreadRef.current === null) initialSpreadRef.current = readInitialSpread();
+  const initialSpread = initialSpreadRef.current;
+  const [currentSpread, setCurrentSpread] = React.useState(initialSpread);
+  const [targetSpread, setTargetSpread] = React.useState(initialSpread);
   const [direction, setDirection] = React.useState<-1 | 0 | 1>(0);
   const isTurning = currentSpread !== targetSpread;
 
   React.useEffect(() => {
     if (currentSpread === targetSpread) return;
-
     const timer = window.setTimeout(() => {
       setCurrentSpread((current) => {
         if (current === targetSpread) return current;
@@ -70,7 +78,6 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
         return current + nextDirection;
       });
     }, PAGE_FLIP_STEP_MS);
-
     return () => window.clearTimeout(timer);
   }, [currentSpread, targetSpread]);
 
@@ -86,6 +93,12 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
       setDirection(nextDirection);
       return current + nextDirection;
     });
+
+    const nextView = BOOK_SPREADS[nextTarget]?.view ?? "overview";
+    const url = new URL(window.location.href);
+    if (nextView === "overview") url.searchParams.delete("view");
+    else url.searchParams.set("view", nextView);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     document.getElementById("hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
@@ -95,19 +108,7 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
   const activeView = BOOK_SPREADS[targetSpread]?.view ?? "overview";
 
   return (
-    <SpatialCvContext.Provider
-      value={{
-        activeView,
-        currentSpread,
-        targetSpread,
-        direction,
-        isTurning,
-        focusView,
-        goToSpread,
-        nextSpread,
-        previousSpread,
-      }}
-    >
+    <SpatialCvContext.Provider value={{ activeView, currentSpread, targetSpread, direction, isTurning, focusView, goToSpread, nextSpread, previousSpread }}>
       {children}
     </SpatialCvContext.Provider>
   );
