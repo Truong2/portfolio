@@ -54,7 +54,7 @@ export function Hero3DCanvas() {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         fallback={<StaticFallback />}
       >
-        <PerspectiveCamera makeDefault position={[0, open ? 2.35 : 0.36, open ? 11.25 : 11.55]} fov={open ? 34 : 36} />
+        <PerspectiveCamera makeDefault position={[0, open ? 3.15 : 0.36, open ? 10.7 : 11.55]} fov={open ? 35 : 36} />
         <SpatialCvScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
     </div>
