@@ -37,7 +37,7 @@ export function Hero3DCanvas() {
   const [webglSupported] = React.useState(() => detectWebGL());
   const reducedMotion = useReducedMotion();
   const { resolvedTheme } = useTheme();
-  const { activeView, currentSpread, isTurning } = useSpatialCv();
+  const { currentSpread } = useSpatialCv();
   const lightMode = resolvedTheme === "light";
   const open = currentSpread > 0;
 
@@ -54,13 +54,9 @@ export function Hero3DCanvas() {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         fallback={<StaticFallback />}
       >
-        <PerspectiveCamera makeDefault position={[0, open ? 0.36 : 0.28, open ? 12.3 : 11.7]} fov={open ? 37 : 36} />
+        <PerspectiveCamera makeDefault position={[0, open ? 0.82 : 0.32, open ? 12.8 : 11.9]} fov={open ? 36 : 36} />
         <SpatialCvScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
-      <div className="pointer-events-none absolute inset-x-3 top-2.5 flex items-center justify-between text-[8px] font-medium uppercase tracking-[0.18em] text-white/24">
-        <span>{open ? "Interactive CV · open book" : "Interactive CV · cover"}</span>
-        <span>{isTurning ? "Turning pages" : open ? activeView : reducedMotion ? "Reduced motion" : "Drag · zoom · open"}</span>
-      </div>
     </div>
   );
 }
