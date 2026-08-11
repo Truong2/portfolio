@@ -12,28 +12,43 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    env:
-      BASE_URL: https://portfolio-git-feature-book-reference-1528b8-truongtsus-projects.vercel.app
+    timeout-minutes: 15
     steps:
-      - name: Wait for preview
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Start app
         run: |
-          for i in {1..18}; do
-            if curl -fsS "$BASE_URL" >/dev/null; then
+          npm run start -- -p 3000 > /tmp/portfolio-next.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null; then
               exit 0
             fi
-            sleep 10
+            sleep 2
           done
+          cat /tmp/portfolio-next.log
           exit 1
 
       - name: Install Chromium
         run: npx --yes playwright@1.55.0 install --with-deps chromium
 
       - name: Capture cover
-        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=3500 "$BASE_URL/" evidence-cover.png
+        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=4500 http://127.0.0.1:3000/ evidence-cover.png
 
       - name: Capture experience
-        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=3500 "$BASE_URL/?view=experience" evidence-experience.png
+        run: npx --yes playwright@1.55.0 screenshot --viewport-size="1586,992" --wait-for-timeout=4500 "http://127.0.0.1:3000/?view=experience" evidence-experience.png
 
       - name: Upload evidence
         uses: actions/upload-artifact@v4
