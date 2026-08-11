@@ -158,7 +158,7 @@ function CurledOuterPage() {
 
   return <group position={[PAGE_WIDTH + 0.02, -0.02, 0.31]} rotation={[0, 0.3, -0.018]}>
     <mesh geometry={geometry} castShadow><meshPhysicalMaterial color="#756bd6" roughness={0.56} metalness={0} clearcoat={0.16} clearcoatRoughness={0.46} emissive="#5b21b6" emissiveIntensity={0.1} transparent opacity={0.4} depthWrite={false} side={THREE.DoubleSide} /></mesh>
-    <mesh position={[-0.72, 0.02, 0.36]}><boxGeometry args={[0.025, height * 0.86, 0.025]} /><meshBasicMaterial color="#ddd6fe" transparent opacity={0.62} /></mesh>
+    <mesh position={[-0.72, 0.02, 0.36]}><boxGeometry args={[0.025, PAGE_HEIGHT - 1.08, 0.025]} /><meshBasicMaterial color="#ddd6fe" transparent opacity={0.62} /></mesh>
   </group>;
 }
 
