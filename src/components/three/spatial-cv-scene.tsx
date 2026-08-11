@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Html, OrbitControls, RoundedBox, Stars, Text } from "@react-three/drei";
+import { Html, Line, OrbitControls, RoundedBox, Stars, Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -133,32 +133,37 @@ function CoverRimGlow() {
 }
 
 function CurledOuterPage() {
+  const curlWidth = 1.18;
+  const curlHeight = PAGE_HEIGHT - 0.42;
   const geometry = React.useMemo(() => {
-    const width = 1.18;
-    const height = PAGE_HEIGHT - 0.42;
-    const geo = new THREE.PlaneGeometry(width, height, 40, 12);
-    geo.translate(-width / 2, 0, 0);
+    const geo = new THREE.PlaneGeometry(curlWidth, curlHeight, 40, 12);
+    geo.translate(-curlWidth / 2, 0, 0);
     const position = geo.attributes.position as THREE.BufferAttribute;
-
     for (let index = 0; index < position.count; index += 1) {
       const x = position.getX(index);
       const y = position.getY(index);
-      const u = THREE.MathUtils.clamp(-x / width, 0, 1);
-      const vertical = Math.min(1, Math.abs(y) / (height / 2));
+      const u = THREE.MathUtils.clamp(-x / curlWidth, 0, 1);
+      const vertical = Math.min(1, Math.abs(y) / (curlHeight / 2));
       const taper = 0.54 + 0.46 * (1 - Math.pow(vertical, 1.5));
       position.setXYZ(index, x * taper, y + 0.14 * u * (1 - vertical * 0.35), 0.07 + 0.34 * Math.sin(u * Math.PI * 0.5) + 0.12 * Math.sin(u * Math.PI));
     }
-
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
   }, []);
 
+  const edgePoints = React.useMemo(() => Array.from({ length: 25 }, (_, index) => {
+    const y = -curlHeight / 2 + (curlHeight * index) / 24;
+    const vertical = Math.min(1, Math.abs(y) / (curlHeight / 2));
+    const taper = 0.54 + 0.46 * (1 - Math.pow(vertical, 1.5));
+    return new THREE.Vector3(-curlWidth * taper, y + 0.14 * (1 - vertical * 0.35), 0.41);
+  }), []);
+
   React.useEffect(() => () => geometry.dispose(), [geometry]);
 
   return <group position={[PAGE_WIDTH + 0.02, -0.02, 0.31]} rotation={[0, 0.3, -0.018]}>
-    <mesh geometry={geometry} castShadow><meshPhysicalMaterial color="#756bd6" roughness={0.56} metalness={0} clearcoat={0.16} clearcoatRoughness={0.46} emissive="#5b21b6" emissiveIntensity={0.1} transparent opacity={0.4} depthWrite={false} side={THREE.DoubleSide} /></mesh>
-    <mesh position={[-0.72, 0.02, 0.36]}><boxGeometry args={[0.025, PAGE_HEIGHT - 1.08, 0.025]} /><meshBasicMaterial color="#ddd6fe" transparent opacity={0.62} /></mesh>
+    <mesh geometry={geometry} castShadow><meshPhysicalMaterial color="#756bd6" roughness={0.58} metalness={0} clearcoat={0.14} clearcoatRoughness={0.48} emissive="#5b21b6" emissiveIntensity={0.08} transparent opacity={0.32} depthWrite={false} side={THREE.DoubleSide} /></mesh>
+    <Line points={edgePoints} color="#ddd6fe" lineWidth={1.2} transparent opacity={0.72} />
   </group>;
 }
 
