@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Download, ExternalLink, Mail, Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 
 import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -16,6 +16,16 @@ const NAV_ITEMS: ReadonlyArray<{ view: CvView; label: string }> = [
   { view: "experience", label: "Achievements" },
 ] as const;
 
+function BrandMark() {
+  return (
+    <span className="relative flex size-9 items-center justify-center">
+      <span className="absolute left-[7px] top-[6px] h-6 w-[7px] -skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-cyan-300 to-blue-500 shadow-[0_0_18px_rgba(34,211,238,.45)]" />
+      <span className="absolute right-[7px] top-[6px] h-6 w-[7px] skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-violet-400 to-blue-500 shadow-[0_0_18px_rgba(139,92,246,.4)]" />
+      <span className="absolute left-[14px] top-[10px] h-[18px] w-[7px] rotate-[-43deg] rounded-[2px] bg-gradient-to-b from-cyan-200 to-violet-400" />
+    </span>
+  );
+}
+
 function Brand() {
   const { focusView } = useSpatialCv();
   return (
@@ -26,13 +36,13 @@ function Brand() {
         focusView("overview");
         document.getElementById("hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }}
-      className="group flex items-center gap-3"
+      className="group flex items-center gap-2.5"
       aria-label="Open CV overview"
     >
-      <span className="relative flex size-9 items-center justify-center rounded-xl border border-cyan-300/30 bg-[#081a2f]/90 font-mono text-[9px] font-bold tracking-[0.12em] text-cyan-300 shadow-[0_0_24px_rgba(34,211,238,.12),inset_0_1px_0_rgba(255,255,255,.05)]">NVT</span>
+      <BrandMark />
       <span className="hidden sm:block">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.13em] text-slate-100">{personalInfo.name}</span>
-        <span className="mt-0.5 block text-[8px] text-slate-500">Portfolio · Frontend Developer</span>
+        <span className="block text-[10px] font-semibold tracking-[-0.01em] text-slate-100">{personalInfo.name}</span>
+        <span className="mt-0.5 block text-[8px] text-slate-500">Portfolio</span>
       </span>
     </a>
   );
@@ -49,7 +59,7 @@ function DesktopLink({ view, label, active }: { view: CvView; label: string; act
       }}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative flex h-12 items-center px-2 text-[10px] font-medium transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-8 after:-translate-x-1/2 after:bg-cyan-300 after:opacity-0 after:shadow-[0_0_12px_#22d3ee] after:transition-opacity",
+        "relative flex h-12 items-center px-2 text-[10px] font-medium transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-11 after:-translate-x-1/2 after:bg-cyan-300 after:opacity-0 after:shadow-[0_0_13px_#22d3ee] after:transition-opacity",
         active ? "text-cyan-200 after:opacity-100" : "text-slate-400 hover:text-slate-100",
       )}
     >
@@ -113,14 +123,12 @@ export function Navbar() {
         className="mx-auto flex h-12 max-w-[120rem] items-center justify-between rounded-2xl border border-white/[0.07] bg-[#030916]/88 px-4 shadow-[0_16px_60px_rgba(0,0,0,.34),inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl sm:px-5"
       >
         <Brand />
-        <div className="hidden items-center gap-4 md:flex lg:gap-7">
+        <div className="hidden items-center gap-4 md:flex lg:gap-8">
           {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={activeView === item.view} />)}
         </div>
         <div className="hidden items-center gap-2 md:flex">
-          <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" className="flex size-8 items-center justify-center rounded-xl border border-white/[0.07] bg-[#050c19]/75 text-cyan-300 transition hover:border-cyan-300/30 hover:bg-cyan-300/5"><ExternalLink className="size-3.5" /></a>
-          <a href={`mailto:${personalInfo.email}`} aria-label="Send email" className="flex size-8 items-center justify-center rounded-xl border border-white/[0.07] bg-[#050c19]/75 text-cyan-300 transition hover:border-cyan-300/30 hover:bg-cyan-300/5"><Mail className="size-3.5" /></a>
-          <div className="scale-[0.86]"><ThemeToggle /></div>
-          <a href={personalInfo.resumeUrl} download className="ml-1 inline-flex h-8 items-center gap-2 rounded-xl border border-cyan-300/25 bg-cyan-300/[0.055] px-3.5 text-[10px] font-semibold text-slate-100 transition hover:border-cyan-300/45 hover:bg-cyan-300/10">
+          <ThemeToggle />
+          <a href={personalInfo.resumeUrl} download className="ml-1 inline-flex h-8 items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3.5 text-[10px] font-medium text-slate-200 transition hover:border-cyan-300/30 hover:bg-cyan-300/5">
             <Download className="size-3.5" /> Download CV
           </a>
         </div>
