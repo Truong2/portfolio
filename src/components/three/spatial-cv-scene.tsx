@@ -125,14 +125,14 @@ function Hardcover({ position }: { position: [number, number, number] }) {
 }
 
 function GalaxyBacking({ open }: { open: boolean }) {
-  return <group position={[open ? HALF_PAGE + 0.25 : HALF_PAGE + 0.48, 0.03, -0.2]} rotation={[0, open ? -0.1 : -0.035, open ? 0.018 : 0.01]}>
+  return <group position={[open ? HALF_PAGE + 0.55 : HALF_PAGE + 0.48, 0.03, open ? -0.26 : -0.2]} rotation={[0, open ? -0.06 : -0.035, open ? 0.01 : 0.01]}>
     <RoundedBox args={[PAGE_WIDTH + 0.08, PAGE_HEIGHT + 0.08, 0.11]} radius={0.1} smoothness={4}>
-      <meshPhysicalMaterial color="#13153c" roughness={0.64} metalness={0.02} clearcoat={0.2} emissive="#4c1d95" emissiveIntensity={0.28} />
+      <meshPhysicalMaterial color="#13153c" roughness={0.64} metalness={0.02} clearcoat={0.2} emissive="#4c1d95" emissiveIntensity={0.3} />
     </RoundedBox>
-    <mesh position={[0.55, -0.9, 0.075]} rotation={[0, 0, -0.28]}><circleGeometry args={[1.35, 64]} /><meshBasicMaterial color="#7c3aed" transparent opacity={0.17} depthWrite={false} /></mesh>
-    <mesh position={[-0.35, -1.3, 0.08]} rotation={[0, 0, 0.24]}><circleGeometry args={[0.92, 64]} /><meshBasicMaterial color="#2563eb" transparent opacity={0.12} depthWrite={false} /></mesh>
-    <mesh position={[0.1, 1.75, 0.08]}><planeGeometry args={[PAGE_WIDTH - 0.45, 0.018]} /><meshBasicMaterial color="#a78bfa" transparent opacity={0.55} /></mesh>
-    <mesh position={[PAGE_WIDTH / 2 + 0.02, 0, 0.08]}><boxGeometry args={[0.024, PAGE_HEIGHT - 0.25, 0.03]} /><meshBasicMaterial color="#8b5cf6" transparent opacity={0.72} /></mesh>
+    <mesh position={[0.55, -0.9, 0.075]} rotation={[0, 0, -0.28]}><circleGeometry args={[1.35, 64]} /><meshBasicMaterial color="#7c3aed" transparent opacity={0.19} depthWrite={false} /></mesh>
+    <mesh position={[-0.35, -1.3, 0.08]} rotation={[0, 0, 0.24]}><circleGeometry args={[0.92, 64]} /><meshBasicMaterial color="#2563eb" transparent opacity={0.13} depthWrite={false} /></mesh>
+    <mesh position={[0.1, 1.75, 0.08]}><planeGeometry args={[PAGE_WIDTH - 0.45, 0.018]} /><meshBasicMaterial color="#a78bfa" transparent opacity={0.6} /></mesh>
+    <mesh position={[PAGE_WIDTH / 2 + 0.02, 0, 0.08]}><boxGeometry args={[0.024, PAGE_HEIGHT - 0.25, 0.03]} /><meshBasicMaterial color="#8b5cf6" transparent opacity={0.8} /></mesh>
   </group>;
 }
 
@@ -145,10 +145,10 @@ function CoverRimGlow() {
 }
 
 function CurledOuterPage() {
-  const curlWidth = 1.05;
-  const curlHeight = PAGE_HEIGHT - 0.5;
+  const curlWidth = 2.2;
+  const curlHeight = PAGE_HEIGHT - 0.46;
   const geometry = React.useMemo(() => {
-    const geo = new THREE.PlaneGeometry(curlWidth, curlHeight, 40, 12);
+    const geo = new THREE.PlaneGeometry(curlWidth, curlHeight, 52, 14);
     geo.translate(-curlWidth / 2, 0, 0);
     const position = geo.attributes.position as THREE.BufferAttribute;
     for (let index = 0; index < position.count; index += 1) {
@@ -156,26 +156,27 @@ function CurledOuterPage() {
       const y = position.getY(index);
       const u = THREE.MathUtils.clamp(-x / curlWidth, 0, 1);
       const vertical = Math.min(1, Math.abs(y) / (curlHeight / 2));
-      const taper = 0.48 + 0.52 * (1 - Math.pow(vertical, 1.45));
-      position.setXYZ(index, x * taper, y + 0.2 * u * (1 - vertical * 0.38), 0.08 + 0.48 * Math.sin(u * Math.PI * 0.5) + 0.15 * Math.sin(u * Math.PI));
+      const taper = 0.58 + 0.42 * (1 - Math.pow(vertical, 1.7));
+      const bow = Math.sin(u * Math.PI * 0.62);
+      position.setXYZ(index, x * taper, y + 0.19 * u * (1 - vertical * 0.38), 0.07 + 0.98 * bow + 0.2 * Math.sin(u * Math.PI));
     }
     position.needsUpdate = true;
     geo.computeVertexNormals();
     return geo;
   }, []);
 
-  const edgePoints = React.useMemo(() => Array.from({ length: 25 }, (_, index) => {
-    const y = -curlHeight / 2 + (curlHeight * index) / 24;
+  const edgePoints = React.useMemo(() => Array.from({ length: 29 }, (_, index) => {
+    const y = -curlHeight / 2 + (curlHeight * index) / 28;
     const vertical = Math.min(1, Math.abs(y) / (curlHeight / 2));
-    const taper = 0.48 + 0.52 * (1 - Math.pow(vertical, 1.45));
-    return new THREE.Vector3(-curlWidth * taper, y + 0.2 * (1 - vertical * 0.38), 0.56);
+    const taper = 0.58 + 0.42 * (1 - Math.pow(vertical, 1.7));
+    return new THREE.Vector3(-curlWidth * taper, y + 0.19 * (1 - vertical * 0.38), 1.08);
   }), []);
 
   React.useEffect(() => () => geometry.dispose(), [geometry]);
 
-  return <group position={[PAGE_WIDTH + 0.02, -0.02, 0.34]} rotation={[0, 0.22, -0.018]}>
-    <mesh geometry={geometry} castShadow><meshPhysicalMaterial color="#9389e8" roughness={0.62} metalness={0} clearcoat={0.1} clearcoatRoughness={0.55} emissive="#5b21b6" emissiveIntensity={0.055} transparent opacity={0.2} depthWrite={false} side={THREE.DoubleSide} /></mesh>
-    <Line points={edgePoints} color="#e9e5ff" lineWidth={1.05} transparent opacity={0.58} />
+  return <group position={[PAGE_WIDTH + 0.04, -0.02, 0.31]} rotation={[0, 0.07, -0.014]}>
+    <mesh geometry={geometry} castShadow><meshPhysicalMaterial color="#10172f" roughness={0.78} metalness={0} clearcoat={0.08} clearcoatRoughness={0.62} emissive="#4c1d95" emissiveIntensity={0.08} transparent opacity={0.82} depthWrite={false} side={THREE.DoubleSide} /></mesh>
+    <Line points={edgePoints} color="#c4b5fd" lineWidth={1.25} transparent opacity={0.82} />
   </group>;
 }
 
