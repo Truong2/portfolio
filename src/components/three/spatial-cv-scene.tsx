@@ -1,249 +1,192 @@
 "use client";
 
 import * as React from "react";
-import { Float, OrbitControls, RoundedBox, Text } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { Html, OrbitControls, RoundedBox, Text } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { type CvView, useSpatialCv } from "@/components/spatial-cv-context";
+import { BOOK_SPREADS, useSpatialCv } from "@/components/spatial-cv-context";
+import { education, experience, personalInfo, skillCategories, summary } from "@/data/profile";
 
-interface ViewPreset {
-  position: [number, number, number];
-  target: [number, number, number];
-}
+const selectedProjects = experience.flatMap((entry) => entry.projects.map((project) => ({ ...project, company: entry.company }))).filter((project) => /AML|Taxi Admin|MARINER25|SANO|METAME|DX Modules/i.test(project.name));
 
-const VIEW_PRESETS: Record<CvView, ViewPreset> = {
-  overview: { position: [0.75, 0.35, 9.7], target: [0, 0.05, 0] },
-  profile: { position: [0.25, 1.7, 4.8], target: [0, 1.35, 0.1] },
-  experience: { position: [-0.7, 0.5, 4.35], target: [-0.45, 0.45, 0.1] },
-  projects: { position: [-0.55, -1.05, 4.25], target: [-0.4, -1.05, 0.1] },
-  skills: { position: [0.8, 0.15, 4.3], target: [0.55, 0.2, 0.1] },
-  education: { position: [0.8, -0.85, 4.25], target: [0.55, -0.85, 0.1] },
-  contact: { position: [0.15, -1.75, 4.45], target: [0, -1.7, 0.1] },
-};
-
-const HOTSPOTS: Array<{
-  view: Exclude<CvView, "overview">;
-  position: [number, number, number];
-  size: [number, number];
-}> = [
-  { view: "profile", position: [0, 1.35, 0.31], size: [3.15, 1.15] },
-  { view: "experience", position: [-0.78, 0.35, 0.31], size: [1.45, 0.78] },
-  { view: "skills", position: [0.82, 0.35, 0.31], size: [1.45, 0.78] },
-  { view: "projects", position: [-0.78, -0.62, 0.31], size: [1.45, 0.78] },
-  { view: "education", position: [0.82, -0.62, 0.31], size: [1.45, 0.78] },
-  { view: "contact", position: [0, -1.52, 0.31], size: [3.15, 0.55] },
-];
-
-function CameraDirector({ reducedMotion }: { reducedMotion: boolean }) {
-  const { activeView } = useSpatialCv();
-  const camera = useThree((state) => state.camera);
-  const controlsRef = React.useRef<OrbitControlsImpl>(null);
-  const previousView = React.useRef<CvView | null>(null);
-  const flying = React.useRef(true);
-
-  useFrame((_, delta) => {
-    const controls = controlsRef.current;
-    if (!controls) return;
-
-    if (previousView.current !== activeView) {
-      previousView.current = activeView;
-      flying.current = true;
-    }
-
-    if (!flying.current) return;
-
-    const preset = VIEW_PRESETS[activeView];
-    const targetPosition = new THREE.Vector3(...preset.position);
-    const targetLookAt = new THREE.Vector3(...preset.target);
-    const strength = reducedMotion ? 18 : 5.2;
-    const damping = 1 - Math.exp(-delta * strength);
-
-    camera.position.lerp(targetPosition, damping);
-    controls.target.lerp(targetLookAt, damping);
-    controls.update();
-
-    if (camera.position.distanceTo(targetPosition) < 0.025 && controls.target.distanceTo(targetLookAt) < 0.025) {
-      camera.position.copy(targetPosition);
-      controls.target.copy(targetLookAt);
-      controls.update();
-      flying.current = false;
-    }
-  });
-
+function PageSurface({ side, children }: { side: "left" | "right"; children: React.ReactNode }) {
+  const x = side === "left" ? -2.06 : 2.06;
   return (
-    <OrbitControls
-      ref={controlsRef}
-      makeDefault
-      enablePan={false}
-      enableZoom
-      enableRotate
-      minDistance={3.7}
-      maxDistance={12.5}
-      minPolarAngle={Math.PI * 0.22}
-      maxPolarAngle={Math.PI * 0.76}
-      rotateSpeed={0.5}
-      zoomSpeed={0.72}
-      dampingFactor={0.075}
-      enableDamping
-      target={[0, 0.05, 0]}
-    />
-  );
-}
-
-function HolographicBase({ lightMode }: { lightMode: boolean }) {
-  return (
-    <group position={[0, -2.35, 0]}>
-      {[1.3, 1.75, 2.2].map((radius, index) => (
-        <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.18]}>
-          <torusGeometry args={[radius, index === 1 ? 0.018 : 0.01, 10, 128]} />
-          <meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={lightMode ? 0.24 : 0.56 - index * 0.1} />
-        </mesh>
-      ))}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.025, 0]}>
-        <circleGeometry args={[1.08, 96]} />
-        <meshBasicMaterial color="#1d4ed8" transparent opacity={lightMode ? 0.05 : 0.12} />
-      </mesh>
-      <pointLight position={[0, 0.4, 0]} intensity={lightMode ? 2.5 : 7} color="#22d3ee" distance={6} />
-    </group>
-  );
-}
-
-function CoverSection({ title, subtitle, position, accent }: { title: string; subtitle: string; position: [number, number, number]; accent: string }) {
-  return (
-    <group position={position}>
-      <RoundedBox args={[1.36, 0.62, 0.025]} radius={0.05} smoothness={3}>
-        <meshBasicMaterial color="#071326" transparent opacity={0.78} />
+    <group position={[x, 0.08, 0.12]} rotation={[0, side === "left" ? 0.025 : -0.025, 0]}>
+      <RoundedBox args={[3.92, 4.9, 0.08]} radius={0.08} smoothness={4}>
+        <meshStandardMaterial color="#081226" roughness={0.52} metalness={0.08} emissive="#07152a" emissiveIntensity={0.28} />
       </RoundedBox>
-      <Text position={[-0.56, 0.12, 0.026]} anchorX="left" fontSize={0.085} color={accent} letterSpacing={0.06}>{title}</Text>
-      <Text position={[-0.56, -0.1, 0.026]} anchorX="left" fontSize={0.055} color="#91a0bd" maxWidth={1.15}>{subtitle}</Text>
+      <Html transform occlude={false} position={[0, 0, 0.06]} distanceFactor={5.8} style={{ width: 520, height: 650, pointerEvents: "auto" }}>
+        <div className="h-[650px] w-[520px] overflow-hidden rounded-[18px] border border-cyan-300/10 bg-[#07101f]/96 p-7 text-slate-100 shadow-[inset_0_0_50px_rgba(34,211,238,.035)]">
+          {children}
+        </div>
+      </Html>
     </group>
   );
 }
 
-function CvBook({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
-  const { activeView, focusView } = useSpatialCv();
-  const groupRef = React.useRef<THREE.Group>(null);
-  const [hoveredView, setHoveredView] = React.useState<CvView | null>(null);
+function Kicker({ children }: { children: React.ReactNode }) {
+  return <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyan-300">{children}</p>;
+}
+
+function CoverContent() {
+  return (
+    <Html transform position={[0, 0.1, 0.25]} distanceFactor={6.4} style={{ width: 520, pointerEvents: "none" }}>
+      <div className="w-[520px] text-center text-white">
+        <p className="text-[10px] font-mono uppercase tracking-[0.45em] text-cyan-300/80">Curriculum Vitae</p>
+        <h2 className="mt-8 text-4xl font-semibold tracking-[-0.045em]">{personalInfo.name}</h2>
+        <p className="mt-3 text-lg font-medium text-violet-300">{personalInfo.title}</p>
+        <p className="mx-auto mt-8 max-w-[420px] text-sm leading-7 text-slate-300/80">{summary}</p>
+        <div className="mt-8 flex flex-wrap justify-center gap-2 text-[11px] text-cyan-100/80">
+          {["React", "Next.js", "Vue 3", "Nuxt 3", "TypeScript", "OpenLayers"].map((item) => <span key={item} className="rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1.5">{item}</span>)}
+        </div>
+      </div>
+    </Html>
+  );
+}
+
+function ProfileSpread() {
+  return <>
+    <PageSurface side="left"><Kicker>01 · Profile</Kicker><h2 className="mt-3 text-4xl font-semibold tracking-[-0.05em]">Professional profile</h2><p className="mt-5 text-sm leading-7 text-slate-300/80">{summary}</p><div className="mt-7 grid gap-3">{["Frontend architecture", "Complex enterprise workflows", "Reusable UI systems", "Realtime product interfaces"].map((item) => <div key={item} className="rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3 text-sm">{item}</div>)}</div></PageSurface>
+    <PageSurface side="right"><Kicker>Core focus</Kicker><div className="mt-5 grid gap-4">{[["Enterprise", "Banking, commerce, healthcare and mobility products."],["Spatial", "GIS and map-heavy monitoring workflows with OpenLayers."],["Realtime", "Socket.IO / WebRTC driven status, alerts and collaboration."],["Web3", "Wallet onboarding, token/NFT flows and transaction tracking."]].map(([title, text]) => <div key={title} className="rounded-2xl border border-violet-300/10 bg-violet-300/[0.035] p-5"><h3 className="text-lg font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{text}</p></div>)}</div></PageSurface>
+  </>;
+}
+
+function ExperienceRolesSpread() {
+  return <>
+    <PageSurface side="left"><Kicker>02 · Experience</Kicker><h2 className="mt-3 text-4xl font-semibold leading-[1.05] tracking-[-0.05em]">Roles, products, and <span className="text-violet-300">delivery ownership.</span></h2><p className="mt-5 text-sm leading-7 text-slate-400">Career progression across enterprise product teams and specialist frontend delivery.</p></PageSurface>
+    <PageSurface side="right"><Kicker>Professional journey</Kicker><div className="mt-5 space-y-5">{experience.map((entry, index) => <div key={entry.id} className="grid grid-cols-[34px_1fr] gap-3 border-b border-white/8 pb-5 last:border-0"><span className="font-mono text-xs text-cyan-300">0{index + 1}</span><div><div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold">{entry.role}</h3><p className="mt-1 text-sm text-violet-300">{entry.company}</p></div><span className="text-right text-[11px] text-slate-500">{entry.period}</span></div><p className="mt-3 text-xs leading-5 text-slate-400">{entry.projects.slice(0,3).map((project) => project.name).join(" · ")}</p></div></div>)}</div></PageSurface>
+  </>;
+}
+
+function ExperienceDeliverySpread() {
+  const projects = experience[0]?.projects.slice(0, 4) ?? [];
+  return <>
+    <PageSurface side="left"><Kicker>Experience · Delivery</Kicker><h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Selected delivery work</h2><div className="mt-5 space-y-4">{projects.slice(0,2).map((project) => <div key={project.name} className="rounded-2xl border border-white/8 bg-white/[0.025] p-4"><h3 className="text-sm font-semibold">{project.name}</h3><p className="mt-2 text-xs leading-5 text-slate-400">{project.description}</p><div className="mt-3 flex flex-wrap gap-1.5">{project.techStack.slice(0,5).map((tech) => <span key={tech} className="rounded-full border border-cyan-300/15 px-2 py-1 text-[9px] text-cyan-200">{tech}</span>)}</div></div>)}</div></PageSurface>
+    <PageSurface side="right"><Kicker>Ownership highlights</Kicker><div className="mt-5 space-y-4">{projects.slice(2,4).map((project) => <div key={project.name} className="rounded-2xl border border-violet-300/10 bg-violet-300/[0.035] p-4"><h3 className="text-sm font-semibold">{project.name}</h3><ul className="mt-3 space-y-2 text-xs leading-5 text-slate-400">{project.highlights.slice(0,3).map((highlight) => <li key={highlight} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-violet-300" />{highlight}</li>)}</ul></div>)}</div></PageSurface>
+  </>;
+}
+
+function ProjectsSpread({ second = false }: { second?: boolean }) {
+  const projects = second ? selectedProjects.slice(3,6) : selectedProjects.slice(0,3);
+  return <>
+    <PageSurface side="left"><Kicker>03 · Projects</Kicker><h2 className="mt-3 text-4xl font-semibold tracking-[-0.05em]">{second ? "Spatial, realtime & Web3." : "Enterprise product systems."}</h2><p className="mt-5 text-sm leading-7 text-slate-400">Selected CV-backed projects, responsibilities and stack.</p></PageSurface>
+    <PageSurface side="right"><div className="space-y-3">{projects.map((project) => <div key={project.name} className="rounded-xl border border-white/8 bg-white/[0.025] p-4"><p className="text-[9px] font-mono uppercase tracking-[0.14em] text-cyan-300/75">{project.company}</p><h3 className="mt-2 text-sm font-semibold">{project.name}</h3><p className="mt-2 text-[11px] leading-5 text-slate-400">{project.description}</p><div className="mt-2 flex flex-wrap gap-1">{project.techStack.slice(0,4).map((tech) => <span key={tech} className="text-[9px] text-violet-300">#{tech.replaceAll(" ", "")}</span>)}</div></div>)}</div></PageSurface>
+  </>;
+}
+
+function SkillsSpread() {
+  return <>
+    <PageSurface side="left"><Kicker>04 · Skills</Kicker><h2 className="mt-3 text-4xl font-semibold tracking-[-0.05em]">Frontend stack & engineering toolkit.</h2><p className="mt-5 text-sm leading-7 text-slate-400">Grouped by the same categories used in the CV.</p></PageSurface>
+    <PageSurface side="right"><div className="grid grid-cols-2 gap-3">{skillCategories.map((category) => <div key={category.id} className="rounded-xl border border-white/8 bg-white/[0.025] p-3"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-300">{category.label}</p><p className="mt-2 text-[11px] leading-5 text-slate-400">{category.skills.join(" · ")}</p></div>)}</div></PageSurface>
+  </>;
+}
+
+function EducationSpread() {
+  const item = education[0];
+  return <><PageSurface side="left"><Kicker>05 · Education</Kicker><h2 className="mt-3 text-4xl font-semibold tracking-[-0.05em]">Engineering foundation.</h2><p className="mt-5 text-sm leading-7 text-slate-400">Electronics and Telecommunication training combined with software product delivery.</p></PageSurface><PageSurface side="right"><div className="mt-12 rounded-2xl border border-cyan-300/12 bg-cyan-300/[0.035] p-6"><h3 className="text-2xl font-semibold">{item?.school}</h3><p className="mt-3 text-violet-300">{item?.degree} · {item?.field}</p><p className="mt-5 text-sm text-slate-400">{item?.period}</p><p className="mt-2 text-lg font-semibold text-cyan-300">{item?.detail}</p></div></PageSurface></>;
+}
+
+function ContactSpread() {
+  return <><PageSurface side="left"><Kicker>06 · Contact</Kicker><h2 className="mt-3 text-4xl font-semibold tracking-[-0.05em]">Let&apos;s build something useful.</h2><p className="mt-5 text-sm leading-7 text-slate-400">Open to frontend product roles and complex enterprise projects.</p></PageSurface><PageSurface side="right"><div className="mt-10 space-y-4">{[["Email",personalInfo.email],["Phone",personalInfo.phone],["Location",personalInfo.location]].map(([label,value]) => <div key={label} className="rounded-xl border border-white/8 bg-white/[0.025] p-4"><p className="text-[10px] uppercase tracking-[0.14em] text-cyan-300">{label}</p><p className="mt-2 text-sm">{value}</p></div>)}<a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="block rounded-xl border border-violet-300/15 bg-violet-300/[0.04] p-4 text-sm text-violet-200">LinkedIn profile ↗</a></div></PageSurface></>;
+}
+
+function SpreadContent({ index }: { index: number }) {
+  if (index === 1) return <ProfileSpread />;
+  if (index === 2) return <ExperienceRolesSpread />;
+  if (index === 3) return <ExperienceDeliverySpread />;
+  if (index === 4) return <ProjectsSpread />;
+  if (index === 5) return <ProjectsSpread second />;
+  if (index === 6) return <SkillsSpread />;
+  if (index === 7) return <EducationSpread />;
+  return <ContactSpread />;
+}
+
+function TurningSheet({ currentSpread, direction, reducedMotion }: { currentSpread: number; direction: -1 | 0 | 1; reducedMotion: boolean }) {
+  const ref = React.useRef<THREE.Group>(null);
+  const progress = React.useRef(1);
+  const previousSpread = React.useRef(currentSpread);
 
   useFrame((_, delta) => {
-    const group = groupRef.current;
+    if (previousSpread.current !== currentSpread) {
+      previousSpread.current = currentSpread;
+      progress.current = reducedMotion ? 1 : 0;
+    }
+    progress.current = Math.min(1, progress.current + delta * 1.55);
+    const group = ref.current;
     if (!group) return;
-    const overview = activeView === "overview";
-    const targetY = overview ? -0.2 : 0;
-    const targetX = overview ? -0.045 : 0;
-    group.rotation.y = THREE.MathUtils.damp(group.rotation.y, targetY, reducedMotion ? 18 : 4.2, delta);
-    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, targetX, reducedMotion ? 18 : 4.2, delta);
+    const p = 1 - Math.pow(1 - progress.current, 3);
+    const dir = direction || 1;
+    group.visible = p < 0.995;
+    group.rotation.y = dir > 0 ? -Math.PI * p : Math.PI * p;
+    group.rotation.z = Math.sin(p * Math.PI) * 0.035 * dir;
   });
 
-  const content = (
-    <group ref={groupRef} rotation={[-0.045, -0.2, -0.025]}>
-      <RoundedBox args={[3.75, 4.95, 0.32]} radius={0.12} smoothness={5}>
-        <meshPhysicalMaterial
-          color={lightMode ? "#dce8fb" : "#0c1630"}
-          roughness={0.2}
-          metalness={0.52}
-          clearcoat={1}
-          clearcoatRoughness={0.08}
-          emissive={lightMode ? "#3154a8" : "#18265d"}
-          emissiveIntensity={lightMode ? 0.08 : 0.24}
-        />
-      </RoundedBox>
-
-      <mesh position={[-1.7, 0, 0.18]}>
-        <boxGeometry args={[0.2, 4.62, 0.08]} />
-        <meshStandardMaterial color={lightMode ? "#a5c9ed" : "#0a2445"} emissive="#22d3ee" emissiveIntensity={lightMode ? 0.08 : 0.35} />
+  if (currentSpread === 0) return null;
+  return (
+    <group ref={ref} position={[direction >= 0 ? 0.08 : -0.08, 0.08, 0.22]}>
+      <mesh position={[direction >= 0 ? 1.98 : -1.98, 0, 0]}>
+        <planeGeometry args={[3.88, 4.84, 18, 1]} />
+        <meshStandardMaterial color="#0b1830" side={THREE.DoubleSide} roughness={0.5} metalness={0.06} emissive="#142451" emissiveIntensity={0.18} />
       </mesh>
-
-      <Text position={[-1.45, 2.04, 0.19]} anchorX="left" fontSize={0.1} color="#8fbaf7" letterSpacing={0.09}>CURRICULUM VITAE</Text>
-      <Text position={[-1.45, 1.56, 0.19]} anchorX="left" fontSize={0.34} color={lightMode ? "#13213c" : "#f7f9ff"} maxWidth={3.0}>NGUYEN VAN TRUONG</Text>
-      <Text position={[-1.45, 1.16, 0.19]} anchorX="left" fontSize={0.16} color="#8b5cf6">Frontend Developer</Text>
-      <Text position={[-1.45, 0.82, 0.19]} anchorX="left" fontSize={0.072} color={lightMode ? "#52647c" : "#a9b6cf"} maxWidth={2.9} lineHeight={1.5}>
-        3+ years building enterprise web applications{"\n"}across banking, mobility, health, GIS and Web3.
-      </Text>
-
-      <CoverSection title="EXPERIENCE" subtitle="Enterprise delivery · architecture" position={[-0.78, 0.28, 0.2]} accent="#a78bfa" />
-      <CoverSection title="SKILLS" subtitle="React · Next · Vue · Nuxt" position={[0.82, 0.28, 0.2]} accent="#22d3ee" />
-      <CoverSection title="PROJECTS" subtitle="AML · Taxi · Maritime · Web3" position={[-0.78, -0.68, 0.2]} accent="#22d3ee" />
-      <CoverSection title="EDUCATION" subtitle="HUST · Engineering" position={[0.82, -0.68, 0.2]} accent="#a78bfa" />
-
-      <RoundedBox args={[3.02, 0.46, 0.025]} radius={0.05} smoothness={3} position={[0, -1.63, 0.2]}>
-        <meshBasicMaterial color="#08162b" transparent opacity={0.82} />
-      </RoundedBox>
-      <Text position={[-1.36, -1.63, 0.226]} anchorX="left" fontSize={0.07} color="#93a4c4">Hanoi · truong8dt@gmail.com · LinkedIn · Download CV</Text>
-
-      {HOTSPOTS.map((spot) => {
-        const hovered = hoveredView === spot.view;
-        const active = activeView === spot.view;
-        return (
-          <mesh
-            key={spot.view}
-            position={spot.position}
-            onClick={(event) => {
-              event.stopPropagation();
-              focusView(spot.view);
-            }}
-            onPointerOver={(event) => {
-              event.stopPropagation();
-              setHoveredView(spot.view);
-              document.body.style.cursor = "pointer";
-            }}
-            onPointerOut={() => {
-              setHoveredView(null);
-              document.body.style.cursor = "auto";
-            }}
-          >
-            <planeGeometry args={spot.size} />
-            <meshBasicMaterial color="#22d3ee" transparent opacity={active ? 0.055 : hovered ? 0.035 : 0} depthWrite={false} />
-          </mesh>
-        );
-      })}
-
-      <pointLight position={[-2.2, 1.4, 1.6]} color="#22d3ee" intensity={lightMode ? 2 : 4.5} distance={7} />
-      <pointLight position={[2.1, -0.6, 1.7]} color="#8b5cf6" intensity={lightMode ? 2 : 5} distance={7} />
     </group>
   );
-
-  if (reducedMotion || activeView !== "overview") return content;
-  return <Float speed={0.75} rotationIntensity={0.03} floatIntensity={0.14}>{content}</Float>;
 }
 
-function Stars({ lightMode }: { lightMode: boolean }) {
-  const positions = React.useMemo(() => {
-    const points = new Float32Array(120 * 3);
-    for (let index = 0; index < 120; index += 1) {
-      const angle = index * 2.399963;
-      const radius = 4.8 + (index % 15) * 0.24;
-      points[index * 3] = Math.cos(angle) * radius;
-      points[index * 3 + 1] = ((index % 27) - 13) * 0.24;
-      points[index * 3 + 2] = Math.sin(angle) * radius - 1.8;
-    }
-    return points;
-  }, []);
+function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
+  const { currentSpread, direction, nextSpread, previousSpread } = useSpatialCv();
+  const open = currentSpread > 0;
+  const root = React.useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (!root.current) return;
+    root.current.rotation.x = THREE.MathUtils.damp(root.current.rotation.x, open ? -0.08 : -0.04, 4.5, delta);
+    root.current.rotation.y = THREE.MathUtils.damp(root.current.rotation.y, open ? 0 : -0.24, 4.5, delta);
+    root.current.position.y = THREE.MathUtils.damp(root.current.position.y, open ? -0.1 : -0.2, 4.5, delta);
+  });
 
   return (
-    <points>
-      <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-      <pointsMaterial color={lightMode ? "#7180a5" : "#7089ff"} size={0.022} transparent opacity={lightMode ? 0.18 : 0.42} sizeAttenuation />
-    </points>
+    <group ref={root} scale={open ? 0.84 : 1}>
+      {!open ? (
+        <group onClick={nextSpread}>
+          <RoundedBox args={[4.15, 5.3, 0.42]} radius={0.13} smoothness={5}>
+            <meshPhysicalMaterial color="#09152d" roughness={0.26} metalness={0.42} clearcoat={1} emissive="#18265d" emissiveIntensity={0.2} />
+          </RoundedBox>
+          <mesh position={[-1.9, 0, 0.23]}><boxGeometry args={[0.22, 5, 0.08]} /><meshStandardMaterial color="#082a4d" emissive="#22d3ee" emissiveIntensity={0.3} /></mesh>
+          <CoverContent />
+          <Text position={[0, -2.15, 0.24]} fontSize={0.08} color="#7dd3fc">CLICK THE COVER TO OPEN</Text>
+        </group>
+      ) : (
+        <group>
+          <RoundedBox args={[8.35, 5.25, 0.3]} radius={0.1} smoothness={5} position={[0, -0.02, -0.12]}><meshStandardMaterial color="#071126" roughness={0.34} metalness={0.2} /></RoundedBox>
+          <mesh position={[0, 0.04, 0.02]}><boxGeometry args={[0.15, 4.95, 0.18]} /><meshStandardMaterial color="#0b3154" emissive="#22d3ee" emissiveIntensity={0.18} /></mesh>
+          <SpreadContent index={currentSpread} />
+          <TurningSheet currentSpread={currentSpread} direction={direction} reducedMotion={reducedMotion} />
+          <mesh position={[-4.18, 0, 0.2]} onClick={previousSpread}><planeGeometry args={[0.55, 4.6]} /><meshBasicMaterial transparent opacity={0} /></mesh>
+          <mesh position={[4.18, 0, 0.2]} onClick={nextSpread}><planeGeometry args={[0.55, 4.6]} /><meshBasicMaterial transparent opacity={0} /></mesh>
+        </group>
+      )}
+    </group>
   );
+}
+
+function HolographicBase() {
+  return <group position={[0, -2.95, 0]}>{[2.2, 3.05, 3.9].map((radius, index) => <mesh key={radius} rotation={[Math.PI / 2, 0, index * 0.18]}><torusGeometry args={[radius, 0.012, 8, 128]} /><meshBasicMaterial color={index % 2 ? "#8b5cf6" : "#22d3ee"} transparent opacity={0.36 - index * 0.07} /></mesh>)}<pointLight position={[0, 0.4, 0]} intensity={6} color="#22d3ee" distance={8} /></group>;
 }
 
 export function SpatialCvScene({ reducedMotion, lightMode }: { reducedMotion: boolean; lightMode: boolean }) {
+  const { currentSpread } = useSpatialCv();
+  const open = currentSpread > 0;
   const background = lightMode ? "#eaf2ff" : "#030711";
-
-  return (
-    <>
-      <color attach="background" args={[background]} />
-      <fog attach="fog" args={[background, 10, 17]} />
-      <ambientLight intensity={lightMode ? 1.65 : 0.72} />
-      <directionalLight position={[4, 7, 7]} intensity={lightMode ? 3.4 : 2.5} color={lightMode ? "#ffffff" : "#d8e4ff"} />
-      <directionalLight position={[-5, -1, 3]} intensity={1.4} color="#22d3ee" />
-      <Stars lightMode={lightMode} />
-      <HolographicBase lightMode={lightMode} />
-      <CvBook reducedMotion={reducedMotion} lightMode={lightMode} />
-      <CameraDirector reducedMotion={reducedMotion} />
-    </>
-  );
+  return <>
+    <color attach="background" args={[background]} />
+    <fog attach="fog" args={[background, 11, 20]} />
+    <ambientLight intensity={lightMode ? 1.8 : 0.72} />
+    <directionalLight position={[4, 7, 7]} intensity={lightMode ? 3.5 : 2.8} color={lightMode ? "#ffffff" : "#d8e4ff"} />
+    <directionalLight position={[-5, -1, 3]} intensity={1.5} color="#22d3ee" />
+    <HolographicBase />
+    <BookModel reducedMotion={reducedMotion} />
+    <OrbitControls makeDefault enablePan={false} enableZoom enableRotate={!open} minDistance={open ? 7.1 : 4.8} maxDistance={open ? 12 : 12.5} rotateSpeed={0.45} zoomSpeed={0.7} target={[0, -0.1, 0]} />
+  </>;
 }
