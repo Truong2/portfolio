@@ -86,14 +86,9 @@ function CoverContent() {
           <p className="mt-6 text-[8px] font-mono uppercase tracking-[0.34em] text-slate-400">Welcome to my</p>
           <p className="mt-2 text-[13px] font-semibold uppercase tracking-[0.42em] text-gradient">Portfolio</p>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
-          <div className="mt-16">
-            <h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2>
-            <p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p>
-          </div>
+          <div className="mt-16"><h2 className="text-[32px] font-semibold leading-none tracking-[-0.05em] text-white">{personalInfo.name}</h2><p className="mt-5 text-[14px] font-medium text-violet-300">&lt; {personalInfo.title} /&gt;</p></div>
           <p className="mt-8 max-w-[330px] text-[9px] leading-[1.15rem] text-slate-400">Detail-oriented frontend developer building responsive, user-centered enterprise products across banking, commerce, healthcare, mobility, GIS and Web3.</p>
-          <div className="mt-8 flex gap-2.5">
-            {coverTech.map((item) => <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>{item.label}</div>)}
-          </div>
+          <div className="mt-8 flex gap-2.5">{coverTech.map((item) => <div key={item.label} className={`flex size-9 items-center justify-center rounded-lg border border-white/[0.07] bg-[#07101e]/80 text-[10px] font-bold ${item.className}`}>{item.label}</div>)}</div>
           <div className="mt-auto flex items-center gap-3 text-[7px] font-mono uppercase tracking-[0.16em] text-slate-500"><span>Let&apos;s build something</span><span className="text-cyan-300">great together</span></div>
         </div>
       </div>
@@ -220,7 +215,7 @@ function CurledOuterPage() {
   React.useEffect(() => () => geometry.dispose(), [geometry]);
 
   return (
-    <mesh geometry={geometry} position={[PAGE_WIDTH + 0.02, -0.02, 0.31]} rotation={[0, 0.62, -0.018]} castShadow>
+    <mesh geometry={geometry} position={[PAGE_WIDTH + 0.02, -0.02, 0.31]} rotation={[0, 0.14, -0.018]} castShadow>
       <meshPhysicalMaterial color="#a6a3ff" roughness={0.48} metalness={0} clearcoat={0.22} clearcoatRoughness={0.4} emissive="#6d28d9" emissiveIntensity={0.15} transparent opacity={0.7} side={THREE.DoubleSide} />
     </mesh>
   );
