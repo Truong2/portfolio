@@ -11,16 +11,16 @@ export type CvView =
   | "education"
   | "contact";
 
-export const BOOK_SPREADS: ReadonlyArray<{ id: string; view: CvView; label: string }> = [
-  { id: "cover", view: "overview", label: "Cover" },
-  { id: "profile", view: "profile", label: "Profile" },
-  { id: "experience-roles", view: "experience", label: "Experience · Roles" },
-  { id: "experience-delivery", view: "experience", label: "Experience · Delivery" },
-  { id: "projects-enterprise", view: "projects", label: "Projects · Enterprise" },
-  { id: "projects-spatial", view: "projects", label: "Projects · Spatial & Web3" },
-  { id: "skills", view: "skills", label: "Skills" },
-  { id: "education", view: "education", label: "Education" },
-  { id: "contact", view: "contact", label: "Contact" },
+export const BOOK_SPREADS: ReadonlyArray<{ id: string; view: CvView; label: string; pageLabel: string }> = [
+  { id: "cover", view: "overview", label: "Cover", pageLabel: "00" },
+  { id: "profile", view: "profile", label: "Profile", pageLabel: "01–02" },
+  { id: "experience-roles", view: "experience", label: "Experience · Roles", pageLabel: "03–04" },
+  { id: "experience-delivery", view: "experience", label: "Experience · Delivery", pageLabel: "05–06" },
+  { id: "projects-enterprise", view: "projects", label: "Projects · Enterprise", pageLabel: "07–08" },
+  { id: "projects-spatial", view: "projects", label: "Projects · Spatial & Web3", pageLabel: "09–10" },
+  { id: "skills", view: "skills", label: "Skills", pageLabel: "11–12" },
+  { id: "education", view: "education", label: "Education", pageLabel: "13–14" },
+  { id: "contact", view: "contact", label: "Contact", pageLabel: "15–16" },
 ] as const;
 
 const VIEW_TO_SPREAD: Record<CvView, number> = {
