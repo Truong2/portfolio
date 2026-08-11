@@ -34,10 +34,10 @@ function PageSurface({ side }: { side: "left" | "right" }) {
       const outer = side === "left" ? 1 - u : u;
       const vertical = Math.abs(y) / (PAGE_HEIGHT / 2);
 
-      const z = -0.22 * Math.pow(gutter, 1.9)
-        + 0.17 * Math.pow(outer, 2.1)
-        + 0.03 * Math.sin(u * Math.PI);
-      const yLift = 0.34 * Math.pow(outer, 1.65) * (0.42 + 0.58 * vertical);
+      const z = -0.2 * Math.pow(gutter, 1.9)
+        + 0.14 * Math.pow(outer, 2.1)
+        + 0.025 * Math.sin(u * Math.PI);
+      const yLift = 0.25 * Math.pow(outer, 1.7) * (0.42 + 0.58 * vertical);
 
       position.setXYZ(index, x, y + yLift, z);
     }
@@ -70,7 +70,7 @@ function PageFrame({ side, children }: { side: "left" | "right"; children: React
       <Html
         transform
         occlude={false}
-        position={[0, 0.01, 0.16]}
+        position={[0, 0.01, 0.15]}
         distanceFactor={3.62}
         style={{ width: 500, height: 640, pointerEvents: "auto" }}
       >
@@ -270,15 +270,15 @@ function PaperStack({ side, layers }: { side: "left" | "right"; layers: number }
       {Array.from({ length: visible }, (_, index) => (
         <mesh
           key={`${side}-${index}`}
-          position={[x + direction * index * 0.012, -0.05 + index * 0.003, -0.34 + index * 0.016]}
+          position={[x + direction * index * 0.012, -0.12 + index * 0.004, -0.32 + index * 0.015]}
           rotation={[0, side === "left" ? 0.014 : -0.014, direction * index * 0.0008]}
         >
-          <boxGeometry args={[PAGE_WIDTH - 0.26 - index * 0.01, PAGE_HEIGHT - 0.48 - index * 0.006, 0.014]} />
+          <boxGeometry args={[PAGE_WIDTH - 0.3 - index * 0.012, PAGE_HEIGHT - 0.68 - index * 0.008, 0.013]} />
           <meshStandardMaterial
             color={index % 4 === 0 ? "#171936" : "#0b1322"}
             roughness={0.9}
             emissive={index % 4 === 0 ? (side === "left" ? "#164e63" : "#4c1d95") : "#040713"}
-            emissiveIntensity={index % 4 === 0 ? 0.16 : 0.015}
+            emissiveIntensity={index % 4 === 0 ? 0.14 : 0.012}
           />
         </mesh>
       ))}
@@ -297,13 +297,13 @@ function Hardcover({ position }: { position: [number, number, number] }) {
 function OpenBookEdgeGlow() {
   return (
     <>
-      <mesh position={[-PAGE_WIDTH - 0.02, 0.06, 0.05]}>
-        <boxGeometry args={[0.035, PAGE_HEIGHT - 0.42, 0.08]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.42} />
+      <mesh position={[-PAGE_WIDTH - 0.02, 0.03, 0.05]}>
+        <boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.28} />
       </mesh>
-      <mesh position={[PAGE_WIDTH + 0.02, 0.06, 0.05]}>
-        <boxGeometry args={[0.035, PAGE_HEIGHT - 0.42, 0.08]} />
-        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.52} />
+      <mesh position={[PAGE_WIDTH + 0.02, 0.03, 0.05]}>
+        <boxGeometry args={[0.025, PAGE_HEIGHT - 0.62, 0.055]} />
+        <meshBasicMaterial color="#8b5cf6" transparent opacity={0.34} />
       </mesh>
     </>
   );
@@ -311,8 +311,9 @@ function OpenBookEdgeGlow() {
 
 function CurledOuterPage() {
   const geometry = React.useMemo(() => {
-    const width = 0.94;
-    const geo = new THREE.PlaneGeometry(width, PAGE_HEIGHT - 0.26, 30, 8);
+    const width = 0.58;
+    const height = PAGE_HEIGHT - 0.62;
+    const geo = new THREE.PlaneGeometry(width, height, 28, 8);
     geo.translate(width / 2, 0, 0);
     const position = geo.attributes.position as THREE.BufferAttribute;
 
@@ -320,13 +321,13 @@ function CurledOuterPage() {
       const x = position.getX(index);
       const y = position.getY(index);
       const u = Math.max(0, Math.min(1, x / width));
-      const vertical = Math.abs(y) / (PAGE_HEIGHT / 2);
-      const fold = Math.pow(u, 1.45);
+      const vertical = Math.abs(y) / (height / 2);
+      const fold = Math.pow(u, 1.55);
       position.setXYZ(
         index,
-        x - 0.6 * Math.pow(u, 1.7),
-        y + 0.32 * fold * (0.5 + 0.5 * vertical),
-        0.05 + 1.28 * fold + Math.sin(u * Math.PI) * 0.18,
+        x - 0.34 * Math.pow(u, 1.8),
+        y + 0.18 * fold * (0.45 + 0.55 * vertical),
+        0.04 + 0.76 * fold + Math.sin(u * Math.PI) * 0.11,
       );
     }
 
@@ -338,17 +339,17 @@ function CurledOuterPage() {
   React.useEffect(() => () => geometry.dispose(), [geometry]);
 
   return (
-    <mesh geometry={geometry} position={[PAGE_WIDTH - 0.94, 0.02, 0.26]} rotation={[0, -0.08, -0.012]} castShadow>
+    <mesh geometry={geometry} position={[PAGE_WIDTH - 0.48, -0.03, 0.25]} rotation={[0, -0.075, -0.01]} castShadow>
       <meshPhysicalMaterial
         color="#17203e"
-        roughness={0.6}
+        roughness={0.66}
         metalness={0}
-        clearcoat={0.18}
-        clearcoatRoughness={0.48}
+        clearcoat={0.12}
+        clearcoatRoughness={0.54}
         emissive="#6d28d9"
-        emissiveIntensity={0.18}
+        emissiveIntensity={0.08}
         transparent
-        opacity={0.9}
+        opacity={0.58}
         side={THREE.DoubleSide}
       />
     </mesh>
@@ -424,13 +425,13 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
 
     const speed = reducedMotion ? 18 : 4.5;
     root.position.x = THREE.MathUtils.damp(root.position.x, open ? 0 : -HALF_PAGE + 0.24, speed, delta);
-    root.position.y = THREE.MathUtils.damp(root.position.y, open ? 0.44 : 0.14, speed, delta);
-    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.145 : -0.07, speed, delta);
+    root.position.y = THREE.MathUtils.damp(root.position.y, open ? 0.34 : 0.14, speed, delta);
+    root.rotation.x = THREE.MathUtils.damp(root.rotation.x, open ? -0.225 : -0.07, speed, delta);
     root.rotation.y = THREE.MathUtils.damp(root.rotation.y, open ? 0 : -0.5, speed, delta);
     root.rotation.z = THREE.MathUtils.damp(root.rotation.z, open ? 0 : -0.018, speed, delta);
 
-    root.scale.x = THREE.MathUtils.damp(root.scale.x, open ? 1.06 : 1.08, speed, delta);
-    root.scale.y = THREE.MathUtils.damp(root.scale.y, open ? 1.14 : 0.98, speed, delta);
+    root.scale.x = THREE.MathUtils.damp(root.scale.x, open ? 1.02 : 1.08, speed, delta);
+    root.scale.y = THREE.MathUtils.damp(root.scale.y, open ? 1.04 : 0.98, speed, delta);
     root.scale.z = THREE.MathUtils.damp(root.scale.z, open ? 1.0 : 0.98, speed, delta);
     cover.rotation.y = THREE.MathUtils.damp(cover.rotation.y, open ? -Math.PI : 0, reducedMotion ? 20 : 4, delta);
   });
@@ -445,8 +446,8 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
       {!open && <mesh position={[HALF_PAGE + 0.26, 0.04, -0.055]}><boxGeometry args={[PAGE_WIDTH - 0.14, PAGE_HEIGHT - 0.18, 0.045]} /><meshStandardMaterial color="#a8b8cc" roughness={0.9} emissive="#6d28d9" emissiveIntensity={0.04} /></mesh>}
       {!open && <mesh position={[HALF_PAGE + 0.39, -0.02, -0.11]}><boxGeometry args={[PAGE_WIDTH - 0.2, PAGE_HEIGHT - 0.18, 0.04]} /><meshStandardMaterial color="#261a5b" roughness={0.8} emissive="#6d28d9" emissiveIntensity={0.11} /></mesh>}
 
-      {open && <group position={[-HALF_PAGE - 0.045, 0, 0.22]} rotation={[0, 0.15, -0.022]}><PageFrame side="left"><SpreadContent index={currentSpread} side="left" /></PageFrame></group>}
-      {open && <group position={[HALF_PAGE + 0.045, 0, 0.22]} rotation={[0, -0.15, 0.022]}><PageFrame side="right"><SpreadContent index={currentSpread} side="right" /></PageFrame></group>}
+      {open && <group position={[-HALF_PAGE - 0.045, 0, 0.22]} rotation={[0, 0.14, -0.018]}><PageFrame side="left"><SpreadContent index={currentSpread} side="left" /></PageFrame></group>}
+      {open && <group position={[HALF_PAGE + 0.045, 0, 0.22]} rotation={[0, -0.14, 0.018]}><PageFrame side="right"><SpreadContent index={currentSpread} side="right" /></PageFrame></group>}
       {open && <OpenBookEdgeGlow />}
       {open && <CurledOuterPage />}
 
@@ -467,7 +468,7 @@ function BookModel({ reducedMotion }: { reducedMotion: boolean }) {
       {open && <mesh position={[-PAGE_WIDTH - 0.08, 0, 0.42]} onClick={previousSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
       {open && <mesh position={[PAGE_WIDTH + 0.08, 0, 0.42]} onClick={nextSpread}><planeGeometry args={[0.52, PAGE_HEIGHT - 0.4]} /><meshBasicMaterial transparent opacity={0} /></mesh>}
 
-      <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.32} /></mesh>
+      <mesh position={[-0.07, -PAGE_HEIGHT / 2 - 0.27, -0.08]} rotation={[0, 0, 0.08]}><boxGeometry args={[0.085, 0.82, 0.028]} /><meshStandardMaterial color="#7c3aed" emissive="#8b5cf6" emissiveIntensity={0.3} /></mesh>
     </group>
   );
 }
@@ -517,7 +518,7 @@ export function SpatialCvScene({ reducedMotion, lightMode }: { reducedMotion: bo
         zoomSpeed={0.56}
         dampingFactor={0.08}
         enableDamping
-        target={[0, 0.16, 0]}
+        target={[0, 0.1, 0]}
       />
     </>
   );
