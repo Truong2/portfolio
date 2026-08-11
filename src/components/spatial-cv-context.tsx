@@ -41,6 +41,8 @@ interface SpatialCvContextValue {
   targetSpread: number;
   direction: -1 | 0 | 1;
   isTurning: boolean;
+  readingFocus: boolean;
+  setReadingFocus: (focused: boolean) => void;
   focusView: (view: CvView) => void;
   goToSpread: (index: number) => void;
   nextSpread: () => void;
@@ -66,6 +68,7 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
   const [currentSpread, setCurrentSpread] = React.useState(initialSpread);
   const [targetSpread, setTargetSpread] = React.useState(initialSpread);
   const [direction, setDirection] = React.useState<-1 | 0 | 1>(0);
+  const [readingFocus, setReadingFocus] = React.useState(false);
   const isTurning = currentSpread !== targetSpread;
 
   React.useEffect(() => {
@@ -83,6 +86,7 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
 
   const goToSpread = React.useCallback((index: number) => {
     const nextTarget = clampSpread(index);
+    if (nextTarget === 0) setReadingFocus(false);
     setTargetSpread(nextTarget);
     setCurrentSpread((current) => {
       if (current === nextTarget) {
@@ -108,7 +112,7 @@ export function SpatialCvProvider({ children }: { children: React.ReactNode }) {
   const activeView = BOOK_SPREADS[targetSpread]?.view ?? "overview";
 
   return (
-    <SpatialCvContext.Provider value={{ activeView, currentSpread, targetSpread, direction, isTurning, focusView, goToSpread, nextSpread, previousSpread }}>
+    <SpatialCvContext.Provider value={{ activeView, currentSpread, targetSpread, direction, isTurning, readingFocus, setReadingFocus, focusView, goToSpread, nextSpread, previousSpread }}>
       {children}
     </SpatialCvContext.Provider>
   );
