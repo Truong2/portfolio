@@ -37,7 +37,7 @@ export function Hero3DCanvas() {
   const [webglSupported] = React.useState(() => detectWebGL());
   const reducedMotion = useReducedMotion();
   const { resolvedTheme } = useTheme();
-  const { activeView, currentSpread } = useSpatialCv();
+  const { activeView, currentSpread, isTurning } = useSpatialCv();
   const lightMode = resolvedTheme === "light";
   const open = currentSpread > 0;
 
@@ -46,15 +46,20 @@ export function Hero3DCanvas() {
   return (
     <div
       aria-label="Interactive 3D CV book. Open the cover, turn pages, or select a CV section to jump directly to its chapter."
-      className={`relative w-full overflow-hidden rounded-[1.4rem] border border-border/60 bg-[#030711] shadow-[0_34px_120px_rgba(17,24,85,0.42)] transition-[height,min-height,aspect-ratio] duration-500 ${open ? "h-[calc(100vh-7.2rem)] min-h-[44rem] max-h-[68rem]" : "aspect-[1.28/1] min-h-[38rem] sm:min-h-[44rem] xl:min-h-[48rem]"}`}
+      className={`relative w-full overflow-hidden transition-[height,min-height] duration-500 ${open ? "h-[calc(100vh-6.5rem)] min-h-[45rem] max-h-[70rem]" : "h-[calc(100vh-7rem)] min-h-[42rem] max-h-[64rem]"}`}
     >
-      <Canvas dpr={[1, 1.5]} frameloop="always" gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }} fallback={<StaticFallback />}>
-        <PerspectiveCamera makeDefault position={[0, 0.2, open ? 10.6 : 9.4]} fov={open ? 40 : 42} />
+      <Canvas
+        dpr={[1, 1.5]}
+        frameloop="always"
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        fallback={<StaticFallback />}
+      >
+        <PerspectiveCamera makeDefault position={[0, 0.18, open ? 10.15 : 9.15]} fov={open ? 39 : 41} />
         <SpatialCvScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
-      <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.18em] text-white/40">
+      <div className="pointer-events-none absolute inset-x-4 top-3 flex items-center justify-between text-[9px] font-medium uppercase tracking-[0.18em] text-white/38">
         <span>{open ? "Interactive CV · open book" : "Interactive CV · cover"}</span>
-        <span>{open ? activeView : reducedMotion ? "Reduced motion" : "Drag · zoom · open"}</span>
+        <span>{isTurning ? "Turning pages" : open ? activeView : reducedMotion ? "Reduced motion" : "Drag · zoom · open"}</span>
       </div>
     </div>
   );
