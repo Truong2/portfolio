@@ -114,7 +114,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
 export function Navbar() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const { activeView } = useSpatialCv();
 
   return (
     <header className="sticky top-0 z-40 bg-transparent px-3 pt-3 sm:px-4">
@@ -124,7 +123,7 @@ export function Navbar() {
       >
         <Brand />
         <div className="hidden items-center gap-4 md:flex lg:gap-8">
-          {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={activeView === item.view} />)}
+          {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={item.view === "overview"} />)}
         </div>
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
