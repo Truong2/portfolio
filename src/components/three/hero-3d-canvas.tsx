@@ -9,6 +9,7 @@ import { useSpatialCv } from "@/components/spatial-cv-context";
 
 import { SpatialCvScene } from "./spatial-cv-scene";
 import { StaticFallback } from "./static-fallback";
+import { ZoomFocusObserver } from "./zoom-focus-observer";
 
 function detectWebGL(): boolean {
   try {
@@ -37,7 +38,7 @@ export function Hero3DCanvas() {
   const [webglSupported] = React.useState(() => detectWebGL());
   const reducedMotion = useReducedMotion();
   const { resolvedTheme } = useTheme();
-  const { currentSpread } = useSpatialCv();
+  const { currentSpread, readingFocus } = useSpatialCv();
   const lightMode = resolvedTheme === "light";
   const open = currentSpread > 0;
 
@@ -46,6 +47,7 @@ export function Hero3DCanvas() {
   return (
     <div
       aria-label="Interactive 3D CV book. Open the cover, turn pages, or select a CV section to jump directly to its chapter."
+      data-reading-focus={readingFocus ? "true" : "false"}
       className={`relative w-full overflow-hidden transition-[height,min-height] duration-500 ${open ? "h-[calc(100vh-5.7rem)] min-h-[42rem] max-h-[61rem]" : "h-[calc(100vh-5.8rem)] min-h-[38rem] max-h-[54rem]"}`}
     >
       <Canvas
@@ -55,6 +57,7 @@ export function Hero3DCanvas() {
         fallback={<StaticFallback />}
       >
         <PerspectiveCamera makeDefault position={[0, open ? 3.15 : 0.36, open ? 10.7 : 11.55]} fov={open ? 35 : 36} />
+        <ZoomFocusObserver />
         <SpatialCvScene reducedMotion={reducedMotion} lightMode={lightMode} />
       </Canvas>
     </div>
