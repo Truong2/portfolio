@@ -18,10 +18,10 @@ const NAV_ITEMS: ReadonlyArray<{ view: CvView; label: string }> = [
 
 function BrandMark() {
   return (
-    <span className="relative flex size-9 items-center justify-center">
-      <span className="absolute left-[7px] top-[6px] h-6 w-[7px] -skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-cyan-300 to-blue-500 shadow-[0_0_18px_rgba(34,211,238,.45)]" />
-      <span className="absolute right-[7px] top-[6px] h-6 w-[7px] skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-violet-400 to-blue-500 shadow-[0_0_18px_rgba(139,92,246,.4)]" />
-      <span className="absolute left-[14px] top-[10px] h-[18px] w-[7px] rotate-[-43deg] rounded-[2px] bg-gradient-to-b from-cyan-200 to-violet-400" />
+    <span className="relative flex size-11 items-center justify-center">
+      <span className="absolute left-[8px] top-[7px] h-7 w-2 -skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-cyan-300 to-blue-500 shadow-[0_0_18px_rgba(34,211,238,.45)]" />
+      <span className="absolute right-[8px] top-[7px] h-7 w-2 skew-y-[32deg] rounded-[2px] bg-gradient-to-b from-violet-400 to-blue-500 shadow-[0_0_18px_rgba(139,92,246,.4)]" />
+      <span className="absolute left-[17px] top-[11px] h-5 w-2 rotate-[-43deg] rounded-[2px] bg-gradient-to-b from-cyan-200 to-violet-400" />
     </span>
   );
 }
@@ -36,13 +36,13 @@ function Brand() {
         focusView("overview");
         document.getElementById("hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }}
-      className="group flex items-center gap-2.5"
+      className="group flex items-center gap-3"
       aria-label="Open CV overview"
     >
       <BrandMark />
       <span className="hidden sm:block">
-        <span className="block text-[10px] font-semibold tracking-[-0.01em] text-slate-100">{personalInfo.name}</span>
-        <span className="mt-0.5 block text-[8px] text-slate-500">Portfolio</span>
+        <span className="block text-[12px] font-semibold tracking-[-0.01em] text-slate-100">{personalInfo.name}</span>
+        <span className="mt-0.5 block text-[9px] text-slate-500">Portfolio</span>
       </span>
     </a>
   );
@@ -59,7 +59,7 @@ function DesktopLink({ view, label, active }: { view: CvView; label: string; act
       }}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative flex h-12 items-center px-2 text-[10px] font-medium transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-11 after:-translate-x-1/2 after:bg-cyan-300 after:opacity-0 after:shadow-[0_0_13px_#22d3ee] after:transition-opacity",
+        "relative flex h-16 items-center px-2 text-[12px] font-medium transition-colors after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-12 after:-translate-x-1/2 after:bg-cyan-300 after:opacity-0 after:shadow-[0_0_13px_#22d3ee] after:transition-opacity",
         active ? "text-cyan-200 after:opacity-100" : "text-slate-400 hover:text-slate-100",
       )}
     >
@@ -116,19 +116,19 @@ export function Navbar() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-transparent px-3 pt-3 sm:px-4">
+    <header className="sticky top-0 z-40 bg-transparent px-3 pt-5 sm:px-4 lg:px-5">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-12 max-w-[120rem] items-center justify-between rounded-2xl border border-white/[0.07] bg-[#030916]/88 px-4 shadow-[0_16px_60px_rgba(0,0,0,.34),inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl sm:px-5"
+        className="mx-auto flex h-16 max-w-[120rem] items-center justify-between rounded-2xl border border-white/[0.07] bg-[#030916]/88 px-5 shadow-[0_16px_60px_rgba(0,0,0,.34),inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl sm:px-6 lg:px-7"
       >
         <Brand />
-        <div className="hidden items-center gap-4 md:flex lg:gap-8">
+        <div className="hidden items-center gap-6 md:flex lg:gap-10">
           {NAV_ITEMS.map((item) => <DesktopLink key={item.view} {...item} active={item.view === "overview"} />)}
         </div>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2.5 md:flex">
           <ThemeToggle />
-          <a href={personalInfo.resumeUrl} download className="ml-1 inline-flex h-8 items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3.5 text-[10px] font-medium text-slate-200 transition hover:border-cyan-300/30 hover:bg-cyan-300/5">
-            <Download className="size-3.5" /> Download CV
+          <a href={personalInfo.resumeUrl} download className="ml-1 inline-flex h-10 items-center gap-2.5 rounded-xl border border-white/[0.08] bg-white/[0.025] px-4.5 text-[12px] font-medium text-slate-200 transition hover:border-cyan-300/30 hover:bg-cyan-300/5">
+            <Download className="size-4" /> Download CV
           </a>
         </div>
         <div className="flex items-center gap-2 md:hidden">
