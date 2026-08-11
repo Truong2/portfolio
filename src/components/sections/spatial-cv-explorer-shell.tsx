@@ -8,9 +8,7 @@ import {
   Braces,
   ChevronLeft,
   ChevronRight,
-  Github,
   GraduationCap,
-  Linkedin,
   Mail,
   MousePointer2,
   UsersRound,
@@ -78,29 +76,26 @@ function BookControls() {
 function JumpToPage() {
   const { currentSpread, activeView, goToSpread } = useSpatialCv();
   const relevant = BOOK_SPREADS
-    .map((spread, index) => ({ ...spread, index }))
-    .filter((spread) => spread.index > 0 && spread.view === activeView);
+    .map((spread, index) => ({ spread, index }))
+    .filter(({ spread, index }) => index > 0 && spread.view === activeView);
 
-  const entries = relevant.length > 1 ? relevant : [
-    { ...BOOK_SPREADS[currentSpread], index: currentSpread },
-  ];
+  const chapterEntries = relevant.length > 0 ? relevant : [{ spread: BOOK_SPREADS[currentSpread]!, index: currentSpread }];
+  const experienceLabels = ["Professional Summary", "Experience Timeline", "Key Highlights", "Featured Roles", "Tech Stack"];
 
   return (
     <aside className="hidden self-center xl:block" aria-label="Jump to CV page">
       <div className="rounded-[17px] border border-white/[0.07] bg-[#06101e]/72 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,.035)] backdrop-blur-2xl">
         <p className="text-[8px] font-mono uppercase tracking-[0.17em] text-slate-400">Jump to page</p>
         <div className="relative mt-3 space-y-1 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-white/[0.08]">
-          {entries.map((spread, order) => {
-            const active = spread.index === currentSpread;
-            const labels = activeView === "experience"
-              ? ["Professional Summary", "Experience Timeline", "Key Highlights", "Featured Roles", "Tech Stack"]
-              : [spread.label];
-            return labels.map((label, index) => (
-              <button key={`${spread.id}-${label}`} type="button" onClick={() => goToSpread(spread.index)} className={`relative flex w-full items-center gap-3 rounded-lg px-1 py-1.5 text-left transition ${active && index === Math.min(order, labels.length - 1) ? "text-slate-100" : "text-slate-500 hover:text-slate-300"}`}>
-                <span className={`relative z-10 size-2 shrink-0 rounded-full border ${active && index === Math.min(order, labels.length - 1) ? "border-cyan-200 bg-cyan-300 shadow-[0_0_12px_#22d3ee]" : "border-slate-600 bg-[#06101e]"}`} />
+          {(activeView === "experience" ? experienceLabels : chapterEntries.map(({ spread }) => spread.label)).map((label, index) => {
+            const target = activeView === "experience" ? chapterEntries[Math.min(index >= 3 ? 1 : 0, chapterEntries.length - 1)] : chapterEntries[Math.min(index, chapterEntries.length - 1)];
+            const active = target?.index === currentSpread;
+            return (
+              <button key={`${label}-${index}`} type="button" onClick={() => target && goToSpread(target.index)} className={`relative flex w-full items-center gap-3 rounded-lg px-1 py-1.5 text-left transition ${active ? "text-slate-100" : "text-slate-500 hover:text-slate-300"}`}>
+                <span className={`relative z-10 size-2 shrink-0 rounded-full border ${active ? "border-cyan-200 bg-cyan-300 shadow-[0_0_12px_#22d3ee]" : "border-slate-600 bg-[#06101e]"}`} />
                 <span className="min-w-0"><span className="block truncate text-[8px] font-medium">{label}</span><span className="mt-0.5 block text-[7px] text-slate-600">Page {String(8 + index).padStart(2, "0")}</span></span>
               </button>
-            ));
+            );
           })}
         </div>
       </div>
@@ -116,8 +111,8 @@ function SocialDock() {
   return (
     <div className="absolute bottom-3 left-4 z-30 hidden items-center gap-4 rounded-xl border border-white/[0.06] bg-[#050b17]/72 px-4 py-2 text-[8px] text-slate-600 backdrop-blur-xl xl:flex">
       <span>Find me on</span>
-      <a href="https://github.com/Truong2" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-slate-500 transition hover:text-cyan-300"><Github className="size-3.5" /></a>
-      <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-slate-500 transition hover:text-cyan-300"><Linkedin className="size-3.5" /></a>
+      <a href="https://github.com/Truong2" target="_blank" rel="noreferrer" aria-label="GitHub" className="flex size-5 items-center justify-center rounded border border-white/[0.06] text-[8px] font-semibold text-slate-500 transition hover:text-cyan-300">GH</a>
+      <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="flex size-5 items-center justify-center rounded border border-white/[0.06] text-[8px] font-semibold text-slate-500 transition hover:text-cyan-300">in</a>
     </div>
   );
 }
